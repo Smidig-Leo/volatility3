@@ -12,7 +12,7 @@ class Lavrans_PROGGRESSBAR_APP(QtWidgets.QMainWindow):
         self.runButton.clicked.connect(self.run_command)
     
     def run_command(self):
-        command = "python vol.py -f mymemoryimage.raw windows.pslist"
+        command = "python vol.py -f infected.vmem windows.pslist"
         try:
             process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = process.communicate()
