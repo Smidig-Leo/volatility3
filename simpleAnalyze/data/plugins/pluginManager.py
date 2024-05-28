@@ -1,4 +1,4 @@
-from .plugin import Plugin
+from simpleAnalyze.data.plugins.plugin import Plugin
 
 
 class PluginManager:
