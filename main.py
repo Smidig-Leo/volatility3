@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QFileDialog, QTextEdit, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QFileDialog, QTextEdit, QMessageBox, QStackedWidget
 import subprocess
 
 class SelectFileScreen(QWidget):
@@ -69,12 +69,8 @@ class PluginScreen(QWidget):
                     if result.returncode == 0:
                         output_text += f"{plugin}: {stdout}\n"
                         self.parent().analyzed_data_screen.output_text.setPlainText(output_text)
-                        self.parent().setCurrentIndex(2)
                 except Exception as e:
                     print(f'An error occured: {e}')
-
-#                output_text += f"Output for {plugin}:\n{result.stdout}\n{'=' * 40}\n"
-
         else:
             QMessageBox.critical(self, "Error", "No memory dump selected")
 
@@ -100,7 +96,12 @@ class VolatilityApp(QMainWindow):
         self.plugin_screen = PluginScreen()
         self.analyzed_data_screen = AnalyzedDataScreen()
 
-        self.setCentralWidget(self.select_file_screen)
+        self.stacked_widget = QStackedWidget()
+        self.setCentralWidget(self.stacked_widget)
+
+        self.stacked_widget.addWidget(self.select_file_screen)
+        self.stacked_widget.addWidget(self.plugin_screen)
+        self.stacked_widget.addWidget(self.analyzed_data_screen)
 
         select_file_action = QPushButton("Select File")
         select_file_action.clicked.connect(self.show_select_file_screen)
@@ -117,13 +118,13 @@ class VolatilityApp(QMainWindow):
         self.toolbar.addWidget(analyzed_data_action)
 
     def show_select_file_screen(self):
-        self.setCentralWidget(self.select_file_screen)
+        self.stacked_widget.setCurrentWidget(self.select_file_screen)
 
     def show_plugin_screen(self):
-        self.setCentralWidget(self.plugin_screen)
+        self.stacked_widget.setCurrentWidget(self.plugin_screen)
 
     def show_analyzed_data_screen(self):
-        self.setCentralWidget(self.analyzed_data_screen)
+        self.stacked_widget.setCurrentWidget(self.analyzed_data_screen)
 
 
 if __name__ == '__main__':
