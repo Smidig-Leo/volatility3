@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QFileDialog, QTextEdit, QMessageBox, QStackedWidget
 import subprocess
 from PyQt5.QtCore import QObject, pyqtSignal
+from uploadConfirmation import is_valid_memory_dump, is_file_exists
 
 class SelectFileScreen(QWidget):
     file_path_set = pyqtSignal(str)
@@ -20,12 +21,13 @@ class SelectFileScreen(QWidget):
 
     def select_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Memory Dump")
-        print(file_path)
         if file_path:
-            self.file_path = file_path
-            self.file_label.setText(f"Selected file: {self.file_path}")
-            self.file_path_set.emit(file_path)
-
+            if is_valid_memory_dump(file_path) and is_file_exists(file_path):
+                self.file_path = file_path
+                self.file_label.setText(f"Selected file: {self.file_path}")
+                self.file_path_set.emit(file_path)
+            else:
+                QMessageBox.critical(self, "Error", "The file you selected is not a valid memory dump! Please select a valid file.\n(Supported file extensions: .vmem)")
 
 class PluginScreen(QWidget):
     analysis_result = pyqtSignal(str)
