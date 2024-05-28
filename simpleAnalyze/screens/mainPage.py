@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog
-
+from PyQt5.QtCore import pyqtSignal
 class MainPage(QWidget):
+    file_path_set = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
@@ -19,5 +21,4 @@ class MainPage(QWidget):
         if file_path:
             self.file_path = file_path
             self.file_label.setText(f"Selected file: {self.file_path}")
-            self.parent().plugin_screen.file_path = self.file_path
-            self.parent().plugin_screen.file_label.setText(f"Selected file: {self.file_path}")
+            self.file_path_set.emit(file_path)
