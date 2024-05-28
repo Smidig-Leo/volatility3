@@ -1,8 +1,10 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QFileDialog, QTextEdit, QMessageBox, QStackedWidget
 import subprocess
+from PyQt5.QtCore import QObject, pyqtSignal
 
 class SelectFileScreen(QWidget):
+    file_path_set = pyqtSignal(str)
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
@@ -18,14 +20,15 @@ class SelectFileScreen(QWidget):
 
     def select_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Memory Dump")
+        print(file_path)
         if file_path:
             self.file_path = file_path
             self.file_label.setText(f"Selected file: {self.file_path}")
-            self.parent().plugin_screen.file_path = self.file_path
-            self.parent().plugin_screen.file_label.setText(f"Selected file: {self.file_path}")
+            self.file_path_set.emit(file_path)
 
 
 class PluginScreen(QWidget):
+    analysis_result = pyqtSignal(str)
     def __init__(self):
         super().__init__()
         self.file_path = ""
@@ -51,15 +54,19 @@ class PluginScreen(QWidget):
 
     def toggle_plugin(self):
         plugin_name = self.sender().text()
-        if plugin_name in self.selected_plugins:
-            self.selected_plugins.remove(plugin_name)
-            self.sender().setStyleSheet("")
+        if self.file_path:
+            if plugin_name in self.selected_plugins:
+                self.selected_plugins.remove(plugin_name)
+                self.sender().setStyleSheet("")
+            else:
+                self.selected_plugins.append(plugin_name)
+                self.sender().setStyleSheet("background-color: green;")
         else:
-            self.selected_plugins.append(plugin_name)
-            self.sender().setStyleSheet("background-color: green;")
+            QMessageBox.critical(self, "Error", "No memory dump selected")
 
     def run_analysis(self):
         if self.file_path:
+            print(self.file_path)
             output_text = ""
             for plugin in self.selected_plugins:
                 cmd = f"python vol.py -f {self.file_path} {plugin}"
@@ -68,11 +75,17 @@ class PluginScreen(QWidget):
                     stdout, stderr = result.communicate()
                     if result.returncode == 0:
                         output_text += f"{plugin}: {stdout}\n"
-                        self.parent().analyzed_data_screen.output_text.setPlainText(output_text)
+                        #self.parent().analyzed_data_screen.output_text.setPlainText(output_text)
                 except Exception as e:
                     print(f'An error occured: {e}')
+            self.analysis_result.emit(output_text)
         else:
             QMessageBox.critical(self, "Error", "No memory dump selected")
+
+    def set_file_path(self, file_path):
+        print(file_path)
+        self.file_path = file_path
+        self.file_label.setText(f"Selected file: {self.file_path}")
 
 
 class AnalyzedDataScreen(QWidget):
@@ -103,6 +116,9 @@ class VolatilityApp(QMainWindow):
         self.stacked_widget.addWidget(self.plugin_screen)
         self.stacked_widget.addWidget(self.analyzed_data_screen)
 
+        self.select_file_screen.file_path_set.connect(self.plugin_screen.set_file_path)
+        self.plugin_screen.analysis_result.connect(self.update_analyzed_data)
+
         select_file_action = QPushButton("Select File")
         select_file_action.clicked.connect(self.show_select_file_screen)
 
@@ -126,6 +142,8 @@ class VolatilityApp(QMainWindow):
     def show_analyzed_data_screen(self):
         self.stacked_widget.setCurrentWidget(self.analyzed_data_screen)
 
+    def update_analyzed_data(self, analyzed_result):
+        self.analyzed_data_screen.output_text.setPlainText(analyzed_result)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
