@@ -1,5 +1,5 @@
 import json
-import simpleAnalyze.utils.fileUploader as fileUploader
+from simpleAnalyze.utils.fileUploader import FileUploader
 
 
 class SessionManager:
@@ -16,7 +16,7 @@ class SessionManager:
             with open(self.session_file, "r") as file:
                 self.session_data = json.load(file)
         except FileNotFoundError:
-            pass
+            self.session_data = {}
 
     def set_file_uploaded(self, file_path):
         self.session_data["file_uploaded"] = file_path
@@ -54,7 +54,7 @@ session_manager = SessionManager()
 session_manager.load_session()
 
 # Example: Set file uploaded
-file_path = fileUploader.FileUploader.get_file_path()
+file_path = FileUploader.get_file_path()
 session_manager.set_file_uploaded(file_path)
 session_manager.save_session()
 

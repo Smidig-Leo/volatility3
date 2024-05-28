@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QPushButt
 from screens.mainPage import MainPage
 from screens.pluginScreen import PluginScreen
 from screens.analyzeDataScreen import AnalyzeDataScreen
+from data.sessionManager import SessionManager
 
 
 class VolatilityApp(QMainWindow):
@@ -10,6 +11,10 @@ class VolatilityApp(QMainWindow):
         super().__init__()
         self.setWindowTitle("Volatility App")
         self.setGeometry(100, 100, 800, 600)
+
+        # Initialize session manager to store user state
+        self.session_manager = SessionManager()
+        self.session_manager.load_session()
 
         self.select_file_screen = MainPage(self)
         self.plugin_screen = PluginScreen()
@@ -51,6 +56,9 @@ class VolatilityApp(QMainWindow):
     def update_analyzed_data(self, analyzed_result):
         self.analyzed_data_screen.display_data(analyzed_result)
 
+    def closeEvent(self, event):
+        self.session_manager.save_session()
+        event.accept()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
