@@ -4,14 +4,13 @@ from screens.mainPage import MainPage
 from screens.pluginScreen import PluginScreen
 from screens.analyzeDataScreen import AnalyzeDataScreen
 
-
 class VolatilityApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Volatility App")
         self.setGeometry(100, 100, 800, 600)
 
-        self.select_file_screen = MainPage()
+        self.select_file_screen = MainPage(self)
         self.plugin_screen = PluginScreen()
         self.analyzed_data_screen = AnalyzeDataScreen()
 
