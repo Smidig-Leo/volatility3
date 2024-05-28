@@ -4,7 +4,6 @@ from screens.mainPage import MainPage
 from screens.pluginScreen import PluginScreen
 from screens.analyzeDataScreen import AnalyzeDataScreen
 
-
 class VolatilityApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -50,7 +49,6 @@ class VolatilityApp(QMainWindow):
 
     def update_analyzed_data(self, analyzed_result):
         self.analyzed_data_screen.display_data(analyzed_result)
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
