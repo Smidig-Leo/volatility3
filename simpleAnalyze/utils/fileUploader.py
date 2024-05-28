@@ -1,7 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QSpacerItem, QSizePolicy, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QSpacerItem, QSizePolicy, \
+    QHBoxLayout, QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
 import os
+from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
 
 class FileUploader(QWidget):
     def __init__(self, parent=None):
@@ -92,7 +94,12 @@ class FileUploader(QWidget):
     def select_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Memory Dump")
         if file_path:
-            self.update_file_path(file_path)
+            if is_valid_memory_dump(file_path) and is_file_exists(file_path):
+                self.file_path = file_path
+                self.update_file_path(file_path)
+            else:
+                QMessageBox.critical(self, "Error",
+                                     "The file you selected is not a valid memory dump! Please select a valid file.\n(Supported file extensions: .vmem)")
 
     def update_file_path(self, file_path):
         self.file_path = file_path
