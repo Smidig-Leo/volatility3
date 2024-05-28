@@ -89,7 +89,11 @@ class FileUploader(QWidget):
         urls = event.mimeData().urls()
         if urls and urls[0].isLocalFile():
             file_path = urls[0].toLocalFile()
-            self.update_file_path(file_path)
+            if is_valid_memory_dump(file_path) and is_file_exists(file_path):
+                self.update_file_path(file_path)
+            else:
+                QMessageBox.critical(self, "Error",
+                                     "The file you selected is not a valid memory dump! Please select a valid file.\n(Supported file extensions: .vmem)")
 
     def select_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Memory Dump")
