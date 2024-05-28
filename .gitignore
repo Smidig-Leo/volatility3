@@ -36,9 +36,9 @@ venv/
 ENV/
 
 # Memory dump files
-*.dmp
+.dmp
 *.vmem
-*.img
+*.img*
 
 # PyTest cache files
 .pytest_cache/

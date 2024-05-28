@@ -4,14 +4,13 @@ from screens.mainPage import MainPage
 from screens.pluginScreen import PluginScreen
 from screens.analyzeDataScreen import AnalyzeDataScreen
 
-
 class VolatilityApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Volatility App")
         self.setGeometry(100, 100, 800, 600)
 
-        self.select_file_screen = MainPage()
+        self.select_file_screen = MainPage(self)
         self.plugin_screen = PluginScreen()
         self.analyzed_data_screen = AnalyzeDataScreen()
 
@@ -21,6 +20,9 @@ class VolatilityApp(QMainWindow):
         self.stacked_widget.addWidget(self.select_file_screen)
         self.stacked_widget.addWidget(self.plugin_screen)
         self.stacked_widget.addWidget(self.analyzed_data_screen)
+
+        self.select_file_screen.file_path_set.connect(self.plugin_screen.set_file_path)
+        self.plugin_screen.analysis_result.connect(self.update_analyzed_data)
 
         select_file_action = QPushButton("Select File")
         select_file_action.clicked.connect(self.show_select_file_screen)
@@ -44,6 +46,10 @@ class VolatilityApp(QMainWindow):
 
     def show_analyzed_data_screen(self):
         self.stacked_widget.setCurrentWidget(self.analyzed_data_screen)
+
+    def update_analyzed_data(self, analyzed_result):
+        self.analyzed_data_screen.output_text.setPlainText(analyzed_result)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
