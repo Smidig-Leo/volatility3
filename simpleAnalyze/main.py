@@ -49,7 +49,7 @@ class VolatilityApp(QMainWindow):
         self.stacked_widget.setCurrentWidget(self.analyzed_data_screen)
 
     def update_analyzed_data(self, analyzed_result):
-        self.analyzed_data_screen.output_text.setPlainText(analyzed_result)
+        self.analyzed_data_screen.display_data(analyzed_result)
 
 
 if __name__ == '__main__':
