@@ -55,13 +55,12 @@ class VolatilityApp(QMainWindow):
     def update_analyzed_data(self, analyzed_result):
         self.analyzed_data_screen.display_data(analyzed_result)
 
-<<<<<<< HEAD
+
     def closeEvent(self, event):
         self.session_manager.save_session()
         event.accept()
 
-=======
->>>>>>> 52a7967b59c8539ff413fc8d109a13491d4efbef
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = VolatilityApp()
