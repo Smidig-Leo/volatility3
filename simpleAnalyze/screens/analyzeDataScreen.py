@@ -47,3 +47,4 @@ class AnalyzeDataScreen(QWidget):
 
         self.table_view.setAlternatingRowColors(True)
 
+
