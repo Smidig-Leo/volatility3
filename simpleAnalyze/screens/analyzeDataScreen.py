@@ -2,6 +2,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTextEdit, QTableView, QHeaderView, QSizePolicy
 import subprocess
 
+
 class AnalyzeDataScreen(QWidget):
     def __init__(self):
         super().__init__()

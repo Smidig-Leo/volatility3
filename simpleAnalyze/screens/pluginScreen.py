@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QMessageBox
 from PyQt5.QtCore import pyqtSignal
 import subprocess
+from simpleAnalyze.data.plugins.pluginManager import PluginManager
+
 class PluginScreen(QWidget):
     analysis_result = pyqtSignal(str)
 
@@ -8,16 +10,19 @@ class PluginScreen(QWidget):
         super().__init__()
         self.file_path = ""
         self.selected_plugins = []
+        self.plugin_manager = PluginManager()
 
         layout = QVBoxLayout()
 
         self.file_label = QLabel("No memory dump selected")
         layout.addWidget(self.file_label)
 
-        self.plugins = ["windows.pslist", "windows.cmdline", "windows.dlllist", "windows.info"]
+        # Load plugins for a specific OS (e.g., "windows")
+        self.plugin_manager.load_plugins("windows", self.file_path)
+        self.plugins = self.plugin_manager.get_plugins()
 
         for plugin in self.plugins:
-            btn = QPushButton(plugin)
+            btn = QPushButton(plugin.name)
             btn.clicked.connect(self.toggle_plugin)
             layout.addWidget(btn)
 
@@ -43,15 +48,17 @@ class PluginScreen(QWidget):
         if self.file_path:
             output_text = ""
             for plugin in self.selected_plugins:
-                cmd = f"python ../vol.py -f {self.file_path} {plugin}"
-                try:
-                    result = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                              text=True)
-                    stdout, stderr = result.communicate()
-                    if result.returncode == 0:
-                        output_text += f"{plugin}: {stdout}\n"
-                except Exception as e:
-                    print(f'An error occured: {e}')
+                for p in self.plugins:
+                    if p.name == plugin:
+                        try:
+                            result = subprocess.Popen(p.command.format(file_path=self.file_path, name=p.name),
+                                                      shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                                      text=True)
+                            stdout, stderr = result.communicate()
+                            if result.returncode == 0:
+                                output_text += f"{p.name}: {stdout}\n"
+                        except Exception as e:
+                            print(f'An error occurred: {e}')
             self.analysis_result.emit(output_text)
         else:
             QMessageBox.critical(self, "Error", "No memory dump selected")
@@ -59,3 +66,4 @@ class PluginScreen(QWidget):
     def set_file_path(self, file_path):
         self.file_path = file_path
         self.file_label.setText(f"Selected file: {self.file_path}")
+        self.plugin_manager.load_plugins("windows", self.file_path)
