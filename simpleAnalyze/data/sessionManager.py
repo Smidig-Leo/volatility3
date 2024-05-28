@@ -18,8 +18,8 @@ class SessionManager:
         except FileNotFoundError:
             self.session_data = {}
 
-    def set_file_uploaded(self, file_path):
-        self.session_data["file_uploaded"] = file_path
+    def set_file_uploaded(self, file_name):
+        self.session_data["file_uploaded"] = file_name
 
     def get_file_uploaded(self):
         return self.session_data.get("file_uploaded", "")
@@ -49,15 +49,5 @@ class SessionManager:
         return self.session_data.get("os", "")
 
 
-# Usage:
-session_manager = SessionManager()
-session_manager.load_session()
 
-# Example: Set file uploaded
-file_path = FileUploader.get_file_path()
-session_manager.set_file_uploaded(file_path)
-session_manager.save_session()
 
-# Example: Get file uploaded
-file_uploaded = session_manager.get_file_uploaded()
-print("File uploaded:", file_uploaded)

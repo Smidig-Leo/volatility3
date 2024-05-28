@@ -1,20 +1,21 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QSpacerItem, QSizePolicy, \
     QHBoxLayout, QMessageBox
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
 import os
 from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
 
 class FileUploader(QWidget):
+    file_path_updated = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent_widget = parent
+        self.file_path = None  # Initialize file_path attribute
 
         self.layout = QVBoxLayout()
 
-
         self.layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
-
 
         self.drop_area = QWidget()
         self.drop_area_layout = QVBoxLayout()
@@ -69,12 +70,10 @@ class FileUploader(QWidget):
         self.drop_area_layout.addWidget(self.or_label, alignment=Qt.AlignCenter)
         self.drop_area_layout.addWidget(self.select_button, alignment=Qt.AlignCenter)
 
-
         self.files_layout = QVBoxLayout()
         self.drop_area_layout.addLayout(self.files_layout)
 
         self.layout.addWidget(self.drop_area, alignment=Qt.AlignCenter)
-
 
         self.layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
@@ -99,7 +98,6 @@ class FileUploader(QWidget):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Memory Dump")
         if file_path:
             if is_valid_memory_dump(file_path) and is_file_exists(file_path):
-                self.file_path = file_path
                 self.update_file_path(file_path)
             else:
                 QMessageBox.critical(self, "Error",
@@ -112,6 +110,7 @@ class FileUploader(QWidget):
         if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
             self.parent_widget.plugin_screen.file_path = self.file_path
             self.parent_widget.plugin_screen.file_label.setText(f"Selected file: {file_name}")
+        self.file_path_updated.emit(file_path)  # Emit the file path signal
 
     def add_file_label(self, file_name):
         file_label = QLabel(file_name)
@@ -125,3 +124,6 @@ class FileUploader(QWidget):
             }
         """)
         self.files_layout.addWidget(file_label)
+
+    def get_file_path(self):
+        return self.file_path
