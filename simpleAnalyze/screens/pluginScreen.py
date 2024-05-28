@@ -14,7 +14,12 @@ class PluginScreen(QWidget):
         self.file_label = QLabel("No memory dump selected")
         layout.addWidget(self.file_label)
 
-        self.plugins = ["windows.pslist", "windows.cmdline", "windows.dlllist", "windows.info"]
+        self.plugins = ["windows.pslist", "windows.cmdline", "windows.dlllist", "windows.info", "windows.bigpools", "windows.callbacks", " windows.cmdline", "windows.crashinfo", "windows.devicetree"," windows.dlllist", 
+                     "windows.driverirp", "windows.drivermodule", "windows.driverscan",  "windows.dumpfiles", "windows.envars", "windows.filescan", "windows.getservicesids"
+                      "windows.getsids", "windows.handles" , "windows.info", "windows.joblinks", " windows.ldrmodules", "windows.malfind" , "windows.mbrscan", "windows.memmap"
+                         " windows.modscan", "windows.modules", "windows.mutantscan", "windows.poolscanner", "windows.privileges", " windows.pslist", "windows.psscan", "windows.pstree", "windows.registry"
+                          "windows.registry", "windows.registry","windows.registry",  "windows.registry", "windows.sessions", "windows.ssdt", "windows.statistics",  "windows.strings",
+                           "windows.symlinkscan",  "windows.thrdscan", "windows.truecrypt","windows.vadinfo", "windows.vadwalk", "windows.virtmap" ]
 
         for plugin in self.plugins:
             btn = QPushButton(plugin)

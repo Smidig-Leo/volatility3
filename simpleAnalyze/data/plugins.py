@@ -32,7 +32,7 @@ class PluginName(Plugin):
         elif self.name == "fjerde_plugin":
             pass
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     Plugin_arguments = PluginArguments()
     
     PluginArguments.register_plugin(PluginName("første_plugin"))
