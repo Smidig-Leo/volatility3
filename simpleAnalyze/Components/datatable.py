@@ -49,7 +49,7 @@ class DataTable(QWidget):
             return []
 
         data = []
-        for row in range(model.rowCount()):
+        for row in range(3, model.rowCount()):
             row_data = {}
             for col in range(model.columnCount()):
                 index = model.index(row, col)
