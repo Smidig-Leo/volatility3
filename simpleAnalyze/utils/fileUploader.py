@@ -110,7 +110,10 @@ class FileUploader(QWidget):
         if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
             self.parent_widget.plugin_screen.file_path = self.file_path
             self.parent_widget.plugin_screen.file_label.setText(f"Selected file: {file_name}")
-        self.file_path_updated.emit(file_path)  # Emit the file path signal
+            # Call SessionManager to store the uploaded file path
+            if self.parent_widget:
+                self.parent_widget.session_manager.set_file_uploaded(file_path)
+        self.file_path_updated.emit(file_path)
 
     def add_file_label(self, file_name):
         file_label = QLabel(file_name)
