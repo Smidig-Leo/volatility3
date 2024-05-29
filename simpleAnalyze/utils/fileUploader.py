@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QSpacerItem, QSizePolicy, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QSpacerItem, QSizePolicy, \
+    QMessageBox, QHBoxLayout
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
 import os
@@ -131,6 +132,63 @@ class FileUploader(QWidget):
         """)
         self.files_layout.addWidget(file_label)
 
+    def add_file_label(self, file_name):
+        file_layout = QHBoxLayout()
+
+        file_label = QLabel(file_name)
+        file_label.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-size: 14px;
+                padding: 1px;
+                border-radius: 5px;
+                margin-top: 5px;
+            }
+        """)
+
+        delete_button = QPushButton("X")
+        delete_button.clicked.connect(lambda _, name=file_name: self.delete_file(name))
+        delete_button.setStyleSheet("""
+            QPushButton {
+                background-color: red;
+                color: white;
+                font-size: 12px;
+                padding: 3px;
+                border: none;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #ff6666;
+            }
+        """)
+
+        file_layout.addWidget(file_label)
+        file_layout.addWidget(delete_button)
+        self.files_layout.addLayout(file_layout)
+
+    def delete_file(self, file_name):
+        # Remove the file from the GUI
+        for i in reversed(range(self.files_layout.count())):
+            layout_item = self.files_layout.itemAt(i)
+            if layout_item is not None:
+                layout = layout_item.layout()
+                if layout is not None:
+                    label_item = layout.itemAt(0)
+                    if label_item is not None:
+                        label_widget = label_item.widget()
+                        if label_widget is not None and label_widget.text() == file_name:
+                            widget_to_remove = self.files_layout.itemAt(i).layout()
+                            if widget_to_remove is not None:
+                                for j in reversed(range(widget_to_remove.count())):
+                                    file_widget = widget_to_remove.itemAt(j).widget()
+                                    if file_widget is not None:
+                                        file_widget.deleteLater()
+                                widget_to_remove.deleteLater()
+
+        # Remove the file from the program
+        if self.file_path == file_name:
+            self.file_path = None
+            self.file_path_updated.emit("")
     def show_popup(self, file_name):
 
         for i in reversed(range(self.layout.count())):
