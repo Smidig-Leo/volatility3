@@ -12,6 +12,7 @@ class PluginScreen(QWidget):
         self.file_path = ""
         self.selected_plugins = []
         self.plugin_manager = PluginManager()
+        self.selected_os = "windows"
 
         layout = QVBoxLayout()
 
@@ -19,8 +20,10 @@ class PluginScreen(QWidget):
         layout.addWidget(self.file_label)
 
         # Load plugins for a specific OS (e.g., "windows")
-        self.plugin_manager.load_plugins("windows", self.file_path)
+        self.plugin_manager.load_plugins(self.selected_os, self.file_path)
         self.plugins = self.plugin_manager.get_plugins()
+
+        self.buttons = []
 
         for plugin in self.plugins:
             btn = QPushButton(plugin.name)
@@ -32,6 +35,10 @@ class PluginScreen(QWidget):
         layout.addWidget(self.run_button)
 
         self.setLayout(layout)
+
+    def set_os(self, os):
+        self.selected_os = str(os)
+        print("OS hitt ", self.selected_os)
 
     def toggle_plugin(self):
         plugin_name = self.sender().text()

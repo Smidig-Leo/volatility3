@@ -27,6 +27,7 @@ class VolatilityApp(QMainWindow):
         self.stacked_widget.addWidget(self.plugin_screen)
         self.stacked_widget.addWidget(self.analyzed_data_screen)
 
+        self.select_file_screen.os_selected.connect(self.plugin_screen.set_os)
         self.select_file_screen.file_path_set.connect(self.plugin_screen.set_file_path)
         self.plugin_screen.analysis_result.connect(self.update_analyzed_data)
 

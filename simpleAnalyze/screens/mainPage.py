@@ -6,12 +6,14 @@ from simpleAnalyze.utils.chooseOs import ChooseOs
 
 class MainPage(QWidget):
     file_path_set = pyqtSignal(str)
+    os_selected = pyqtSignal(str)
     def __init__(self, parent=None):
         super().__init__(parent)
         layout = QVBoxLayout()
 
         self.file_uploader = FileUploader(parent)
         self.chooseOs = ChooseOs(parent)
+        self.chooseOs.os_changed.connect(self.os_selected)
         layout.addWidget(self.file_uploader)
         layout.addWidget(self.chooseOs)
 
@@ -23,3 +25,6 @@ class MainPage(QWidget):
             self.file_path = file_path
             self.file_label.setText(f"Selected file: {self.file_path}")
             self.file_path_set.emit(file_path)
+
+    def on_os_selected(self, text):
+        print("Selected OS nr2:", text)
