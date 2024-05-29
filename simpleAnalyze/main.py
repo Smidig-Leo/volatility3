@@ -4,7 +4,6 @@ from screens.mainPage import MainPage
 from screens.pluginScreen import PluginScreen
 from screens.analyzeDataScreen import AnalyzeDataScreen
 from data.sessionManager import SessionManager
-from utils.fileUploader import FileUploader
 
 class VolatilityApp(QMainWindow):
     def __init__(self):
@@ -12,7 +11,7 @@ class VolatilityApp(QMainWindow):
         self.setWindowTitle("Volatility App")
         self.setGeometry(100, 100, 800, 600)
 
-        #Initialize session manager to store user state
+        # Initialize session manager to store user state
         self.session_manager = SessionManager()
         self.session_manager.load_session()
 
@@ -27,6 +26,7 @@ class VolatilityApp(QMainWindow):
         self.stacked_widget.addWidget(self.plugin_screen)
         self.stacked_widget.addWidget(self.analyzed_data_screen)
 
+        self.select_file_screen.os_selected.connect(self.plugin_screen.set_os)
         self.select_file_screen.file_path_set.connect(self.plugin_screen.set_file_path)
         self.plugin_screen.analysis_result.connect(self.update_analyzed_data)
 
@@ -44,6 +44,12 @@ class VolatilityApp(QMainWindow):
         self.toolbar.addWidget(plugins_action)
         self.toolbar.addWidget(analyzed_data_action)
 
+        # Set the file uploaded from previous session
+        file_path = self.session_manager.get_file_uploaded()
+        if file_path:
+            self.select_file_screen.file_uploader.update_file_path(file_path)
+            self.plugin_screen.set_file_path(file_path)
+
     def show_select_file_screen(self):
         self.stacked_widget.setCurrentWidget(self.select_file_screen)
 
@@ -56,22 +62,12 @@ class VolatilityApp(QMainWindow):
     def update_analyzed_data(self, analyzed_result):
         self.analyzed_data_screen.display_data(analyzed_result)
 
-
     def closeEvent(self, event):
-       self.session_manager.save_session()
-       event.accept()
-
+        self.session_manager.save_session()
+        event.accept()
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     window = VolatilityApp()
-    session_manager = SessionManager()
-    session_manager.load_session()
-    file_uploader = FileUploader()
-    file_path = file_uploader.get_file_path()
-    session_manager.set_file_uploaded(file_path)
-    session_manager.save_session()
-    file_uploaded = session_manager.get_file_uploaded()
     window.show()
     sys.exit(app.exec_())
