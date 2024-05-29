@@ -13,9 +13,9 @@ class ChooseOs(QWidget):
         self.linux_radio = QRadioButton('Linux')
         self.mac_radio = QRadioButton('Mac')
 
-        self.windows_radio.clicked.connect(lambda: self.on_os_changed("Windows"))
-        self.linux_radio.clicked.connect(lambda: self.on_os_changed("Linux"))
-        self.mac_radio.clicked.connect(lambda: self.on_os_changed("Mac"))
+        self.windows_radio.clicked.connect(lambda: self.on_os_changed("windows"))
+        self.linux_radio.clicked.connect(lambda: self.on_os_changed("linux"))
+        self.mac_radio.clicked.connect(lambda: self.on_os_changed("mac"))
 
         self.layout.addWidget(self.windows_radio)
         self.layout.addWidget(self.linux_radio)

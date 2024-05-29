@@ -14,31 +14,54 @@ class PluginScreen(QWidget):
         self.plugin_manager = PluginManager()
         self.selected_os = "windows"
 
-        layout = QVBoxLayout()
+        self.layout = QVBoxLayout()
 
         self.file_label = QLabel("No memory dump selected")
-        layout.addWidget(self.file_label)
+        self.layout.addWidget(self.file_label)
 
         # Load plugins for a specific OS (e.g., "windows")
         self.plugin_manager.load_plugins(self.selected_os, self.file_path)
         self.plugins = self.plugin_manager.get_plugins()
 
-        self.buttons = []
+        self.plugin_manager.load_plugins(self.selected_os, self.file_path)
+        self.plugins = self.plugin_manager.get_plugins()
 
         for plugin in self.plugins:
             btn = QPushButton(plugin.name)
             btn.clicked.connect(self.toggle_plugin)
-            layout.addWidget(btn)
+            self.layout.addWidget(btn)
 
         self.run_button = QPushButton("Run Analysis")
         self.run_button.clicked.connect(self.run_analysis)
-        layout.addWidget(self.run_button)
+        self.layout.addWidget(self.run_button)
 
-        self.setLayout(layout)
+        self.setLayout(self.layout)
 
     def set_os(self, os):
         self.selected_os = str(os)
         print("OS hitt ", self.selected_os)
+        self.refresh_buttons()
+
+    def refresh_buttons(self):
+        self.plugin_manager.load_plugins(self.selected_os, self.file_path)
+        self.plugins = self.plugin_manager.get_plugins()
+
+        for i in reversed(range(1, self.layout.count())):
+            widget = self.layout.itemAt(i).widget()
+            if isinstance(widget, QPushButton):
+                widget.deleteLater()
+
+        for plugin in self.plugins:
+            btn = QPushButton(plugin.name)
+            btn.clicked.connect(self.toggle_plugin)
+            self.layout.addWidget(btn)
+
+        new_run_button = QPushButton("Run Analysis")
+        new_run_button.clicked.connect(self.run_analysis)
+        self.layout.addWidget(new_run_button)
+
+        self.layout.update()
+
 
     def toggle_plugin(self):
         plugin_name = self.sender().text()
