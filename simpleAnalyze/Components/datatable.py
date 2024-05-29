@@ -1,3 +1,4 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableView, QHeaderView, QSizePolicy
 
@@ -41,3 +42,20 @@ class DataTable(QWidget):
             self.table_view.verticalHeader().hideSection(row)
 
         self.table_view.setAlternatingRowColors(True)
+
+    def get_data(self):
+        model = self.table_view.model()
+        if not model:
+            return []
+
+        data = []
+        for row in range(model.rowCount()):
+            row_data = {}
+            for col in range(model.columnCount()):
+                index = model.index(row, col)
+                header = model.headerData(col, Qt.Horizontal)
+                value = model.data(index)
+                row_data[header] = value
+            data.append(row_data)
+
+        return data
