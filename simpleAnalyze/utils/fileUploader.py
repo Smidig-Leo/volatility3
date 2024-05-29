@@ -79,7 +79,6 @@ class FileUploader(QWidget):
 
         self.setLayout(self.layout)
 
-
         self.drop_area.dragEnterEvent = self.dragEnterEvent
         self.drop_area.dropEvent = self.dropEvent
 
@@ -110,10 +109,14 @@ class FileUploader(QWidget):
         self.file_path = file_path
         file_name = os.path.basename(file_path)
         self.add_file_label(file_name)
+        self.show_popup(file_name)
         if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
             self.parent_widget.plugin_screen.file_path = self.file_path
             self.parent_widget.plugin_screen.file_label.setText(f"Selected file: {file_name}")
-        self.file_path_updated.emit(file_path)  # Emit the file path signal
+            # Call SessionManager to store the uploaded file path
+            if self.parent_widget:
+                self.parent_widget.session_manager.set_file_uploaded(file_path)
+        self.file_path_updated.emit(file_path)
 
     def add_file_label(self, file_name):
         file_label = QLabel(file_name)
@@ -127,6 +130,67 @@ class FileUploader(QWidget):
             }
         """)
         self.files_layout.addWidget(file_label)
+
+    def show_popup(self, file_name):
+
+        for i in reversed(range(self.layout.count())):
+            widget = self.layout.itemAt(i).widget()
+            if widget is not None and widget.objectName() == "popup_widget":
+                self.layout.removeWidget(widget)
+                widget.deleteLater()
+
+
+        popup_widget = QWidget()
+        popup_widget.setObjectName("popup_widget")
+        popup_layout = QVBoxLayout()
+        popup_widget.setLayout(popup_layout)
+
+
+        popup_widget.setStyleSheet("""
+            QWidget#popup_widget {
+                background-color: #343534;
+                padding: 20px;
+            }
+        """)
+
+
+        file_uploaded_label = QLabel(f"{file_name} \n uploaded")
+        file_uploaded_label.setAlignment(Qt.AlignCenter)
+        file_uploaded_label.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-size: 16px;
+            }
+        """)
+
+
+        analyze_button = QPushButton("Analyze My Data")
+        analyze_button.setFixedSize(150, 40)
+        analyze_button.setStyleSheet("""
+            QPushButton {
+                background-color: orange;
+                color: white;
+                font-size: 16px;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #ff9933;
+            }
+        """)
+        analyze_button.clicked.connect(self.go_to_analyze_screen)
+
+
+        popup_layout.addWidget(file_uploaded_label)
+        popup_layout.addWidget(analyze_button, alignment=Qt.AlignCenter)
+
+
+        self.layout.addWidget(popup_widget, alignment=Qt.AlignCenter)
+
+    def go_to_analyze_screen(self):
+        if self.parent_widget:
+            self.parent_widget.show_analyzed_data_screen()
 
     def get_file_path(self):
         return self.file_path
