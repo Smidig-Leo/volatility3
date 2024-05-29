@@ -234,13 +234,13 @@ class FileUploader(QWidget):
                                     if file_widget is not None:
                                         file_widget.deleteLater()
                                 widget_to_remove.deleteLater()
-
         if self.file_uploaded_label and self.file_uploaded_label.text().startswith(file_name):
             self.file_uploaded_label.clear()
-
         if self.file_path == file_name:
             self.file_path = None
             self.file_path_updated.emit("")
+        if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
+            self.parent_widget.plugin_screen.clear_file_path()
     def go_to_analyze_screen(self):
         if self.parent_widget:
             self.parent_widget.show_analyzed_data_screen()

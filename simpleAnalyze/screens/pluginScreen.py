@@ -98,3 +98,9 @@ class PluginScreen(QWidget):
         self.file_path = file_path
         self.file_label.setText(f"Selected file: {self.file_path}")
         self.plugin_manager.load_plugins("windows", self.file_path)
+
+    def clear_file_path(self):
+        self.file_path = ""
+        self.file_label.setText("No memory dump selected")
+        self.selected_plugins.clear()
+        self.refresh_buttons()
