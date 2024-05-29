@@ -14,8 +14,9 @@ class MainPage(QWidget):
         self.file_uploader = FileUploader(parent)
         self.chooseOs = ChooseOs(parent)
         self.chooseOs.os_changed.connect(self.os_selected)
-        layout.addWidget(self.file_uploader)
         layout.addWidget(self.chooseOs)
+        layout.addWidget(self.file_uploader)
+
 
         self.setLayout(layout)
 
