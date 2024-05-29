@@ -68,12 +68,12 @@ class LeftPaneWidget(QWidget):
                 }
                 QListWidget {
                     border-radius: 5px;
-                    background-color: #333; /* Set background color */
+                    background-color: #333;
                 }
                 QListWidget::item {
                     color: #FFF;
                     height: 25px;
-                    background-color: #333; /* Set background color */
+                    background-color: #333;
                 }
                 QListWidget::item:selected {
                     background-color: #FFFFFF;
