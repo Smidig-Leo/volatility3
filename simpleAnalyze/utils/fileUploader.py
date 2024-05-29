@@ -13,6 +13,7 @@ class FileUploader(QWidget):
         self.parent_widget = parent
         self.file_path = None
 
+        self.file_uploaded_label = None
         self.layout = QVBoxLayout()
 
         self.layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
@@ -166,43 +167,17 @@ class FileUploader(QWidget):
         file_layout.addWidget(delete_button)
         self.files_layout.addLayout(file_layout)
 
-    def delete_file(self, file_name):
-        # Remove the file from the GUI
-        for i in reversed(range(self.files_layout.count())):
-            layout_item = self.files_layout.itemAt(i)
-            if layout_item is not None:
-                layout = layout_item.layout()
-                if layout is not None:
-                    label_item = layout.itemAt(0)
-                    if label_item is not None:
-                        label_widget = label_item.widget()
-                        if label_widget is not None and label_widget.text() == file_name:
-                            widget_to_remove = self.files_layout.itemAt(i).layout()
-                            if widget_to_remove is not None:
-                                for j in reversed(range(widget_to_remove.count())):
-                                    file_widget = widget_to_remove.itemAt(j).widget()
-                                    if file_widget is not None:
-                                        file_widget.deleteLater()
-                                widget_to_remove.deleteLater()
-
-        # Remove the file from the program
-        if self.file_path == file_name:
-            self.file_path = None
-            self.file_path_updated.emit("")
     def show_popup(self, file_name):
-
         for i in reversed(range(self.layout.count())):
             widget = self.layout.itemAt(i).widget()
             if widget is not None and widget.objectName() == "popup_widget":
                 self.layout.removeWidget(widget)
                 widget.deleteLater()
 
-
         popup_widget = QWidget()
         popup_widget.setObjectName("popup_widget")
         popup_layout = QVBoxLayout()
         popup_widget.setLayout(popup_layout)
-
 
         popup_widget.setStyleSheet("""
             QWidget#popup_widget {
@@ -211,16 +186,14 @@ class FileUploader(QWidget):
             }
         """)
 
-
-        file_uploaded_label = QLabel(f"{file_name} \n uploaded")
-        file_uploaded_label.setAlignment(Qt.AlignCenter)
-        file_uploaded_label.setStyleSheet("""
+        self.file_uploaded_label = QLabel(f"{file_name} \n uploaded")  # Store the reference
+        self.file_uploaded_label.setAlignment(Qt.AlignCenter)
+        self.file_uploaded_label.setStyleSheet("""
             QLabel {
                 color: white;
                 font-size: 16px;
             }
         """)
-
 
         analyze_button = QPushButton("Analyze My Data")
         analyze_button.setFixedSize(150, 40)
@@ -239,13 +212,35 @@ class FileUploader(QWidget):
         """)
         analyze_button.clicked.connect(self.go_to_analyze_screen)
 
-
-        popup_layout.addWidget(file_uploaded_label)
+        popup_layout.addWidget(self.file_uploaded_label)  # Use the reference
         popup_layout.addWidget(analyze_button, alignment=Qt.AlignCenter)
-
 
         self.layout.addWidget(popup_widget, alignment=Qt.AlignCenter)
 
+    def delete_file(self, file_name):
+        for i in reversed(range(self.files_layout.count())):
+            layout_item = self.files_layout.itemAt(i)
+            if layout_item is not None:
+                layout = layout_item.layout()
+                if layout is not None:
+                    label_item = layout.itemAt(0)
+                    if label_item is not None:
+                        label_widget = label_item.widget()
+                        if label_widget is not None and label_widget.text() == file_name:
+                            widget_to_remove = self.files_layout.itemAt(i).layout()
+                            if widget_to_remove is not None:
+                                for j in reversed(range(widget_to_remove.count())):
+                                    file_widget = widget_to_remove.itemAt(j).widget()
+                                    if file_widget is not None:
+                                        file_widget.deleteLater()
+                                widget_to_remove.deleteLater()
+
+        if self.file_uploaded_label and self.file_uploaded_label.text().startswith(file_name):
+            self.file_uploaded_label.clear()
+
+        if self.file_path == file_name:
+            self.file_path = None
+            self.file_path_updated.emit("")
     def go_to_analyze_screen(self):
         if self.parent_widget:
             self.parent_widget.show_analyzed_data_screen()
