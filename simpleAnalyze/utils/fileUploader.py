@@ -1,5 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QSpacerItem, QSizePolicy, \
-    QHBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QSpacerItem, QSizePolicy, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
 import os
@@ -11,13 +10,14 @@ class FileUploader(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent_widget = parent
-        self.file_path = None  # Initialize file_path attribute
+        self.file_path = None
 
         self.layout = QVBoxLayout()
 
         self.layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        self.drop_area = QWidget()
+        self.drop_area = QWidget(self)
+        self.drop_area.setAcceptDrops(True)
         self.drop_area_layout = QVBoxLayout()
         self.drop_area.setLayout(self.drop_area_layout)
         self.drop_area.setFixedSize(300, 300)
@@ -77,8 +77,11 @@ class FileUploader(QWidget):
 
         self.layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        self.setAcceptDrops(True)
         self.setLayout(self.layout)
+
+
+        self.drop_area.dragEnterEvent = self.dragEnterEvent
+        self.drop_area.dropEvent = self.dropEvent
 
     def dragEnterEvent(self, event: QDragEnterEvent):
         if event.mimeData().hasUrls():
