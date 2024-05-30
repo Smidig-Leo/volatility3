@@ -1,6 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QMenu, QAction, QCheckBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton
 from simpleAnalyze.Components.datatable import DataTable
 from simpleAnalyze.Components.leftPane import LeftPaneWidget
+from simpleAnalyze.Components.columnsSort import ColumnsSort
 from simpleAnalyze.utils.exportmanager import ExportManager
 
 class AnalyzeDataScreen(QWidget):
@@ -11,24 +12,15 @@ class AnalyzeDataScreen(QWidget):
 
         header_layout = QHBoxLayout()
         header_layout.addStretch()
+
         self.export_button = QPushButton("Export")
         self.export_button.setFixedSize(100, 30)
         self.export_button.clicked.connect(self.export_data)
         header_layout.addWidget(self.export_button)
 
-        self.columns_button = QPushButton("Columns")
-        self.columns_button.setFixedSize(100, 30)
+        self.columns_sort = ColumnsSort()
+        header_layout.addWidget(self.columns_sort)
 
-        menu = QMenu()
-        options = ["pid", "process name", "process base", "size", "module name", "module path", "loadtime", "fileoutput"]
-        for option in options:
-            action = QAction(option, self, checkable=True)
-            action.setChecked(True)
-            menu.addAction(action)
-
-        self.columns_button.setMenu(menu)
-
-        header_layout.addWidget(self.columns_button)
         main_layout.addLayout(header_layout)
 
         content_layout = QHBoxLayout()
