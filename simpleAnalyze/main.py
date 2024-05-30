@@ -44,11 +44,12 @@ class VolatilityApp(QMainWindow):
         self.toolbar.addWidget(plugins_action)
         self.toolbar.addWidget(analyzed_data_action)
 
-        # Set the file uploaded from previous session
-        file_path = self.session_manager.get_file_uploaded()
-        if file_path:
-            self.select_file_screen.file_uploader.update_file_path(file_path)
-            self.plugin_screen.set_file_path(file_path)
+        # Set the files uploaded from previous session
+        file_paths = self.session_manager.get_file_uploaded()
+        if file_paths:
+            for file_path in file_paths:
+                self.select_file_screen.file_uploader.add_file_path(file_path)
+                self.plugin_screen.set_file_path(file_path)
 
     def show_select_file_screen(self):
         self.stacked_widget.setCurrentWidget(self.select_file_screen)
