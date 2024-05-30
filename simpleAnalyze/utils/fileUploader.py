@@ -3,7 +3,9 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDial
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
 import os
+import json
 from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
+
 
 class FileUploader(QWidget):
     file_path_updated = pyqtSignal(str)
@@ -11,7 +13,8 @@ class FileUploader(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent_widget = parent
-        self.file_path = None
+        self.file_paths = []
+        self.file_widgets = {}
 
         self.file_uploaded_label = None
         self.layout = QVBoxLayout()
@@ -93,7 +96,7 @@ class FileUploader(QWidget):
         if urls and urls[0].isLocalFile():
             file_path = urls[0].toLocalFile()
             if is_valid_memory_dump(file_path) and is_file_exists(file_path):
-                self.update_file_path(file_path)
+                self.add_file_path(file_path)
             else:
                 QMessageBox.critical(self, "Error",
                                      "The file you selected is not a valid memory dump! Please select a valid file.\n(Supported file extensions: .vmem)")
@@ -102,38 +105,26 @@ class FileUploader(QWidget):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Memory Dump")
         if file_path:
             if is_valid_memory_dump(file_path) and is_file_exists(file_path):
-                self.update_file_path(file_path)
+                self.add_file_path(file_path)
             else:
                 QMessageBox.critical(self, "Error",
                                      "The file you selected is not a valid memory dump! Please select a valid file.\n(Supported file extensions: .vmem)")
 
-    def update_file_path(self, file_path):
-        self.file_path = file_path
-        file_name = os.path.basename(file_path)
-        self.add_file_label(file_name)
-        self.show_popup(file_name)
-        if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
-            self.parent_widget.plugin_screen.file_path = self.file_path
-            self.parent_widget.plugin_screen.file_label.setText(f"Selected file: {file_name}")
-            # Call SessionManager to store the uploaded file path
+    def add_file_path(self, file_path):
+        if file_path not in self.file_paths:
+            print(f"Adding file path: {file_path}")
+            self.file_paths.append(file_path)
+            self.add_file_label(file_path)
+            self.file_path_updated.emit(file_path)
+            self.show_popup(os.path.basename(file_path))
             if self.parent_widget:
-                self.parent_widget.session_manager.set_file_uploaded(file_path)
-        self.file_path_updated.emit(file_path)
+                self.parent_widget.session_manager.set_file_uploaded(self.file_paths)
+        else:
+            print(f"File path {file_path} already exists in the list")
 
-    def add_file_label(self, file_name):
-        file_label = QLabel(file_name)
-        file_label.setStyleSheet("""
-            QLabel {
-                color: white;
-                font-size: 14px;
-                padding: 1px;
-                border-radius: 5px;
-                margin-top: 5px;
-            }
-        """)
-        self.files_layout.addWidget(file_label)
-
-    def add_file_label(self, file_name):
+    def add_file_label(self, file_path):
+        file_name = os.path.basename(file_path)
+        print(f"Adding file label for: {file_name}")
         file_layout = QHBoxLayout()
 
         file_label = QLabel(file_name)
@@ -148,7 +139,7 @@ class FileUploader(QWidget):
         """)
 
         delete_button = QPushButton("X")
-        delete_button.clicked.connect(lambda _, name=file_name: self.delete_file(name))
+        delete_button.clicked.connect(lambda _, path=file_path: self.delete_file(path))
         delete_button.setStyleSheet("""
             QPushButton {
                 background-color: red;
@@ -166,8 +157,10 @@ class FileUploader(QWidget):
         file_layout.addWidget(file_label)
         file_layout.addWidget(delete_button)
         self.files_layout.addLayout(file_layout)
+        self.file_widgets[file_path] = file_layout
 
     def show_popup(self, file_name):
+
         for i in reversed(range(self.layout.count())):
             widget = self.layout.itemAt(i).widget()
             if widget is not None and widget.objectName() == "popup_widget":
@@ -186,7 +179,7 @@ class FileUploader(QWidget):
             }
         """)
 
-        self.file_uploaded_label = QLabel(f"{file_name} \n uploaded")  # Store the reference
+        self.file_uploaded_label = QLabel(f"{file_name} \n uploaded")
         self.file_uploaded_label.setAlignment(Qt.AlignCenter)
         self.file_uploaded_label.setStyleSheet("""
             QLabel {
@@ -212,38 +205,42 @@ class FileUploader(QWidget):
         """)
         analyze_button.clicked.connect(self.go_to_analyze_screen)
 
-        popup_layout.addWidget(self.file_uploaded_label)  # Use the reference
+        popup_layout.addWidget(self.file_uploaded_label)
         popup_layout.addWidget(analyze_button, alignment=Qt.AlignCenter)
 
         self.layout.addWidget(popup_widget, alignment=Qt.AlignCenter)
 
-    def delete_file(self, file_name):
-        for i in reversed(range(self.files_layout.count())):
-            layout_item = self.files_layout.itemAt(i)
-            if layout_item is not None:
-                layout = layout_item.layout()
-                if layout is not None:
-                    label_item = layout.itemAt(0)
-                    if label_item is not None:
-                        label_widget = label_item.widget()
-                        if label_widget is not None and label_widget.text() == file_name:
-                            widget_to_remove = self.files_layout.itemAt(i).layout()
-                            if widget_to_remove is not None:
-                                for j in reversed(range(widget_to_remove.count())):
-                                    file_widget = widget_to_remove.itemAt(j).widget()
-                                    if file_widget is not None:
-                                        file_widget.deleteLater()
-                                widget_to_remove.deleteLater()
-        if self.file_uploaded_label and self.file_uploaded_label.text().startswith(file_name):
-            self.file_uploaded_label.clear()
-        if self.file_path == file_name:
-            self.file_path = None
+    def delete_file(self, file_path):
+        print(f"Deleting file: {file_path}")
+        if file_path in self.file_paths:
+            self.file_paths.remove(file_path)
+            print(f"Removed file path: {file_path}")
+            if file_path in self.file_widgets:
+                file_layout = self.file_widgets.pop(file_path)
+                while file_layout.count():
+                    item = file_layout.takeAt(0)
+                    widget = item.widget()
+                    if widget is not None:
+                        widget.deleteLater()
+
+
+            if self.file_uploaded_label and self.file_uploaded_label.text().startswith(os.path.basename(file_path)):
+                self.file_uploaded_label.clear()
+                for i in reversed(range(self.layout.count())):
+                    widget = self.layout.itemAt(i).widget()
+                    if widget is not None and widget.objectName() == "popup_widget":
+                        self.layout.removeWidget(widget)
+                        widget.deleteLater()
+
             self.file_path_updated.emit("")
-        if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
-            self.parent_widget.plugin_screen.clear_file_path()
+            if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
+                self.parent_widget.plugin_screen.clear_file_path()
+            if self.parent_widget:
+                self.parent_widget.session_manager.set_file_uploaded(self.file_paths)
+
     def go_to_analyze_screen(self):
         if self.parent_widget:
             self.parent_widget.show_analyzed_data_screen()
 
-    def get_file_path(self):
-        return self.file_path
+    def get_file_paths(self):
+        return self.file_paths
