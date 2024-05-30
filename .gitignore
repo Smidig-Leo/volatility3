@@ -44,4 +44,4 @@ ENV/
 .pytest_cache/
 
 # Session data file
-simpleAnalyze/session_data.json
+simpleAnalyze/*.json
