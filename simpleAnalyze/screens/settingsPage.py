@@ -1,13 +1,7 @@
-from PyQt5 import QtWidgets, uic
-import sys
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.uic import  loadUi
 
-
-class SettingsPage(QtWidgets.QSettingsWidget):
+class SettingsPage(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('settings.ui', self)
-
-app = QtWidgets.QApplication(sys.argv)
-window = SettingsPage()
-window.show()
-sys.exit(app.exec_())
+        loadUi('screens/settings.ui', self)

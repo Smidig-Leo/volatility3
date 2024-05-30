@@ -3,7 +3,9 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QPushButt
 from screens.mainPage import MainPage
 from screens.pluginScreen import PluginScreen
 from screens.analyzeDataScreen import AnalyzeDataScreen
+from screens.settingsPage import SettingsPage
 from data.sessionManager import SessionManager
+
 
 class VolatilityApp(QMainWindow):
     def __init__(self):
@@ -18,6 +20,7 @@ class VolatilityApp(QMainWindow):
         self.select_file_screen = MainPage(self)
         self.plugin_screen = PluginScreen()
         self.analyzed_data_screen = AnalyzeDataScreen()
+        self.settings_screen = SettingsPage()
 
         self.stacked_widget = QStackedWidget()
         self.setCentralWidget(self.stacked_widget)
@@ -25,6 +28,7 @@ class VolatilityApp(QMainWindow):
         self.stacked_widget.addWidget(self.select_file_screen)
         self.stacked_widget.addWidget(self.plugin_screen)
         self.stacked_widget.addWidget(self.analyzed_data_screen)
+        self.stacked_widget.addWidget(self.settings_screen)
 
         self.select_file_screen.os_selected.connect(self.plugin_screen.set_os)
         self.select_file_screen.file_path_set.connect(self.plugin_screen.set_file_path)
@@ -39,10 +43,14 @@ class VolatilityApp(QMainWindow):
         analyzed_data_action = QPushButton("Analyzed Data")
         analyzed_data_action.clicked.connect(self.show_analyzed_data_screen)
 
+        settings_action = QPushButton("Settings")
+        settings_action.clicked.connect(self.show_settings_screen)
+
         self.toolbar = self.addToolBar("Toolbar")
         self.toolbar.addWidget(select_file_action)
         self.toolbar.addWidget(plugins_action)
         self.toolbar.addWidget(analyzed_data_action)
+        self.toolbar.addWidget(settings_action)
 
         # Set the files uploaded from previous session
         file_paths = self.session_manager.get_file_uploaded()
@@ -59,6 +67,9 @@ class VolatilityApp(QMainWindow):
 
     def show_analyzed_data_screen(self):
         self.stacked_widget.setCurrentWidget(self.analyzed_data_screen)
+
+    def show_settings_screen(self):
+        self.stacked_widget.setCurrentWidget(self.settings_screen)
 
     def update_analyzed_data(self, analyzed_result):
         self.analyzed_data_screen.display_data(analyzed_result)
