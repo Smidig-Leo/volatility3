@@ -1,24 +1,30 @@
 import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QCheckBox
 from PyQt5.QtCore import pyqtSignal, Qt
-from simpleAnalyze.data.sessionManager import SessionManager
+from simpleAnalyze.utils.fileUploader import FileUploader
+
 
 class SelectDump(QWidget):
     file_selected = pyqtSignal(list)
 
     def __init__(self):
         super().__init__()
-        self.session_manager = SessionManager()
-        self.file_paths = self.session_manager.get_file_uploaded() or []
-
+        self.file_paths = []
         layout = QVBoxLayout()
-        self.file_label = QLabel("No memory dump selected")
+        self.file_uploader = FileUploader()
+        self.file_uploader.file_path_updated.connect(self.update_file_paths)
+        self.file_label = QLabel("DUMPS")
         layout.addWidget(self.file_label)
         self.dump_list = QListWidget()
         layout.addWidget(self.dump_list)
         self.setLayout(layout)
         self.apply_styles()
         self.populate_dump_list()
+
+    def update_file_paths(self, file_paths):
+        self.file_paths = file_paths
+        self.populate_dump_list()
+        print("Received file paths:", file_paths)
 
     def apply_styles(self):
         self.file_label.setStyleSheet("""
@@ -48,24 +54,24 @@ class SelectDump(QWidget):
 
     def populate_dump_list(self):
         self.dump_list.clear()
-
-        # Add the previously uploaded files, if any
         for file_path in self.file_paths:
-            file_name = os.path.basename(file_path)
-            self.add_list_item(file_name, file_path)
+            display_text = os.path.basename(file_path)
+            self.add_list_item(display_text, file_path)
 
     def add_list_item(self, display_text, file_path):
         item = QListWidgetItem()
         widget = QWidget()
-        checkbox = QCheckBox(display_text)
-        checkbox.stateChanged.connect(lambda state: self.on_checkbox_state_changed(state, file_path))
         layout = QVBoxLayout()
+        checkbox = QCheckBox()
+        checkbox.stateChanged.connect(lambda state: self.on_checkbox_state_changed(state, file_path))
         layout.addWidget(checkbox)
+        layout.addWidget(QLabel(display_text))
         widget.setLayout(layout)
         item.setSizeHint(widget.sizeHint())
-        item.setData(Qt.UserRole, file_path)  # Set file path as user data
+        item.setData(Qt.UserRole, file_path)
         self.dump_list.addItem(item)
         self.dump_list.setItemWidget(item, widget)
+        print(f"Added item: {display_text} with file path: {file_path}")
 
     def on_checkbox_state_changed(self, state, file_path):
         if state == Qt.Checked:
@@ -81,3 +87,5 @@ class SelectDump(QWidget):
                 file_path = item.data(Qt.UserRole)
                 selected_files.append(file_path)
         return selected_files
+
+

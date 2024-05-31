@@ -5,6 +5,10 @@ from screens.pluginScreen import PluginScreen
 from screens.analyzeDataScreen import AnalyzeDataScreen
 from screens.settingsPage import SettingsPage
 from data.sessionManager import SessionManager
+from Components.selectDump import SelectDump
+from Components.runAnalysis import RunAnalysis
+from Components.selectPlugin import SelectPlugin
+from utils.fileUploader import FileUploader
 
 
 class VolatilityApp(QMainWindow):
@@ -16,10 +20,13 @@ class VolatilityApp(QMainWindow):
         # Initialize session manager to store user state
         self.session_manager = SessionManager()
         self.session_manager.load_session()
+        self.file_uploader = FileUploader(parent=self)
+        self.select_dump = SelectDump()
+        self.select_plugin = SelectPlugin()
 
         self.select_file_screen = MainPage(self)
         self.plugin_screen = PluginScreen()
-        self.analyzed_data_screen = AnalyzeDataScreen()
+        self.analyzed_data_screen = AnalyzeDataScreen(self.file_uploader, self.select_plugin, self.select_dump)
         self.settings_screen = SettingsPage()
 
         self.stacked_widget = QStackedWidget()
@@ -52,12 +59,20 @@ class VolatilityApp(QMainWindow):
         self.toolbar.addWidget(analyzed_data_action)
         self.toolbar.addWidget(settings_action)
 
+
+
         # Set the files uploaded from previous session
         file_paths = self.session_manager.get_file_uploaded()
         if file_paths:
             for file_path in file_paths:
                 self.select_file_screen.file_uploader.add_file_path(file_path)
                 self.plugin_screen.set_file_path(file_path)
+
+
+        self.run_analysis_instance = RunAnalysis(self.select_dump, self.select_plugin)
+        self.select_plugin.plugin_selected.connect(self.run_analysis_instance.handle_selected_plugin)
+
+
 
     def show_select_file_screen(self):
         self.stacked_widget.setCurrentWidget(self.select_file_screen)

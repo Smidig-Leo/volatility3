@@ -3,12 +3,11 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDial
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
 import os
-import json
 from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
 
 
 class FileUploader(QWidget):
-    file_path_updated = pyqtSignal(str)
+    file_path_updated = pyqtSignal(list)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -112,10 +111,10 @@ class FileUploader(QWidget):
 
     def add_file_path(self, file_path):
         if file_path not in self.file_paths:
-            print(f"Adding file path: {file_path}")
             self.file_paths.append(file_path)
             self.add_file_label(file_path)
-            self.file_path_updated.emit(file_path)
+            print("File paths updated:", self.file_paths)  # Midlertidig utskrift for feilsøking
+            self.file_path_updated.emit(self.file_paths.copy())
             self.show_popup(os.path.basename(file_path))
             if self.parent_widget:
                 self.parent_widget.session_manager.set_file_uploaded(self.file_paths)
@@ -223,7 +222,6 @@ class FileUploader(QWidget):
                     if widget is not None:
                         widget.deleteLater()
 
-
             if self.file_uploaded_label and self.file_uploaded_label.text().startswith(os.path.basename(file_path)):
                 self.file_uploaded_label.clear()
                 for i in reversed(range(self.layout.count())):
@@ -232,7 +230,7 @@ class FileUploader(QWidget):
                         self.layout.removeWidget(widget)
                         widget.deleteLater()
 
-            self.file_path_updated.emit("")
+            self.file_path_updated.emit(self.file_paths.copy())
             if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
                 self.parent_widget.plugin_screen.clear_file_path()
             if self.parent_widget:

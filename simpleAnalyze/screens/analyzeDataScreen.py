@@ -7,14 +7,14 @@ from simpleAnalyze.utils.fileUploader import FileUploader
 
 class AnalyzeDataScreen(QWidget):
 
-    def __init__(self):
+    def __init__(self, file_uploader, select_plugin, select_dump):
         super().__init__()
 
         main_layout = QHBoxLayout(self)
 
-        self.select_dump = SelectDump()
-        self.select_plugin = SelectPlugin()
-
+        self.select_plugin = select_plugin
+        self.file_uploader = file_uploader
+        self.select_dump = select_dump
         self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
         self.run_analysis.analysis_result.connect(self.display_data)
 
@@ -45,7 +45,6 @@ class AnalyzeDataScreen(QWidget):
 
     def display_data(self, data):
         self.data_table.update_table(data)
-
 
     def export_data(self):
         data = self.data_table.get_data()
