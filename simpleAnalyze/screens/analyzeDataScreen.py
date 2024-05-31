@@ -1,41 +1,47 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy
 from simpleAnalyze.Components.datatable import DataTable
-from simpleAnalyze.Components.leftPane import LeftPaneWidget
-from simpleAnalyze.Components.columnsSort import ColumnsSort
-from simpleAnalyze.utils.exportmanager import ExportManager
+from simpleAnalyze.Components.selectPlugin import SelectPlugin
+from simpleAnalyze.Components.selectDump import SelectDump
+from simpleAnalyze.Components.runAnalysis import RunAnalysis
+from simpleAnalyze.utils.fileUploader import FileUploader
 
 class AnalyzeDataScreen(QWidget):
-    def __init__(self):
+
+    def __init__(self, file_uploader, select_plugin, select_dump):
         super().__init__()
 
-        main_layout = QVBoxLayout(self)
+        main_layout = QHBoxLayout(self)
 
-        header_layout = QHBoxLayout()
-        header_layout.addStretch()
+        self.select_plugin = select_plugin
+        self.file_uploader = file_uploader
+        self.select_dump = select_dump
+        self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
+        self.run_analysis.analysis_result.connect(self.display_data)
 
-        self.export_button = QPushButton("Export")
-        self.export_button.setFixedSize(100, 30)
-        self.export_button.clicked.connect(self.export_data)
-        header_layout.addWidget(self.export_button)
+        left_layout = QVBoxLayout()
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.setSpacing(0)
 
-        self.columns_sort = ColumnsSort()
-        header_layout.addWidget(self.columns_sort)
+        self.select_dump.setFixedWidth(270)
+        self.select_dump.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        left_layout.addWidget(self.select_dump)
 
-        main_layout.addLayout(header_layout)
+        self.select_plugin.setFixedWidth(270)
+        self.select_plugin.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        left_layout.addWidget(self.select_plugin)
 
-        content_layout = QHBoxLayout()
+        run_button = QPushButton("Run Analysis")
+        run_button.setFixedWidth(270)
+        run_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        run_button.clicked.connect(self.run_analysis.run_analysis)
+        left_layout.addWidget(run_button)
 
-        left_pane = LeftPaneWidget()
-        left_pane.setFixedWidth(270)
-        content_layout.addWidget(left_pane)
+        left_container = QWidget()
+        left_container.setLayout(left_layout)
+        main_layout.addWidget(left_container, 1)  # Left container takes 25% of the space
 
         self.data_table = DataTable()
-        content_layout.addWidget(self.data_table)
-
-        main_layout.addLayout(content_layout)
-
-        self.export_manager = ExportManager()
-        self.setLayout(main_layout)
+        main_layout.addWidget(self.data_table, 3)  # Data table takes 75% of the space
 
     def display_data(self, data):
         self.data_table.update_table(data)
