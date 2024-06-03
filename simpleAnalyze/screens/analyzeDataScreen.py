@@ -1,11 +1,14 @@
+import os
+
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QFileDialog, QMenu, QAction
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QFileDialog, QLabel
 from simpleAnalyze.Components.datatable import DataTable
 import xml.etree.ElementTree as ET
 
+
 class AnalyzeDataScreen(QWidget):
 
-    def __init__(self, file_uploader, select_dump, select_plugin, run_analysis, export_manager):
+    def __init__(self, file_uploader, select_dump, select_plugin, run_analysis, export_manager, plugin_manager):
         super().__init__()
 
         self.file_uploader = file_uploader
@@ -33,19 +36,34 @@ class AnalyzeDataScreen(QWidget):
         self.columns_button = QPushButton("Columns")
         self.columns_button.setFixedSize(100, 30)
 
-
         run_button = QPushButton("Run Analysis")
         run_button.setFixedWidth(270)
         run_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         run_button.clicked.connect(self.run_analysis.run_analysis)
         left_layout.addWidget(run_button)
 
-        # Right layout for export_button and data_table
+        # Right layout for data_table, export_button, and labels
         right_layout = QVBoxLayout()
 
+        # Layout for labels and export button
+        labels_and_export_layout = QHBoxLayout()
+
+        # Labels for selected file and plugin in a vertical layout
+        labels_layout = QVBoxLayout()
+        self.file_label = QLabel("Selected File: None")
+        self.plugin_label = QLabel("Selected Plugin: None")
+        labels_layout.addWidget(self.file_label)
+        labels_layout.addWidget(self.plugin_label)
+
+        # Add labels layout to the labels and export layout
+        labels_and_export_layout.addLayout(labels_layout)
+
+        # Export button
         self.export_button = QPushButton("Export as...")
         self.export_button.clicked.connect(self.download_as_xml)
-        right_layout.addWidget(self.export_button, alignment=Qt.AlignTop | Qt.AlignRight)
+        labels_and_export_layout.addWidget(self.export_button, alignment=Qt.AlignTop | Qt.AlignRight)
+
+        right_layout.addLayout(labels_and_export_layout)
 
         self.data_table = DataTable()
         right_layout.addWidget(self.data_table)
@@ -53,6 +71,16 @@ class AnalyzeDataScreen(QWidget):
         # Add left and right layouts to main layout
         main_layout.addLayout(left_layout)
         main_layout.addLayout(right_layout)
+
+    def update_file_label(self, selected_files):
+        if selected_files:
+            self.file_label.setText(f"Selected File: {', '.join([os.path.basename(f) for f in selected_files])}")
+        else:
+            self.file_label.setText("Selected File: None")
+
+    def update_plugin_label(self, plugin_name):
+        if plugin_name:
+            self.plugin_label.setText(f"Selected Plugin: {plugin_name}")
 
     def display_data(self, data):
         self.data_table.update_table(data)
@@ -80,4 +108,3 @@ class AnalyzeDataScreen(QWidget):
                                                    options=options)
         if file_name:
             tree.write(file_name, encoding='utf-8', xml_declaration=True)
-

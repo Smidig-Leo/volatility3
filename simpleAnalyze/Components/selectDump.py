@@ -1,6 +1,7 @@
 import os
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QCheckBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QCheckBox, QHBoxLayout
 from PyQt5.QtCore import pyqtSignal, Qt
+
 
 class SelectDump(QWidget):
     file_selected = pyqtSignal(list)
@@ -34,24 +35,16 @@ class SelectDump(QWidget):
             QListWidget {
                 border-radius: 5px;
                 background-color: #343534;
-                color: #FFFFFF;
+                color: white;
                 border: none;
                 padding: 0px;
             }
             QListWidget::item {
+                color: white;
                 height: 25px;
                 padding: 0px;
                 border: none;
-                border-bottom: 1px solid #CCCCCC;
                 background-color: #343534;
-            }
-            QListWidget::item:selected {
-                background-color: #0078d7;
-                color: #FFFFFF;
-            }
-            QListWidget::item::indicator {
-                width: 20px;
-                height: 20px;
             }
         """)
 
@@ -64,11 +57,30 @@ class SelectDump(QWidget):
     def add_list_item(self, display_text, file_path):
         item = QListWidgetItem()
         widget = QWidget()
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
         checkbox = QCheckBox()
         checkbox.stateChanged.connect(lambda state, fp=file_path: self.on_checkbox_state_changed(state, fp))
+
+        label = QLabel(display_text)
+        label.setStyleSheet("color: white;")
+        checkbox.setStyleSheet("""
+                        QCheckBox::indicator {
+                            width: 10px;
+                            height: 10px;
+                            border-radius: 3px;
+                        }
+                        QCheckBox::indicator:unchecked {
+                            background-color: white;
+                            border: 1px solid #ccc;
+                        }
+                        QCheckBox::indicator:checked {
+                            background-color: #F27821;
+                            border: 1px solid #F27821;
+                        }
+                    """)
         layout.addWidget(checkbox)
-        layout.addWidget(QLabel(display_text))
+        layout.addWidget(label)
+        layout.addStretch()
         widget.setLayout(layout)
         item.setSizeHint(widget.sizeHint())
         item.setData(Qt.UserRole, file_path)

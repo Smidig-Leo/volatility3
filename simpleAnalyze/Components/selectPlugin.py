@@ -1,15 +1,15 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGroupBox, QListWidget, QListWidgetItem, QLabel
 from PyQt5.QtCore import Qt, pyqtSignal
-from simpleAnalyze.data.plugins.pluginManager import PluginManager
+
 
 class SelectPlugin(QWidget):
     plugin_selected = pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, plugin_manager):
         super().__init__()
         self.file_path = ""
         self.selected_os = "windows"
-        self.plugin_manager = PluginManager()
+        self.plugin_manager = plugin_manager
         self.plugin_manager.load_plugins(self.selected_os, self.file_path)
         self.plugins_group = QGroupBox("PLUGINS")
         self.plugins_layout = QVBoxLayout()
@@ -27,6 +27,7 @@ class SelectPlugin(QWidget):
 
         # Set the layout of the SelectPlugin widget to the layout of the QGroupBox
         self.setLayout(self.plugins_group.layout())
+
 
     def populate_plugins_list(self):
         # change this to get activated plugins
@@ -75,20 +76,25 @@ class SelectPlugin(QWidget):
             QListWidget::item {
                 color: white;
                 height: 25px;
-                padding: 0px;
+                padding: 5px;
                 border: none;
-                border-bottom: 1px solid #ccc;
                 background-color: #343534;
             }
 
-            QListWidget::item:selected {
-                background-color: #0078d7;
-                color: white;
+            QCheckbox::indicator {
+                width: 10px;
+                height: 10px;
+                border-radius: 3px;
             }
 
-            QListWidget::item::indicator {
-                width: 20px;
-                height: 20px;
+            QListWidget::indicator:unchecked {
+                background-color: white;
+                border: 1px solid #ccc;
+            }
+
+            QListWidget::indicator:checked {
+                background-color: #F27821;
+                border: 1px solid #F27821;
             }
         """)
 
