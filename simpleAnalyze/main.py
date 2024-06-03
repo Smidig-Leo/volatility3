@@ -49,7 +49,8 @@ class VolatilityApp(QMainWindow):
 
         self.select_file_screen.os_selected.connect(self.plugin_screen.set_os)
         self.select_file_screen.file_path_set.connect(self.plugin_screen.set_file_path)
-        self.plugin_screen.analysis_result.connect(self.update_analyzed_data)
+
+        self.plugin_screen.plugins_updated.connect(self.update_selected_plugins)
 
         select_file_action = QPushButton("Select File")
         select_file_action.clicked.connect(self.show_select_file_screen)
@@ -97,6 +98,10 @@ class VolatilityApp(QMainWindow):
 
     def update_analyzed_data(self, analyzed_result):
         self.analyzed_data_screen.display_data(analyzed_result)
+
+    def update_selected_plugins(self, selected_plugins):
+        print("Selected plugins:", selected_plugins)
+
 
     def closeEvent(self, event):
         self.session_manager.save_session()
