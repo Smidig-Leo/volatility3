@@ -30,22 +30,17 @@ class RunAnalysis(QObject):
                     print(f"Running command: {' '.join(command)}")  # Debugging statement
                     output = subprocess.check_output(command).decode()
 
-                    # Split output into lines
                     lines = output.splitlines()
 
                     if first_file:
-                        # Include the entire output including headers for the first file
                         summary += "\n".join(lines)
                         first_file = False
                     else:
-                        # Exclude the headers (assuming headers are in the first few lines)
-                        data_lines = lines[3:]  # Adjust index if headers span more lines
+                        data_lines = lines[3:]
                         summary += "\n" + "\n".join(data_lines)
 
                 self.analysis_result.emit(summary)
             except subprocess.CalledProcessError as e:
-                # Emit an error message signal
                 self.analysis_result.emit("Error: " + e.output.decode())
         else:
-            # Emit an error message signal
             self.analysis_result.emit("Error: No plugin or memory dump selected")
