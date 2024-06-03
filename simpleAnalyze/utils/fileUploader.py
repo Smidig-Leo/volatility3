@@ -113,7 +113,6 @@ class FileUploader(QWidget):
         if file_path not in self.file_paths:
             self.file_paths.append(file_path)
             self.add_file_label(file_path)
-            print("File paths updated:", self.file_paths)  # Midlertidig utskrift for feilsøking
             self.file_path_updated.emit(self.file_paths.copy())
             self.show_popup(os.path.basename(file_path))
             if self.parent_widget:

@@ -8,15 +8,15 @@ class MainPage(QWidget):
     file_path_set = pyqtSignal(list)
     os_selected = pyqtSignal(str)
 
-    def __init__(self, parent=None):
+    def __init__(self, parent, file_uploader, chooseOs):
         super().__init__(parent)
         self.file_path = []
         layout = QVBoxLayout()
 
-        self.file_uploader = FileUploader(parent)
+        self.file_uploader = file_uploader
         self.file_uploader.file_path_updated.connect(self.update_file_path)
 
-        self.chooseOs = ChooseOs(parent)
+        self.chooseOs = chooseOs
         self.chooseOs.os_changed.connect(self.os_selected)
 
         layout.addWidget(self.chooseOs)

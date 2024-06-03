@@ -1,7 +1,7 @@
 import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QCheckBox
 from PyQt5.QtCore import pyqtSignal, Qt
-from simpleAnalyze.utils.fileUploader import FileUploader
+
 
 
 class SelectDump(QWidget):
@@ -11,45 +11,54 @@ class SelectDump(QWidget):
         super().__init__()
         self.file_paths = []
         layout = QVBoxLayout()
-        self.file_uploader = FileUploader()
-        self.file_uploader.file_path_updated.connect(self.update_file_paths)
         self.file_label = QLabel("DUMPS")
         layout.addWidget(self.file_label)
         self.dump_list = QListWidget()
         layout.addWidget(self.dump_list)
         self.setLayout(layout)
         self.apply_styles()
-        self.populate_dump_list()
 
-    def update_file_paths(self, file_paths):
-        self.file_paths = file_paths
+    def update_file_paths(self, list_of_files):
+        self.file_paths = list_of_files
         self.populate_dump_list()
-        print("Received file paths:", file_paths)
+        print("Received file paths:", list_of_files)
 
     def apply_styles(self):
         self.file_label.setStyleSheet("""
             QLabel {
-                color: black;
+                color: FFFFFF;
                 font-size: 18px;
-                padding: 10px;
+                padding: 0px;
+                border-bottom: 1px solid #F27821;
             }
         """)
         self.dump_list.setStyleSheet("""
+
             QListWidget {
-                background-color: white;
-                color: black;
-                border: 1px solid #ccc;
-                padding: 5px;
-            }
-            QListWidget::item {
-                color: black;
-                padding: 10px;
-                border-bottom: 1px solid #ccc;
-            }
-            QListWidget::item:selected {
-                background-color: #0078d7;
-                color: white;
-            }
+            border-radius: 5px;
+            background-color: #343534;
+            color: #FFFFFF; /* Fix color code */
+            border: none;
+            padding: 0px;
+        }
+
+        QListWidget::item {
+            height: 25px;
+            padding: 0px;
+            border: none;
+            border-bottom: 1px solid #CCCCCC; /* Fix color code */
+            background-color: #343534;
+        }
+
+        QListWidget::item:selected {
+            background-color: #0078d7;
+            color: #FFFFFF; /* Fix color code */
+        }
+
+        QListWidget::item::indicator {
+            width: 20px;
+            height: 20px;
+        }
         """)
 
     def populate_dump_list(self):

@@ -9,6 +9,8 @@ from Components.selectDump import SelectDump
 from Components.runAnalysis import RunAnalysis
 from Components.selectPlugin import SelectPlugin
 from utils.fileUploader import FileUploader
+from utils.chooseOs import ChooseOs
+
 
 
 class VolatilityApp(QMainWindow):
@@ -20,13 +22,16 @@ class VolatilityApp(QMainWindow):
         # Initialize session manager to store user state
         self.session_manager = SessionManager()
         self.session_manager.load_session()
-        self.file_uploader = FileUploader(parent=self)
         self.select_dump = SelectDump()
+        self.chooseOs = ChooseOs()
         self.select_plugin = SelectPlugin()
+        self.file_uploader = FileUploader(self)
+        self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
 
-        self.select_file_screen = MainPage(self)
+        self.select_file_screen = MainPage(self, self.file_uploader, self.chooseOs)
         self.plugin_screen = PluginScreen()
-        self.analyzed_data_screen = AnalyzeDataScreen(self.file_uploader, self.select_plugin, self.select_dump)
+        self.analyzed_data_screen = AnalyzeDataScreen(select_dump=self.select_dump, select_plugin=self.select_plugin, file_uploader=self.file_uploader, run_analysis=self.run_analysis, export_manager=None)
+        self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
         self.settings_screen = SettingsPage()
 
         self.stacked_widget = QStackedWidget()
@@ -59,7 +64,9 @@ class VolatilityApp(QMainWindow):
         self.toolbar.addWidget(analyzed_data_action)
         self.toolbar.addWidget(settings_action)
 
-
+        # Setup connections for the run analysis process
+        self.select_plugin.plugin_selected.connect(self.run_analysis.handle_selected_plugin)
+        self.run_analysis.analysis_result.connect(self.analyzed_data_screen.display_data)
 
         # Set the files uploaded from previous session
         file_paths = self.session_manager.get_file_uploaded()
@@ -68,11 +75,8 @@ class VolatilityApp(QMainWindow):
                 self.select_file_screen.file_uploader.add_file_path(file_path)
                 self.plugin_screen.set_file_path(file_path)
 
-
-        self.run_analysis_instance = RunAnalysis(self.select_dump, self.select_plugin)
-        self.select_plugin.plugin_selected.connect(self.run_analysis_instance.handle_selected_plugin)
-
-
+        # Connect the file uploader signal to update file paths in SelectDump
+        self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
 
     def show_select_file_screen(self):
         self.stacked_widget.setCurrentWidget(self.select_file_screen)
