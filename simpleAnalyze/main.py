@@ -33,6 +33,7 @@ class VolatilityApp(QMainWindow):
         self.analyzed_data_screen = AnalyzeDataScreen(select_dump=self.select_dump, select_plugin=self.select_plugin, file_uploader=self.file_uploader, run_analysis=self.run_analysis, export_manager=None)
         self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
         self.settings_screen = SettingsPage()
+        self.select_dump.file_selected.connect(self.run_analysis.handle_selected_files)
 
         self.stacked_widget = QStackedWidget()
         self.setCentralWidget(self.stacked_widget)
