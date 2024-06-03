@@ -1,6 +1,26 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableView, QHeaderView, QSizePolicy, QPushButton
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSortFilterProxyModel, QModelIndex
+
+
+class NumericSortFilterProxyModel(QSortFilterProxyModel):
+    def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
+        left_data = self.sourceModel().data(left)
+        right_data = self.sourceModel().data(right)
+
+        if left_data is None:
+            left_data = ""
+        if right_data is None:
+            right_data = ""
+
+        try:
+            left_data = float(left_data)
+            right_data = float(right_data)
+        except ValueError:
+            left_data = str(left_data)
+            right_data = str(right_data)
+
+        return left_data < right_data
 
 
 class DataTable(QWidget):
@@ -10,6 +30,10 @@ class DataTable(QWidget):
         self.table_view = QTableView()
         layout.addWidget(self.table_view)
         self.setLayout(layout)
+
+        self.proxy_model = NumericSortFilterProxyModel()
+        self.table_view.setSortingEnabled(True)
+        self.table_view.setModel(self.proxy_model)
 
     def update_table(self, data):
         if not data:
@@ -33,7 +57,7 @@ class DataTable(QWidget):
 
             model.setItem(row_index, len(headers) - 1, QStandardItem())
 
-        self.table_view.setModel(model)
+        self.proxy_model.setSourceModel(model)
 
         for row_index in range(len(rows) - 1):
             export_button = QPushButton()
@@ -44,9 +68,9 @@ class DataTable(QWidget):
             export_button.setFixedSize(20, 20)
 
             index = model.index(row_index, len(headers) - 1)
-            self.table_view.setIndexWidget(index, export_button)
+            self.table_view.setIndexWidget(self.proxy_model.mapFromSource(index), export_button)
 
-            widget = self.table_view.indexWidget(index)
+            widget = self.table_view.indexWidget(self.proxy_model.mapFromSource(index))
             print(f"Widget at index ({row_index}, {len(headers) - 1}):", widget)
             print(f"Column name: {headers[len(headers) - 1]}")
 
@@ -66,7 +90,7 @@ class DataTable(QWidget):
         self.table_view.setAlternatingRowColors(True)
 
     def get_data(self):
-        model = self.table_view.model()
+        model = self.proxy_model.sourceModel()
         if not model:
             return []
 
