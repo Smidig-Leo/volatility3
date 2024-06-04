@@ -26,7 +26,7 @@ class VolatilityApp(QMainWindow):
         self.plugin_manager = PluginManager()
         self.select_dump = SelectDump()
         self.chooseOs = ChooseOs()
-        self.select_plugin = SelectPlugin(self.plugin_manager)
+        self.select_plugin = SelectPlugin()
         self.file_uploader = FileUploader(self)
         self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
         self.settings_screen = SettingsPage()
@@ -34,6 +34,7 @@ class VolatilityApp(QMainWindow):
         self.plugin_screen = PluginScreen()
         self.analyzed_data_screen = AnalyzeDataScreen(select_dump=self.select_dump, select_plugin=self.select_plugin, file_uploader=self.file_uploader, run_analysis=self.run_analysis, export_manager=None, plugin_manager=self.plugin_manager)
 
+        self.plugin_screen.plugins_updated.connect(self.select_plugin.set_plugins)
         self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
         self.select_dump.file_selected.connect(self.run_analysis.handle_selected_files)
         self.select_dump.file_selected.connect(self.analyzed_data_screen.update_file_label)

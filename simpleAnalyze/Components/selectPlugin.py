@@ -5,12 +5,11 @@ from PyQt5.QtCore import Qt, pyqtSignal
 class SelectPlugin(QWidget):
     plugin_selected = pyqtSignal(str)
 
-    def __init__(self, plugin_manager):
+    def __init__(self):
         super().__init__()
         self.file_path = ""
         self.selected_os = "windows"
-        self.plugin_manager = plugin_manager
-        self.plugin_manager.load_plugins(self.selected_os, self.file_path)
+        self.plugins = []
         self.plugins_group = QGroupBox("PLUGINS")
         self.plugins_layout = QVBoxLayout()
         self.plugins_header = QLabel("PLUGINS")
@@ -28,12 +27,14 @@ class SelectPlugin(QWidget):
         # Set the layout of the SelectPlugin widget to the layout of the QGroupBox
         self.setLayout(self.plugins_group.layout())
 
+    def set_plugins(self, plugins):
+        self.plugins = plugins
+        self.populate_plugins_list()
 
     def populate_plugins_list(self):
-        # change this to get activated plugins
-        plugins = self.plugin_manager.get_plugins()
-        for plugin in plugins:
-            item = QListWidgetItem(plugin.name)
+        self.plugins_list.clear()
+        for plugin in self.plugins:
+            item = QListWidgetItem(plugin)
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
             item.setCheckState(Qt.Unchecked)
             item.setData(Qt.UserRole, plugin)
@@ -43,7 +44,7 @@ class SelectPlugin(QWidget):
     def plugin_selection_changed(self, item):
         if item.checkState() == Qt.Checked:
             selected_plugin = item.data(Qt.UserRole)
-            self.plugin_selected.emit(selected_plugin.name)
+            self.plugin_selected.emit(selected_plugin)
             if selected_plugin:
                 for index in range(self.plugins_list.count()):
                     if self.plugins_list.item(index) is not item:
