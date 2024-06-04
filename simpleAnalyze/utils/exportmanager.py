@@ -1,3 +1,5 @@
+from PyQt5.QtGui import QPainter
+from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.QtWidgets import QFileDialog
 import xml.etree.ElementTree as ET
 

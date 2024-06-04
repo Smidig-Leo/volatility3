@@ -1,6 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QFileDialog
 from simpleAnalyze.Components.datatable import DataTable
+from simpleAnalyze.Components.columnsSort import ColumnsSort
 import xml.etree.ElementTree as ET
 
 class AnalyzeDataScreen(QWidget):
@@ -15,7 +16,6 @@ class AnalyzeDataScreen(QWidget):
 
         main_layout = QHBoxLayout(self)
 
-        # Left layout for select_dump, select_plugin, and run_button
         left_layout = QVBoxLayout()
         left_layout.setContentsMargins(0, 0, 0, 0)
         left_layout.setSpacing(0)
@@ -34,17 +34,30 @@ class AnalyzeDataScreen(QWidget):
         run_button.clicked.connect(self.run_analysis.run_analysis)
         left_layout.addWidget(run_button)
 
-        # Right layout for export_button and data_table
         right_layout = QVBoxLayout()
 
+        header_layout = QHBoxLayout()
+        header_layout.setContentsMargins(0, 0, 0, 0)
+        header_layout.setSpacing(7)
+
+        header_layout.addStretch()
+
+        self.columns_sort = ColumnsSort()
+        self.columns_sort.setFixedHeight(30)
+        self.columns_sort.column_visibility_changed.connect(self.update_column_visibility)
+        header_layout.addWidget(self.columns_sort, alignment=Qt.AlignTop)
+
         self.export_button = QPushButton("Export as...")
+        self.export_button.setFixedHeight(30)
         self.export_button.clicked.connect(self.download_as_xml)
-        right_layout.addWidget(self.export_button, alignment=Qt.AlignTop | Qt.AlignRight)
+        header_layout.addWidget(self.export_button, alignment=Qt.AlignTop)
+
+        right_layout.addLayout(header_layout)
 
         self.data_table = DataTable()
+        self.data_table.headers_updated.connect(self.update_columns_sort)
         right_layout.addWidget(self.data_table)
 
-        # Add left and right layouts to main layout
         main_layout.addLayout(left_layout)
         main_layout.addLayout(right_layout)
 
@@ -75,16 +88,8 @@ class AnalyzeDataScreen(QWidget):
         if file_name:
             tree.write(file_name, encoding='utf-8', xml_declaration=True)
 
-        '''self.columns_button = QPushButton("Columns")
-        self.columns_button.setFixedSize(100, 30)
+    def update_column_visibility(self, column_name, is_visible):
+        self.data_table.set_column_visibility(column_name, is_visible)
 
-        menu = QMenu()
-        options = ["pid", "process name", "process base", "size", "module name", "module path", "loadtime", "fileoutput"]
-        for option in options:
-            action = QAction(option, self, checkable=True)
-            action.setChecked(True)
-            menu.addAction(action)
-
-        self.columns_button.setMenu(menu)
-
-        header_layout.addWidget(self.columns_button)'''
+    def update_columns_sort(self, headers):
+        self.columns_sort.update_columns(headers)
