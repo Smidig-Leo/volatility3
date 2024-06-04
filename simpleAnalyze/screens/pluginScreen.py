@@ -3,7 +3,6 @@ from PyQt5.QtCore import pyqtSignal
 import subprocess
 from simpleAnalyze.data.plugins.pluginManager import PluginManager
 
-
 class PluginScreen(QWidget):
     plugins_updated = pyqtSignal(list)
 
