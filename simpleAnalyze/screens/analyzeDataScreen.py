@@ -43,13 +43,13 @@ class AnalyzeDataScreen(QWidget):
         run_button.clicked.connect(self.run_analysis.run_analysis)
         left_layout.addWidget(run_button)
 
-        # Right layout for data_table, export_button, and labels
+
         right_layout = QVBoxLayout()
 
-        # Layout for labels and export button
+
         labels_and_export_layout = QHBoxLayout()
 
-        # Labels for selected file and plugin in a vertical layout
+
         labels_layout = QVBoxLayout()
         self.file_label = QLabel("Selected File: None")
         self.plugin_label = QLabel("Selected Plugin: None")
@@ -73,7 +73,7 @@ class AnalyzeDataScreen(QWidget):
         self.data_table.headers_updated.connect(self.update_columns_sort)
         right_layout.addWidget(self.data_table)
 
-        # Add left and right layouts to main layout
+
         main_layout.addLayout(left_layout)
         main_layout.addLayout(right_layout)
 
