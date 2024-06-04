@@ -34,8 +34,10 @@ class PluginScreen(QWidget):
             checkbox = QCheckBox(plugin.name)
             checkbox.stateChanged.connect(self.toggle_plugin)
             self.layout.addWidget(checkbox)
-            if self.selected_os in self.selected_plugins and plugin.name in self.selected_plugins[self.selected_os]:
-                checkbox.setChecked(True)
+
+            checkbox.setChecked(True)
+            self.selected_plugins.append(plugin.name)
+
             self.layout.addWidget(checkbox)
 
     def set_os(self, os):
