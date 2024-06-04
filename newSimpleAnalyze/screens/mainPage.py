@@ -12,7 +12,6 @@ class MainPage(QWidget):
         self.os = ChooseOs()
         self.file_uploader = FileUploader()
 
-
         self.layout.addWidget(self.os)
         self.layout.addWidget(self.file_uploader)
 

@@ -5,6 +5,9 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
 import os
 
+from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
+
+
 # from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
 
 
