@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QMessageBox, QCheckBox, QLineEdit
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
 import subprocess
 from simpleAnalyze.data.plugins.pluginManager import PluginManager
 
@@ -31,6 +31,8 @@ class PluginScreen(QWidget):
 
     def populate_plugin_checkboxes(self):
 
+        self.selected_plugins.clear()
+
         for i in reversed(range(1, self.layout.count())):
             widget = self.layout.itemAt(i).widget()
             if widget:
@@ -40,29 +42,20 @@ class PluginScreen(QWidget):
         for plugin in filtered_plugins:
             checkbox = QCheckBox(plugin.name)
             checkbox.stateChanged.connect(self.toggle_plugin)
-
-            checkbox.setChecked(True)
-            self.selected_plugins.append(plugin.name)
-
+            checkbox.setChecked(plugin.name in self.selected_plugins)
             self.layout.addWidget(checkbox)
-
-
-    def set_os(self, os):
-        self.selected_os = str(os)
-        print("OS set to ", self.selected_os)
-        self.load_plugins(self.selected_os)
+            checkbox.setChecked(True)
 
     def toggle_plugin(self):
         plugin_name = self.sender().text()
-        if self.file_path:
-            if plugin_name in self.selected_plugins:
-                self.selected_plugins.remove(plugin_name)
-                self.sender().setStyleSheet("")
-            else:
-                self.selected_plugins.append(plugin_name)
+        checkbox = self.sender()
 
+        if checkbox.isChecked():
+            self.selected_plugins.append(plugin_name)
+        elif plugin_name in self.selected_plugins:
+            self.selected_plugins.remove(plugin_name)
 
-            self.plugins_updated.emit(self.selected_plugins)
+        self.plugins_updated.emit(self.selected_plugins)
 
     def set_file_path(self, file_path):
         self.file_path = file_path
@@ -72,7 +65,10 @@ class PluginScreen(QWidget):
         self.file_path = ""
         self.selected_plugins.clear()
         self.load_plugins(self.selected_os)
-
+    def set_os(self, os):
+        self.selected_os = str(os)
+        print("OS set to ", self.selected_os)
+        self.load_plugins(self.selected_os)
     def filter_plugins(self, text):
         self.search_text = text
         self.populate_plugin_checkboxes()
