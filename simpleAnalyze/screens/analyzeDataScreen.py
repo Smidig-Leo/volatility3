@@ -19,7 +19,6 @@ class AnalyzeDataScreen(QWidget):
 
         main_layout = QHBoxLayout(self)
 
-        # Left layout for select_dump, select_plugin, run_button
         left_layout = QVBoxLayout()
         left_layout.setContentsMargins(0, 0, 0, 0)
         left_layout.setSpacing(0)
@@ -37,21 +36,17 @@ class AnalyzeDataScreen(QWidget):
         self.columns_button = QPushButton("Columns")
         self.columns_button.setFixedSize(100, 30)
 
-        run_button = QPushButton("Run Analysis")
-        run_button.setFixedWidth(270)
-        run_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        left_layout.addWidget(run_button)
+        self.run_button = QPushButton("Run Analysis")
+        self.run_button.setFixedWidth(270)
+        self.run_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        left_layout.addWidget(self.run_button)
 
-        # Add left layout to main layout
         main_layout.addLayout(left_layout)
 
-        # Right layout for data_table, export_button, labels, and progress bar
         right_layout = QVBoxLayout()
 
-        # Layout for labels and export button
         labels_and_export_layout = QHBoxLayout()
 
-        # Labels for selected file and plugin in a vertical layout
         labels_layout = QVBoxLayout()
         self.file_label = QLabel("Selected File: None")
         self.plugin_label = QLabel("Selected Plugin: None")
@@ -63,7 +58,6 @@ class AnalyzeDataScreen(QWidget):
         self.columns_sort.column_visibility_changed.connect(self.update_column_visibility)
         header_layout.addWidget(self.columns_sort, alignment=Qt.AlignTop)
 
-        # Export button
         self.export_button = QPushButton("Export as...")
         self.export_button.setFixedHeight(30)
         self.export_button.clicked.connect(self.download_as_xml)
@@ -75,22 +69,20 @@ class AnalyzeDataScreen(QWidget):
         self.data_table.headers_updated.connect(self.update_columns_sort)
         right_layout.addWidget(self.data_table)
 
-        # Progress bar
         self.loading_bar = QProgressBar()
         self.loading_bar.setRange(0, 100)
         self.loading_bar.setValue(0)
         right_layout.addWidget(self.loading_bar)
 
-        # Add right layout to main layout
         main_layout.addLayout(right_layout)
 
-        # Connect run_button to start_analysis method
-        run_button.clicked.connect(self.start_analysis)
+        self.run_button.clicked.connect(self.start_analysis)
 
-        # Timer to reset progress bar after analysis completion
         self.reset_timer = QTimer(self)
-        self.reset_timer.setSingleShot(True)  # Timer will be single shot
+        self.reset_timer.setSingleShot(True)
         self.reset_timer.timeout.connect(self.reset_progress_bar)
+
+        self.original_button_text = self.run_button.text()
 
     def update_file_label(self, selected_files):
         if selected_files:
@@ -137,6 +129,7 @@ class AnalyzeDataScreen(QWidget):
 
     def start_analysis(self):
         self.loading_bar.setValue(0)  # Reset loading bar
+        self.update_button_text("Analyzing...")  # Update button text
         self.run_analysis.progress_updated.connect(self.update_progress)
         self.run_analysis.analysis_result.connect(self.analysis_complete)  # Connect analysis_complete slot
         self.run_analysis.run_analysis()
@@ -145,8 +138,11 @@ class AnalyzeDataScreen(QWidget):
         self.loading_bar.setValue(progress_percentage)
 
     def analysis_complete(self):
-        # Start the timer to reset progress bar after 3 seconds
         self.reset_timer.start(3000)
+        self.update_button_text(self.original_button_text)
 
     def reset_progress_bar(self):
         self.loading_bar.setValue(0)
+
+    def update_button_text(self, text):
+        self.run_button.setText(text)
