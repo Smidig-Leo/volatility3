@@ -53,8 +53,8 @@ class AnalyzeDataScreen(QWidget):
         labels_layout = QVBoxLayout()
         self.file_label = QLabel("Selected File: None")
         self.plugin_label = QLabel("Selected Plugin: None")
-        labels_layout.addWidget(self.file_label)
-        labels_layout.addWidget(self.plugin_label)
+        header_layout.addWidget(self.file_label)
+        header_layout.addWidget(self.plugin_label)
 
         self.columns_sort = ColumnsSort()
         self.columns_sort.setFixedHeight(30)
@@ -65,9 +65,9 @@ class AnalyzeDataScreen(QWidget):
         self.export_button = QPushButton("Export as...")
         self.export_button.setFixedHeight(30)
         self.export_button.clicked.connect(self.download_as_xml)
-        labels_and_export_layout.addWidget(self.export_button, alignment=Qt.AlignTop | Qt.AlignRight)
+        header_layout.addWidget(self.export_button, alignment=Qt.AlignTop | Qt.AlignRight)
 
-        right_layout.addLayout(labels_and_export_layout)
+        right_layout.addLayout(header_layout)
 
         self.data_table = DataTable()
         self.data_table.headers_updated.connect(self.update_columns_sort)
