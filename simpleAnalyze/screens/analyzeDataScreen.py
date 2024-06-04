@@ -27,11 +27,11 @@ class AnalyzeDataScreen(QWidget):
 
         header_layout = QHBoxLayout()
 
-        self.select_dump.setFixedWidth(270)
+        self.select_dump.setFixedWidth(250)
         self.select_dump.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         left_layout.addWidget(self.select_dump)
 
-        self.select_plugin.setFixedWidth(270)
+        self.select_plugin.setFixedWidth(250)
         self.select_plugin.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         left_layout.addWidget(self.select_plugin)
 
@@ -39,7 +39,7 @@ class AnalyzeDataScreen(QWidget):
         self.columns_button.setFixedSize(100, 30)
 
         run_button = QPushButton("Run Analysis")
-        run_button.setFixedWidth(270)
+        run_button.setFixedWidth(250)
         run_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         run_button.clicked.connect(self.run_analysis.run_analysis)
         left_layout.addWidget(run_button)
