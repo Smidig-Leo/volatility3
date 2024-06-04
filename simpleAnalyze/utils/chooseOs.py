@@ -8,6 +8,7 @@ class ChooseOs(QWidget):
         self.parent_widget = parent
 
         self.layout = QVBoxLayout()
+        self.on_os_changed("windows")
 
         self.windows_radio = QRadioButton('Windows')
         self.linux_radio = QRadioButton('Linux')
@@ -24,6 +25,7 @@ class ChooseOs(QWidget):
         self.setLayout(self.layout)
 
         self.windows_radio.setChecked(True)
+
 
     def on_os_changed(self, text):
         print("Selected OS:", text)
