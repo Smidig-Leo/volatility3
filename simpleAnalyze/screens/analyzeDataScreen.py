@@ -17,6 +17,7 @@ class AnalyzeDataScreen(QWidget):
         self.select_plugin = select_plugin
         self.run_analysis = run_analysis
 
+
         main_layout = QHBoxLayout(self)
 
         # Left layout for select_dump, select_plugin, and run_button
@@ -76,6 +77,7 @@ class AnalyzeDataScreen(QWidget):
         # Add left and right layouts to main layout
         main_layout.addLayout(left_layout)
         main_layout.addLayout(right_layout)
+
 
     def update_file_label(self, selected_files):
         if selected_files:

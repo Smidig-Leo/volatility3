@@ -31,7 +31,7 @@ class VolatilityApp(QMainWindow):
         self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
         self.settings_screen = SettingsPage()
         self.select_file_screen = MainPage(self, self.file_uploader, self.chooseOs)
-        self.plugin_screen = PluginScreen()
+        self.plugin_screen = PluginScreen(self.plugin_manager)
         self.analyzed_data_screen = AnalyzeDataScreen(select_dump=self.select_dump, select_plugin=self.select_plugin, file_uploader=self.file_uploader, run_analysis=self.run_analysis, export_manager=None, plugin_manager=self.plugin_manager)
 
         self.plugin_screen.plugins_updated.connect(self.select_plugin.set_plugins)
@@ -39,6 +39,8 @@ class VolatilityApp(QMainWindow):
         self.select_dump.file_selected.connect(self.run_analysis.handle_selected_files)
         self.select_dump.file_selected.connect(self.analyzed_data_screen.update_file_label)
         self.select_plugin.plugin_selected.connect(self.analyzed_data_screen.update_plugin_label)
+        self.chooseOs.os_changed.connect(self.plugin_manager.get_plugins)
+        self.chooseOs.os_changed.connect(self.plugin_screen.load_plugins)
 
         self.stacked_widget = QStackedWidget()
         self.setCentralWidget(self.stacked_widget)
@@ -47,11 +49,6 @@ class VolatilityApp(QMainWindow):
         self.stacked_widget.addWidget(self.plugin_screen)
         self.stacked_widget.addWidget(self.analyzed_data_screen)
         self.stacked_widget.addWidget(self.settings_screen)
-
-        self.select_file_screen.os_selected.connect(self.plugin_screen.set_os)
-        self.select_file_screen.file_path_set.connect(self.plugin_screen.set_file_path)
-
-        self.plugin_screen.plugins_updated.connect(self.update_selected_plugins)
 
         select_file_action = QPushButton("Select File")
         select_file_action.clicked.connect(self.show_select_file_screen)
@@ -80,7 +77,6 @@ class VolatilityApp(QMainWindow):
         if file_paths:
             for file_path in file_paths:
                 self.select_file_screen.file_uploader.add_file_path(file_path)
-                self.plugin_screen.set_file_path(file_path)
 
         # Connect the file uploader signal to update file paths in SelectDump
         self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
@@ -107,6 +103,7 @@ class VolatilityApp(QMainWindow):
     def closeEvent(self, event):
         self.session_manager.save_session()
         event.accept()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
