@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QPushButton
 from screens.mainPage import MainPage
 from screens.analyzeDataScreen import AnalyzeDataScreen
+from newSimpleAnalyze.Components.fileUploader import FileUploader
+from newSimpleAnalyze.Components.chooseOs import ChooseOs
 from screens.pluginScreen import PluginScreen
 from screens.settingsPage import SettingsPage
 from PyQt5.uic import loadUi
@@ -21,7 +23,7 @@ class VolatilityApp(QMainWindow):
         # self.pluginsBtn
         # self.settingsBtn
 
-        self.main_page = MainPage()
+        self.main_page = MainPage(FileUploader(), ChooseOs())
         self.data_page = AnalyzeDataScreen()
         self.plugins_page = PluginScreen()
         self.settings_page = SettingsPage()
@@ -31,11 +33,15 @@ class VolatilityApp(QMainWindow):
         self.stackedWidget.addWidget(self.plugins_page)
         self.stackedWidget.addWidget(self.settings_page)
 
+        self.main_page.analyzedButtonClicked.connect(self.switch_to_data_page)
+
         self.mainBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.main_page))
         self.dataBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.data_page))
         self.pluginsBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.plugins_page))
         self.settingsBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.settings_page))
 
+    def switch_to_data_page(self):
+        self.stackedWidget.setCurrentWidget(self.data_page)
 
 
     #     # Setup connections for the run analysis process

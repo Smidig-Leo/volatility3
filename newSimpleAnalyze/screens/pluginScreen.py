@@ -17,6 +17,7 @@ class PluginScreen(QMainWindow):
         #All buttons made in code none in .ui
 
         scroll_layout = QVBoxLayout()
+        scroll_layout.setSpacing(0)
 
         self.pluginScroll.setLayout(scroll_layout)
 
