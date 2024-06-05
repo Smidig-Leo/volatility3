@@ -29,7 +29,7 @@ class VolatilityApp(QMainWindow):
         self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
         self.settings_screen = SettingsPage()
         self.select_file_screen = MainPage(self, self.file_uploader, self.chooseOs)
-        self.plugin_screen = PluginScreen(self.plugin_manager)
+        self.plugin_screen = PluginScreen(self.plugin_manager, self.session_manager)
         self.analyzed_data_screen = AnalyzeDataScreen(select_dump=self.select_dump, select_plugin=self.select_plugin, file_uploader=self.file_uploader, run_analysis=self.run_analysis, export_manager=None, plugin_manager=self.plugin_manager)
 
         self.plugin_screen.plugins_updated.connect(self.select_plugin.set_plugins)
@@ -81,6 +81,11 @@ class VolatilityApp(QMainWindow):
 
     def show_select_file_screen(self):
         self.stacked_widget.setCurrentWidget(self.select_file_screen)
+
+    def emit_initial_plugins(self):
+
+        selected_plugins = self.session_manager.get_activated_plugins()
+        self.plugin_screen.plugins_updated.emit(selected_plugins)
 
     def show_plugin_screen(self):
         self.stacked_widget.setCurrentWidget(self.plugin_screen)

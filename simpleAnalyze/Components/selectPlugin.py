@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGroupBox, QListWidget, QListWidgetItem, QLabel
 from PyQt5.QtCore import Qt, pyqtSignal
 
-
 class SelectPlugin(QWidget):
     plugin_selected = pyqtSignal(str)
 
@@ -13,20 +12,17 @@ class SelectPlugin(QWidget):
         self.plugins_header = QLabel("PLUGINS")
         self.plugins_subheader = QLabel("Choose a plugin to analyze memory dump")
         self.plugins_list = QListWidget()
-        self.populate_plugins_list()
         self.apply_styles()
 
-        # Add widgets to the layout
         self.plugins_layout.addWidget(self.plugins_header)
         self.plugins_layout.addWidget(self.plugins_subheader)
         self.plugins_layout.addWidget(self.plugins_list)
         self.plugins_group.setLayout(self.plugins_layout)
 
-        # Set the layout of the SelectPlugin widget to the layout of the QGroupBox
         self.setLayout(self.plugins_group.layout())
 
     def set_plugins(self, plugins):
-        print("Plugins: ", self.plugins)
+        print("Plugins: ", plugins)
         self.plugins = plugins
         self.populate_plugins_list()
 
@@ -35,7 +31,7 @@ class SelectPlugin(QWidget):
         for plugin in self.plugins:
             item = QListWidgetItem(plugin)
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            item.setCheckState(Qt.Unchecked)
+            item.setCheckState(Qt.Unchecked)  # Ensure plugins are not checked by default
             item.setData(Qt.UserRole, plugin)
             self.plugins_list.addItem(item)
             self.plugins_list.itemChanged.connect(self.plugin_selection_changed)
@@ -50,7 +46,6 @@ class SelectPlugin(QWidget):
                         self.plugins_list.item(index).setCheckState(Qt.Unchecked)
 
     def apply_styles(self):
-        # Apply styles to QLabel
         self.plugins_header.setStyleSheet("""
             color:#FFFFFF;
             font-size: 18px;
@@ -62,8 +57,6 @@ class SelectPlugin(QWidget):
             color: #FFFFFF;
             font-size: 9px;
         """)
-
-        # Apply styles to QListWidget
         self.plugins_list.setStyleSheet("""
             QListWidget {
                 border-radius: 5px;
@@ -97,4 +90,3 @@ class SelectPlugin(QWidget):
                 border: 1px solid #F27821;
             }
         """)
-

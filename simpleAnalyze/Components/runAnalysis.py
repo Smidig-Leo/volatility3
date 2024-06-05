@@ -50,7 +50,6 @@ class RunAnalysis(QObject):
                     # Update progress
                     progress_percentage = int((current_file_count / total_files) * 100)
                     self.progress_updated.emit(progress_percentage)
-                print(summaries)
                 self.analysis_result.emit(summaries)
             except subprocess.CalledProcessError as e:
                 self.analysis_result.emit("Error: " + e.output.decode())
