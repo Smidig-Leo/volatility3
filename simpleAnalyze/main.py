@@ -1,4 +1,6 @@
 import sys
+
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QPushButton
 from screens.mainPage import MainPage
 from screens.pluginScreen import PluginScreen
@@ -78,6 +80,9 @@ class VolatilityApp(QMainWindow):
 
         # Connect the file uploader signal to update file paths in SelectDump
         self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
+
+        self.show()
+        QTimer.singleShot(0, self.emit_initial_plugins)
 
     def show_select_file_screen(self):
         self.stacked_widget.setCurrentWidget(self.select_file_screen)
