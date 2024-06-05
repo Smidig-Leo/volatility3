@@ -7,8 +7,6 @@ class SelectPlugin(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.file_path = ""
-        self.selected_os = "windows"
         self.plugins = []
         self.plugins_group = QGroupBox("PLUGINS")
         self.plugins_layout = QVBoxLayout()
@@ -28,6 +26,7 @@ class SelectPlugin(QWidget):
         self.setLayout(self.plugins_group.layout())
 
     def set_plugins(self, plugins):
+        print("Plugins: ", self.plugins)
         self.plugins = plugins
         self.populate_plugins_list()
 

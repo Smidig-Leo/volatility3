@@ -4,6 +4,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 
 class RunAnalysis(QObject):
     analysis_result = pyqtSignal(str)
+    progress_updated = pyqtSignal(int)
 
     def __init__(self, select_dump, select_plugin):
         super().__init__()
@@ -23,8 +24,8 @@ class RunAnalysis(QObject):
     def run_analysis(self):
         if self.selected_files and self.plugin:
             try:
-                summary = ""
-                first_file = True  # Flag to check if it's the first file
+                total_files = len(self.selected_files)
+                current_file_count = 0
                 for file in self.selected_files:
                     command = ["python", "../vol.py", "-f", file, self.plugin]
                     print(f"Running command: {' '.join(command)}")  # Debugging statement
@@ -32,12 +33,17 @@ class RunAnalysis(QObject):
 
                     lines = output.splitlines()
 
-                    if first_file:
-                        summary += "\n".join(lines)
-                        first_file = False
+                    if current_file_count == 0:
+                        summary = "\n".join(lines)
                     else:
                         data_lines = lines[3:]
                         summary += "\n" + "\n".join(data_lines)
+
+                    current_file_count += 1
+
+                    # Update progress
+                    progress_percentage = int((current_file_count / total_files) * 100)
+                    self.progress_updated.emit(progress_percentage)
 
                 self.analysis_result.emit(summary)
             except subprocess.CalledProcessError as e:

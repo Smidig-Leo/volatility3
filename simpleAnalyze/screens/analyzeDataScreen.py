@@ -1,7 +1,7 @@
 import os
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QFileDialog, QLabel
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QFileDialog, QLabel, QProgressBar
 from simpleAnalyze.Components.datatable import DataTable
 from simpleAnalyze.Components.columnsSort import ColumnsSort
 import xml.etree.ElementTree as ET
@@ -19,37 +19,34 @@ class AnalyzeDataScreen(QWidget):
 
         main_layout = QHBoxLayout(self)
 
-        # Left layout for select_dump, select_plugin, and run_button
         left_layout = QVBoxLayout()
         left_layout.setContentsMargins(0, 0, 0, 0)
         left_layout.setSpacing(0)
 
         header_layout = QHBoxLayout()
 
-        self.select_dump.setFixedWidth(250)
+        self.select_dump.setFixedWidth(270)
         self.select_dump.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         left_layout.addWidget(self.select_dump)
 
-        self.select_plugin.setFixedWidth(250)
+        self.select_plugin.setFixedWidth(270)
         self.select_plugin.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         left_layout.addWidget(self.select_plugin)
 
         self.columns_button = QPushButton("Columns")
         self.columns_button.setFixedSize(100, 30)
 
-        run_button = QPushButton("Run Analysis")
-        run_button.setFixedWidth(250)
-        run_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        run_button.clicked.connect(self.run_analysis.run_analysis)
-        left_layout.addWidget(run_button)
+        self.run_button = QPushButton("Run Analysis")
+        self.run_button.setFixedWidth(270)
+        self.run_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        left_layout.addWidget(self.run_button)
 
-        # Right layout for data_table, export_button, and labels
+        main_layout.addLayout(left_layout)
+
         right_layout = QVBoxLayout()
 
-        # Layout for labels and export button
         labels_and_export_layout = QHBoxLayout()
 
-        # Labels for selected file and plugin in a vertical layout
         labels_layout = QVBoxLayout()
         self.file_label = QLabel("Selected File: None")
         self.plugin_label = QLabel("Selected Plugin: None")
@@ -61,7 +58,6 @@ class AnalyzeDataScreen(QWidget):
         self.columns_sort.column_visibility_changed.connect(self.update_column_visibility)
         header_layout.addWidget(self.columns_sort, alignment=Qt.AlignTop)
 
-        # Export button
         self.export_button = QPushButton("Export as...")
         self.export_button.setFixedHeight(30)
         self.export_button.clicked.connect(self.download_as_xml)
@@ -73,9 +69,20 @@ class AnalyzeDataScreen(QWidget):
         self.data_table.headers_updated.connect(self.update_columns_sort)
         right_layout.addWidget(self.data_table)
 
-        # Add left and right layouts to main layout
-        main_layout.addLayout(left_layout)
+        self.loading_bar = QProgressBar()
+        self.loading_bar.setRange(0, 100)
+        self.loading_bar.setValue(0)
+        right_layout.addWidget(self.loading_bar)
+
         main_layout.addLayout(right_layout)
+
+        self.run_button.clicked.connect(self.start_analysis)
+
+        self.reset_timer = QTimer(self)
+        self.reset_timer.setSingleShot(True)
+        self.reset_timer.timeout.connect(self.reset_progress_bar)
+
+        self.original_button_text = self.run_button.text()
 
     def update_file_label(self, selected_files):
         if selected_files:
@@ -119,3 +126,23 @@ class AnalyzeDataScreen(QWidget):
 
     def update_columns_sort(self, headers):
         self.columns_sort.update_columns(headers)
+
+    def start_analysis(self):
+        self.loading_bar.setValue(0)  # Reset loading bar
+        self.update_button_text("Analyzing...")  # Update button text
+        self.run_analysis.progress_updated.connect(self.update_progress)
+        self.run_analysis.analysis_result.connect(self.analysis_complete)  # Connect analysis_complete slot
+        self.run_analysis.run_analysis()
+
+    def update_progress(self, progress_percentage):
+        self.loading_bar.setValue(progress_percentage)
+
+    def analysis_complete(self):
+        self.reset_timer.start(3000)
+        self.update_button_text(self.original_button_text)
+
+    def reset_progress_bar(self):
+        self.loading_bar.setValue(0)
+
+    def update_button_text(self, text):
+        self.run_button.setText(text)
