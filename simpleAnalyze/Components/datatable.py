@@ -132,14 +132,21 @@ class DataTable(QWidget):
         if not model:
             return
 
-        data = []
+        data = {}
         for col in range(model.columnCount()):
             index = model.index(row, col)
             header = model.headerData(col, Qt.Horizontal)
             value = model.data(index)
-            data.append({header: value})
 
-        ExportManager.export_data(data, self)
+
+            if value is not None:
+                value = value.replace('\n', ' ').replace('\r', ' ')
+            else:
+                value = ""
+
+            data[header] = value
+
+        ExportManager.export_row(data, self)
 
     def toggle_flag(self, button, row):
         flagged = button.property('flagged')
