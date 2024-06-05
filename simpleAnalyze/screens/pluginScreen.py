@@ -1,14 +1,14 @@
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QLabel, QCheckBox, QLineEdit, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import pyqtSignal, Qt
 
-
 class PluginScreen(QWidget):
     plugins_updated = pyqtSignal(list)
 
-    def __init__(self, plugin_manager):
+    def __init__(self, plugin_manager, session_manager):
         super().__init__()
         self.plugins = []
         self.plugin_manager = plugin_manager
+        self.session_manager = session_manager
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
         self.setup_search_bar()
@@ -28,18 +28,19 @@ class PluginScreen(QWidget):
         self.plugins = self.plugin_manager.get_plugins(os_type)
         self.clear_layout()
         self.populate_plugin_checkboxes()
-        # Get the names of the first 4 plugins
-        selected_plugins = [plugin.name for plugin in self.plugins[:4]]
-        self.plugins_updated.emit(selected_plugins)  # Emit signal with default checked plugin names
+
+        selected_plugins = self.session_manager.get_activated_plugins()
+        self.plugins_updated.emit(selected_plugins)
 
     def populate_plugin_checkboxes(self):
         self.clear_layout()
         search_text = self.search_bar.text()
-        for i, plugin in enumerate(self.plugins):
+        activated_plugins = set(self.session_manager.get_activated_plugins())
+        for plugin in self.plugins:
             if search_text.lower() in plugin.name.lower():
                 checkbox = QCheckBox(plugin.name)
                 checkbox.clicked.connect(self.toggle_plugin)
-                if i < 4:
+                if plugin.name in activated_plugins:
                     checkbox.setChecked(True)
                 self.layout.addWidget(checkbox)
 
@@ -48,6 +49,7 @@ class PluginScreen(QWidget):
     def toggle_plugin(self):
         selected_plugins = [checkbox.text() for checkbox in self.findChildren(QCheckBox) if checkbox.isChecked()]
         self.plugins_updated.emit(selected_plugins)
+        self.session_manager.set_activated_plugins(selected_plugins)
 
     def clear_layout(self):
         for i in reversed(range(self.layout.count())):
