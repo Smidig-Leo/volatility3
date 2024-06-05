@@ -1,4 +1,5 @@
 import sys
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QPushButton
 from screens.mainPage import MainPage
 from screens.pluginScreen import PluginScreen
@@ -33,6 +34,8 @@ class VolatilityApp(QMainWindow):
         self.analyzed_data_screen = AnalyzeDataScreen(select_dump=self.select_dump, select_plugin=self.select_plugin, file_uploader=self.file_uploader, run_analysis=self.run_analysis, export_manager=None, plugin_manager=self.plugin_manager)
 
         self.plugin_screen.plugins_updated.connect(self.select_plugin.set_plugins)
+
+
         self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
         self.select_dump.file_selected.connect(self.run_analysis.handle_selected_files)
         self.select_dump.file_selected.connect(self.analyzed_data_screen.update_file_label)
@@ -79,6 +82,14 @@ class VolatilityApp(QMainWindow):
         # Connect the file uploader signal to update file paths in SelectDump
         self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
 
+        self.show()
+        QTimer.singleShot(0, self.emit_initial_plugins)
+
+    def emit_initial_plugins(self):
+        # Emit the initial plugins_updated signal
+        selected_plugins = [plugin.name for plugin in self.plugin_manager.get_plugins('windows')[:4]]
+        self.plugin_screen.plugins_updated.emit(selected_plugins)
+
     def show_select_file_screen(self):
         self.stacked_widget.setCurrentWidget(self.select_file_screen)
 
@@ -97,11 +108,9 @@ class VolatilityApp(QMainWindow):
     def update_selected_plugins(self, selected_plugins):
         print("Selected plugins:", selected_plugins)
 
-
     def closeEvent(self, event):
         self.session_manager.save_session()
         event.accept()
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
