@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, QModelIndex, pyqtSignal, QSortFilterProxyModel
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableView, QHeaderView, QSizePolicy, QPushButton, QLabel
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor, QBrush
 import xml.etree.ElementTree as ET
 
 from simpleAnalyze.utils.exportmanager import ExportManager
@@ -35,6 +35,8 @@ class DataTable(QWidget):
         self.proxy_model = NumericSortFilterProxyModel()
         self.table_view.setSortingEnabled(True)
         self.table_view.setModel(self.proxy_model)
+
+        self.flagged_rows = set()
 
     def update_table(self, data):
         if not data:
@@ -72,7 +74,7 @@ class DataTable(QWidget):
             flag_button = QPushButton("Flag")
             flag_button.setFixedSize(60, 21)
             flag_button.clicked.connect(
-                lambda _, button=flag_button: self.toggle_flag(button))
+                lambda _, button=flag_button, row=row_index: self.toggle_flag(button, row))
             flag_button.setProperty('flagged', False)
             cell_layout.addWidget(flag_button)
 
@@ -137,12 +139,25 @@ class DataTable(QWidget):
             value = model.data(index)
             data.append({header: value})
 
-        ExportManager.export_data_as_xml(data, self)
+        ExportManager.export_data(data, self)
 
-    def toggle_flag(self, button):
+    def toggle_flag(self, button, row):
         flagged = button.property('flagged')
-        if flagged:
-            button.setStyleSheet("")
-        else:
+        model = self.proxy_model.sourceModel()
+
+        if not flagged:
+            for col in range(model.columnCount()):
+                index = model.index(row, col)
+                item = model.itemFromIndex(index)
+                item.setBackground(QColor("#FF6242"))
+            self.flagged_rows.add(row)
             button.setStyleSheet("background-color: #ff6242; color: white; text-align: center;")
+        else:
+            for col in range(model.columnCount()):
+                index = model.index(row, col)
+                item = model.itemFromIndex(index)
+                item.setBackground(QBrush())
+            self.flagged_rows.remove(row)
+            button.setStyleSheet("")
+
         button.setProperty('flagged', not flagged)
