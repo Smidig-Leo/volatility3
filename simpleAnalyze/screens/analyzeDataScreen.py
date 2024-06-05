@@ -1,14 +1,11 @@
 import os
-
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QFileDialog, QLabel, QProgressBar
 from simpleAnalyze.Components.datatable import DataTable
 from simpleAnalyze.Components.columnsSort import ColumnsSort
 import xml.etree.ElementTree as ET
 
-
 class AnalyzeDataScreen(QWidget):
-
     def __init__(self, file_uploader, select_dump, select_plugin, run_analysis, export_manager, plugin_manager):
         super().__init__()
 
@@ -63,6 +60,12 @@ class AnalyzeDataScreen(QWidget):
         self.export_button.clicked.connect(self.download_as_xml)
         header_layout.addWidget(self.export_button, alignment=Qt.AlignTop | Qt.AlignRight)
 
+        self.show_flagged_button = QPushButton("Show Flagged Rows")
+        self.show_flagged_button.setFixedWidth(150)
+        self.show_flagged_button.setFixedHeight(30)
+        self.show_flagged_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        header_layout.addWidget(self.show_flagged_button, alignment=Qt.AlignTop | Qt.AlignRight)
+
         right_layout.addLayout(header_layout)
 
         self.data_table = DataTable()
@@ -77,6 +80,7 @@ class AnalyzeDataScreen(QWidget):
         main_layout.addLayout(right_layout)
 
         self.run_button.clicked.connect(self.start_analysis)
+        self.show_flagged_button.clicked.connect(self.show_flagged_rows)
 
         self.reset_timer = QTimer(self)
         self.reset_timer.setSingleShot(True)
@@ -134,6 +138,10 @@ class AnalyzeDataScreen(QWidget):
         self.run_analysis.analysis_result.connect(self.analysis_complete)  # Connect analysis_complete slot
         self.run_analysis.run_analysis()
 
+    def show_flagged_rows(self):
+        self.data_table.show_flagged_rows()
+
+
     def update_progress(self, progress_percentage):
         self.loading_bar.setValue(progress_percentage)
 
@@ -146,3 +154,4 @@ class AnalyzeDataScreen(QWidget):
 
     def update_button_text(self, text):
         self.run_button.setText(text)
+
