@@ -4,10 +4,12 @@ from PyQt5.QtCore import pyqtSignal
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt
 from newSimpleAnalyze.Components.py_toggle import PyToggle
+from newSimpleAnalyze.data.plugins.pluginManager import PluginManager
 import subprocess
 
 class PluginScreen(QMainWindow):
     plugins_updated = pyqtSignal(list)
+    activeCommandsUpdated = pyqtSignal(list)
 
     def __init__(self):
         super().__init__()
@@ -15,7 +17,10 @@ class PluginScreen(QMainWindow):
 
         #All buttons made in code none in .ui
 
+        self.activeCommands = []
+
         scroll_layout = QVBoxLayout()
+        scroll_layout.setSpacing(0)
 
         self.pluginScroll.setLayout(scroll_layout)
 
@@ -24,15 +29,29 @@ class PluginScreen(QMainWindow):
 
         self.pluginScroll.setWidget(widget)
 
-        for i in range(20):
-            self.create_plugins(scroll_layout)
+        self.plugins_data = PluginManager()
 
-    def create_plugins(self, scroll_layout):
+        for i in range(len(self.plugins_data.get_plugins('windows'))):
+            plugin = self.plugins_data.get_plugins('windows')[i]
+
+            if (i+1) % 2 == 0:
+                self.create_plugins(scroll_layout, plugin.get_name(), "secondary")
+            else:
+                self.create_plugins(scroll_layout, plugin.get_name(), "primary")
+
+    def create_plugins(self, scroll_layout, command, color):
         firstFrame = QFrame()
         secondFrame = QFrame()
         thirdFrame = QFrame()
 
-        firstFrame.setStyleSheet("background-color:rgb(38, 38, 38);")
+        primaryColor = "background-color:rgb(38, 38, 38);"
+        secondaryColor = "background-color:rgb(52, 53, 52);"
+
+        if color == "primary":
+            firstFrame.setStyleSheet(primaryColor)
+        elif color == "secondary":
+            firstFrame.setStyleSheet(secondaryColor)
+
         firstFrame.setMaximumHeight(100)
 
         layout = QHBoxLayout()
@@ -45,7 +64,7 @@ class PluginScreen(QMainWindow):
         layout2 = QVBoxLayout()
         layout3 = QVBoxLayout()
 
-        label1 = QLabel("windows.pslist")
+        label1 = QLabel(command)
         label1.setStyleSheet("color:white;")
         layout2.addWidget(label1)
 
@@ -56,13 +75,20 @@ class PluginScreen(QMainWindow):
         secondFrame.setLayout(layout2)
         thirdFrame.setLayout(layout3)
 
+        toggle.stateChanged.connect(lambda: self.setActiveCommands(command, toggle.isChecked()))
+
         scroll_layout.addWidget(firstFrame)
-
-
 
         # self.label = QLabel("Test")
         #
         # self.layout().addWidget(self.label)
+
+    def setActiveCommands(self, command, isChecked):
+        if isChecked:
+            self.activeCommands.append(command)
+        else:
+            self.activeCommands.remove(command)
+        self.activeCommandsUpdated.emit(self.activeCommands)
 
     #     self.file_path = ""
     #     self.selected_plugins = []

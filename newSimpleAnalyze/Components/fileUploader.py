@@ -13,6 +13,7 @@ from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file
 
 class FileUploader(QMainWindow):
     file_path_updated = pyqtSignal(list)
+    analyzedButtonClicked = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -114,7 +115,7 @@ class FileUploader(QMainWindow):
             }
         """)
 
-        self.analyzeButton.clicked.connect(self.go_to_analyze_screen)
+        self.analyzeButton.clicked.connect(self.emit_analyzeButtonClicked)
 
 
     def delete_file(self, file_path):
@@ -144,9 +145,8 @@ class FileUploader(QMainWindow):
             if self.parent_widget:
                 self.parent_widget.session_manager.set_file_uploaded(self.file_paths)
 
-    def go_to_analyze_screen(self):
-        if self.parent_widget:
-            self.parent_widget.show_analyzed_data_screen()
+    def emit_analyzeButtonClicked(self):
+        self.analyzedButtonClicked.emit()
 
     def get_file_paths(self):
         return self.file_paths

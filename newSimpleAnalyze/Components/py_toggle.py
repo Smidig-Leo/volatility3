@@ -25,7 +25,12 @@ class PyToggle(QCheckBox):
         self.animation.setEasingCurve(animation_curve)
         self.animation.setDuration(500)
 
+        # self.stateChanged.connect(self.debug)
+
         self.stateChanged.connect(self.start_transition)
+
+    # def debug(self):
+    #     print(f"Status: {self.isChecked()}")
 
     def circle_position(self):
         return self._circle_position

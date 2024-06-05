@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy, QFileDialog, QLabel, QMainWindow
@@ -8,9 +9,48 @@ import xml.etree.ElementTree as ET
 
 class AnalyzeDataScreen(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, active_commands_updated, active_file_path):
         super().__init__()
         loadUi('screens/ui/DataAnalyze.ui', self)
+
+        self.activeCommands = []
+        self.activeFilePath = []
+
+        self.output_text = QLabel()
+        self.scroll_area_content = QWidget()
+
+        active_file_path.connect(self.update_active_file_path)
+        active_commands_updated.connect(self.update_active_commands)
+
+        self.runBtn.clicked.connect(self.run_analysis)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.output_text)
+        self.scroll_area_content.setLayout(layout)
+
+        self.dataScroll.setWidget(self.scroll_area_content)
+
+    def update_active_commands(self, active_commands):
+        self.activeCommands = active_commands
+        print("Active Commands:", self.activeCommands)
+
+    def update_active_file_path(self, active_file_path):
+        self.activeFilePath = active_file_path
+        print("Active File Path:", self.activeFilePath)
+
+    def run_analysis(self):
+        print("Running Analysis")
+        command = f"python ../vol.py -f {self.activeFilePath[0]} {self.activeCommands[0]}"
+        try:
+            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            stdout, stderr = process.communicate()
+            if process.returncode == 0:
+                self.output_text.setText(stdout)
+            else:
+                self.output_text.setText(f"Error: {stderr}")
+        except Exception as e:
+            print(f'An error occurred: {e}')
+
 
         # available buttons:
         # self.checkBoxDump1
@@ -29,6 +69,7 @@ class AnalyzeDataScreen(QMainWindow):
         # self.labelColumnText
         # self.labelExportText
         # self.labelSearchText
+        # self.runBtn
 
 
     #     self.file_uploader = file_uploader

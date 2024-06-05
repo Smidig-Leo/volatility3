@@ -1,7 +1,11 @@
 import sys
+
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QPushButton
 from screens.mainPage import MainPage
 from screens.analyzeDataScreen import AnalyzeDataScreen
+from newSimpleAnalyze.Components.fileUploader import FileUploader
+from newSimpleAnalyze.Components.chooseOs import ChooseOs
 from screens.pluginScreen import PluginScreen
 from screens.settingsPage import SettingsPage
 from PyQt5.uic import loadUi
@@ -10,6 +14,9 @@ from PyQt5.uic import loadUi
 
 
 class VolatilityApp(QMainWindow):
+    activeCommandsUpdated = pyqtSignal(list)
+    file_path_updated = pyqtSignal(list)
+
     def __init__(self):
         super().__init__()
         loadUi('screens/ui/NavigationBar.ui', self)
@@ -21,9 +28,12 @@ class VolatilityApp(QMainWindow):
         # self.pluginsBtn
         # self.settingsBtn
 
-        self.main_page = MainPage()
-        self.data_page = AnalyzeDataScreen()
+        self.file_uploader = FileUploader()
+        self.os = ChooseOs()
+
+        self.main_page = MainPage(self.file_uploader, self.os)
         self.plugins_page = PluginScreen()
+        self.data_page = AnalyzeDataScreen(self.plugins_page.activeCommandsUpdated, self.file_uploader.file_path_updated)
         self.settings_page = SettingsPage()
 
         self.stackedWidget.addWidget(self.main_page)
@@ -31,11 +41,20 @@ class VolatilityApp(QMainWindow):
         self.stackedWidget.addWidget(self.plugins_page)
         self.stackedWidget.addWidget(self.settings_page)
 
+        self.plugins_page.activeCommandsUpdated.connect(self.on_active_commands_updated)
+
+        self.main_page.analyzedButtonClicked.connect(self.switch_to_data_page)
+
         self.mainBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.main_page))
         self.dataBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.data_page))
         self.pluginsBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.plugins_page))
         self.settingsBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.settings_page))
 
+    def switch_to_data_page(self):
+        self.stackedWidget.setCurrentWidget(self.data_page)
+
+    def on_active_commands_updated(self, active_commands):
+        self.activeCommandsUpdated.emit(active_commands)
 
 
     #     # Setup connections for the run analysis process
