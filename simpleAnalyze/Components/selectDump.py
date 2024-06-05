@@ -41,7 +41,6 @@ class SelectDump(QWidget):
             QLabel {
                 color: #FFFFFF;
                 font-size: 18px;
-                padding: 0px;
                 border-bottom: 1px solid #F27821;
             }
         """)
@@ -51,19 +50,13 @@ class SelectDump(QWidget):
                 background-color: #343534;
                 color: white;
                 border: none;
-                padding: 0px;
-                spacing: 0px; /* Reduce spacing between items */
             }
             QListWidget::item {
                 color: white;
                 height: 25px;
-                padding: 0px;
-                margin: 0px; /* Remove margin */
                 border: none;
-                background-color: #343534;
             }
         """)
-
     def populate_dump_list(self):
         self.dump_list.clear()
         for file_path in self.file_paths:
@@ -74,9 +67,9 @@ class SelectDump(QWidget):
 
     def add_list_item(self, display_text, file_path, color):
         item = QListWidgetItem()
-        layout = QHBoxLayout()  # Use QHBoxLayout for horizontal arrangement
-        layout.setContentsMargins(0, 0, 0, 0)  # Remove margins from layout
-        layout.setSpacing(0)  # Adjust spacing between widgets to 0
+        layout = QHBoxLayout()
+        layout.setContentsMargins(10, 10, 0, 0)
+        layout.setSpacing(10)
 
         checkbox = QCheckBox()
         checkbox.stateChanged.connect(lambda state, fp=file_path: self.on_checkbox_state_changed(state, fp))
@@ -94,25 +87,23 @@ class SelectDump(QWidget):
                 background-color: #F27821;
                 border: 1px solid #F27821;
             }
-            QCheckBox {
-                margin-right: 0px;  # Ensure no extra margin on the right
-            }
         """)
         layout.addWidget(checkbox)
 
         label = QLabel(display_text)
-        label.setStyleSheet("color: white; padding-left: 0px; margin: 0px;")  # Adjust padding/margin for the label
+        label.setStyleSheet("color: white;")
         layout.addWidget(label)
 
         box = QLabel("")
-        box.setFixedSize(10, 25)  # Set fixed size for the color box
-        box.setStyleSheet(f"background-color: {color}; border-radius: 3px; margin: 0px; padding: 0px;")
+        box.setFixedSize(10, 25)
+        box.setStyleSheet(f"background-color: {color}; border-radius: 3px;")
         layout.addWidget(box)
 
         widget = QWidget()
         widget.setLayout(layout)
         item.setSizeHint(widget.sizeHint())
         item.setData(Qt.UserRole, file_path)
+        layout.setSizeConstraint(QVBoxLayout.SetFixedSize)
         self.dump_list.addItem(item)
         self.dump_list.setItemWidget(item, widget)
 

@@ -12,8 +12,6 @@ from utils.fileUploader import FileUploader
 from utils.chooseOs import ChooseOs
 from data.plugins.pluginManager import PluginManager
 
-
-
 class VolatilityApp(QMainWindow):
     def __init__(self):
         super().__init__()
