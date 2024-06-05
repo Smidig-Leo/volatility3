@@ -18,6 +18,13 @@ class FileUploader(QMainWindow):
         super().__init__()
         loadUi('screens/ui/FileUploader.ui', self)
 
+        # available buttons:
+        # self.selectButton
+        # self.fileName
+        # self.deleteBtn
+        # self.analyzeButton
+        # self.fileUploaded
+
         self.file_paths = []
         self.file_uploaded_label = None
         self.file_widgets = {}

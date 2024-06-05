@@ -11,6 +11,15 @@ class ChooseOs(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         loadUi('screens/ui/Os.ui', self)
+
+        # available buttons:
+        # self.radioButtonWindows
+        # self.radioButtonMac
+        # self.radioButtonLinux
+
+
+
+
         # self.parent_widget = parent
         #
         # self.layout = QVBoxLayout()

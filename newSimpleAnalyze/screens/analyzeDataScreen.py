@@ -12,6 +12,25 @@ class AnalyzeDataScreen(QMainWindow):
         super().__init__()
         loadUi('screens/ui/DataAnalyze.ui', self)
 
+        # available buttons:
+        # self.checkBoxDump1
+        # self.checkBoxDump2
+        # self.checkBoxDump3
+        # self.checkBoxDump4
+        # self.checkBoxPlugin1
+        # self.checkBoxPlugin2
+        # self.checkBoxPlugin3
+        # self.checkBoxPlugin4
+        # self.frameFilePlugin
+        # self.labelFileText
+        # self.labelPluginText
+        # self.labelFileChosen
+        # self.labelPluginChosen
+        # self.labelColumnText
+        # self.labelExportText
+        # self.labelSearchText
+
+
     #     self.file_uploader = file_uploader
     #     self.select_dump = select_dump
     #     self.select_plugin = select_plugin

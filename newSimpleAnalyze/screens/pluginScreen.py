@@ -12,16 +12,16 @@ class PluginScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         loadUi('screens/ui/Plugins.ui', self)
+
+        #All buttons made in code none in .ui
+
         scroll_layout = QVBoxLayout()
 
-        # Add the layout to pluginScroll
         self.pluginScroll.setLayout(scroll_layout)
 
-        # Create a widget to hold all the frames
         widget = QWidget()
         widget.setLayout(scroll_layout)
 
-        # Set the widget as the scroll area's widget
         self.pluginScroll.setWidget(widget)
 
         for i in range(20):
@@ -35,7 +35,6 @@ class PluginScreen(QMainWindow):
         firstFrame.setStyleSheet("background-color:rgb(38, 38, 38);")
         firstFrame.setMaximumHeight(100)
 
-        # Create a QHBoxLayout
         layout = QHBoxLayout()
 
         layout.addWidget(secondFrame)
@@ -57,7 +56,6 @@ class PluginScreen(QMainWindow):
         secondFrame.setLayout(layout2)
         thirdFrame.setLayout(layout3)
 
-        # Add firstFrame to the scroll_layout
         scroll_layout.addWidget(firstFrame)
 
 

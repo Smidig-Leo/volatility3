@@ -15,6 +15,12 @@ class VolatilityApp(QMainWindow):
         loadUi('screens/ui/NavigationBar.ui', self)
         self.setWindowTitle("Volatility3")
 
+        # NavBar available buttons:
+        # self.mainBtn
+        # self.dataBtn
+        # self.pluginsBtn
+        # self.settingsBtn
+
         self.main_page = MainPage()
         self.data_page = AnalyzeDataScreen()
         self.plugins_page = PluginScreen()

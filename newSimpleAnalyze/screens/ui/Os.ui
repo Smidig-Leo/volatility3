@@ -152,7 +152,7 @@ QFrame &gt; * {
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButtonDarkMode">
+           <widget class="QRadioButton" name="radioButtonWindows">
             <property name="font">
              <font>
               <family>Arial</family>
@@ -208,7 +208,7 @@ QRadioButton {
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButtonLightMode">
+           <widget class="QRadioButton" name="radioButtonMac">
             <property name="font">
              <font>
               <family>Arial</family>
@@ -264,7 +264,7 @@ QRadioButton {
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButtonLightMode_2">
+           <widget class="QRadioButton" name="radioButtonLinux">
             <property name="font">
              <font>
               <family>Arial</family>
