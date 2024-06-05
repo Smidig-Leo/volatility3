@@ -230,8 +230,6 @@ class FileUploader(QWidget):
                         widget.deleteLater()
 
             self.file_path_updated.emit(self.file_paths.copy())
-            if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
-                self.parent_widget.plugin_screen.clear_file_path()
             if self.parent_widget:
                 self.parent_widget.session_manager.set_file_uploaded(self.file_paths)
 

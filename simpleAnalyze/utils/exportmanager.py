@@ -18,19 +18,7 @@ class ExportManager:
                 field = ET.SubElement(record, sanitized_key)
                 field.text = str(value)
         tree = ET.ElementTree(root)
-        tree.write(file_name, encoding='utf-8', xml_declaration=True)
 
-    @staticmethod
-    def export_row_as_xml(data, file_name):
-        def sanitize_tag(tag):
-            return ''.join(c if c.isalnum() or c == '_' else '_' for c in tag)
-
-        root = ET.Element("Record")
-        for key, value in data.items():
-            sanitized_key = sanitize_tag(key)
-            field = ET.SubElement(root, sanitized_key)
-            field.text = str(value)
-        tree = ET.ElementTree(root)
         tree.write(file_name, encoding='utf-8', xml_declaration=True)
 
     @staticmethod
@@ -50,8 +38,7 @@ class ExportManager:
              height: auto;
            }
            </style>
-           </head>
-           <body>"""
+           </head>"""
         html += "<table>"
         html += "<thead><tr>"
         for header in data[0].keys():
@@ -64,7 +51,7 @@ class ExportManager:
                 html += "<td>{}</td>".format(value)
             html += "</tr>"
         html += "</tbody></table>"
-        html += "</body></html>"
+        html += "</html>"
 
         doc = QTextDocument()
         doc.setHtml(html)
@@ -88,15 +75,3 @@ class ExportManager:
                 ExportManager.export_data_as_xml(data, file_name)
             elif file_name.endswith('.pdf'):
                 ExportManager.export_data_as_pdf(data, file_name)
-
-    @staticmethod
-    def export_row(data, parent):
-        options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getSaveFileName(parent, "Save Row As", "",
-                                                   "XML Files (*.xml);;PDF Files (*.pdf);;All Files (*)",
-                                                   options=options)
-        if file_name:
-            if file_name.endswith('.xml'):
-                ExportManager.export_row_as_xml(data, file_name)
-            elif file_name.endswith('.pdf'):
-                ExportManager.export_data_as_pdf([data], file_name)

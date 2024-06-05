@@ -90,7 +90,7 @@ class AnalyzeDataScreen(QWidget):
 
     def update_file_label(self, selected_files):
         if selected_files:
-            self.file_label.setText(f"Selected File: {', '.join([os.path.basename(f) for f in selected_files])}")
+            self.file_label.setText(f"Selected File(s): {', '.join([os.path.basename(f[0]) for f in selected_files])}")
         else:
             self.file_label.setText("Selected File: None")
 

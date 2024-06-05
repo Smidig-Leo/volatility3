@@ -1,11 +1,12 @@
-from PyQt5.QtCore import Qt, pyqtSignal, QSortFilterProxyModel
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableView, QHeaderView, QSizePolicy, QPushButton
+from PyQt5.QtCore import Qt, QModelIndex, pyqtSignal, QSortFilterProxyModel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableView, QHeaderView, QSizePolicy, QPushButton, QLabel
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor, QBrush
+import xml.etree.ElementTree as ET
 
 from simpleAnalyze.utils.exportmanager import ExportManager
 
 class NumericSortFilterProxyModel(QSortFilterProxyModel):
-    def lessThan(self, left, right):
+    def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
         left_data = self.sourceModel().data(left)
         right_data = self.sourceModel().data(right)
 
@@ -137,6 +138,7 @@ class DataTable(QWidget):
             header = model.headerData(col, Qt.Horizontal)
             value = model.data(index)
 
+
             if value is not None:
                 value = value.replace('\n', ' ').replace('\r', ' ')
             else:
@@ -166,18 +168,3 @@ class DataTable(QWidget):
             button.setStyleSheet("")
 
         button.setProperty('flagged', not flagged)
-
-    def show_flagged_rows(self):
-        model = self.proxy_model.sourceModel()
-        if not model:
-            return
-
-        if not self.flagged_rows:
-            for row_index in range(model.rowCount()):
-                self.table_view.setRowHidden(row_index, row_index < 3)
-
-        else:
-            for row_index in range(model.rowCount()):
-                self.table_view.setRowHidden(row_index, row_index not in self.flagged_rows)
-
-

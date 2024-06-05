@@ -2,7 +2,6 @@ import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QCheckBox, QHBoxLayout
 from PyQt5.QtCore import pyqtSignal, Qt
 
-
 class SelectDump(QWidget):
     file_selected = pyqtSignal(list)
 
@@ -21,19 +20,22 @@ class SelectDump(QWidget):
             "#C3E0E5",  # Pale Blue
             "#FFF0F5",  # Light Lavender
         ]
-        self.color_index = 0  # Track the current color index
+        self.color_index = 0
+        self.setup_ui()
+        self.apply_styles()
+
+    def setup_ui(self):
         layout = QVBoxLayout()
         self.file_label = QLabel("DUMPS")
         layout.addWidget(self.file_label)
         self.dump_list = QListWidget()
         layout.addWidget(self.dump_list)
         self.setLayout(layout)
-        self.apply_styles()
 
     def update_file_paths(self, list_of_files):
         self.file_paths = list_of_files
         self.color_index = 0  # Reset color index when files change
-        self.populate_dump_list()
+        self.populate_file_list()
         print("Received file paths:", list_of_files)
 
     def apply_styles(self):
@@ -41,7 +43,6 @@ class SelectDump(QWidget):
             QLabel {
                 color: #FFFFFF;
                 font-size: 18px;
-                padding: 0px;
                 border-bottom: 1px solid #F27821;
             }
         """)
@@ -51,20 +52,15 @@ class SelectDump(QWidget):
                 background-color: #343534;
                 color: white;
                 border: none;
-                padding: 0px;
-                spacing: 0px; /* Reduce spacing between items */
             }
             QListWidget::item {
                 color: white;
                 height: 25px;
-                padding: 0px;
-                margin: 0px; /* Remove margin */
                 border: none;
-                background-color: #343534;
             }
         """)
 
-    def populate_dump_list(self):
+    def populate_file_list(self):
         self.dump_list.clear()
         for file_path in self.file_paths:
             display_text = os.path.basename(file_path)
@@ -74,12 +70,12 @@ class SelectDump(QWidget):
 
     def add_list_item(self, display_text, file_path, color):
         item = QListWidgetItem()
-        layout = QHBoxLayout()  # Use QHBoxLayout for horizontal arrangement
-        layout.setContentsMargins(0, 0, 0, 0)  # Remove margins from layout
-        layout.setSpacing(0)  # Adjust spacing between widgets to 0
+        layout = QHBoxLayout()
+        layout.setContentsMargins(10, 10, 0, 0)
+        layout.setSpacing(10)
 
         checkbox = QCheckBox()
-        checkbox.stateChanged.connect(lambda state, fp=file_path: self.on_checkbox_state_changed(state, fp))
+        checkbox.stateChanged.connect(lambda state, fp=file_path, col=color: self.on_checkbox_state_changed(state, fp, col))
         checkbox.setStyleSheet("""
             QCheckBox::indicator {
                 width: 10px;
@@ -94,31 +90,30 @@ class SelectDump(QWidget):
                 background-color: #F27821;
                 border: 1px solid #F27821;
             }
-            QCheckBox {
-                margin-right: 0px;  # Ensure no extra margin on the right
-            }
         """)
         layout.addWidget(checkbox)
 
         label = QLabel(display_text)
-        label.setStyleSheet("color: white; padding-left: 0px; margin: 0px;")  # Adjust padding/margin for the label
+        label.setStyleSheet("color: white;")
         layout.addWidget(label)
 
-        box = QLabel("")
-        box.setFixedSize(10, 25)  # Set fixed size for the color box
-        box.setStyleSheet(f"background-color: {color}; border-radius: 3px; margin: 0px; padding: 0px;")
-        layout.addWidget(box)
+        color_box = QLabel("")
+        color_box.setFixedSize(10, 25)
+        color_box.setStyleSheet(f"background-color: {color}; border-radius: 3px;")
+        layout.addWidget(color_box)
 
         widget = QWidget()
         widget.setLayout(layout)
         item.setSizeHint(widget.sizeHint())
-        item.setData(Qt.UserRole, file_path)
+        item.setData(Qt.UserRole, (file_path, color))  # Store both file path and color in the item's data
+        layout.setSizeConstraint(QVBoxLayout.SetFixedSize)
         self.dump_list.addItem(item)
         self.dump_list.setItemWidget(item, widget)
 
-    def on_checkbox_state_changed(self, state, file_path):
+    def on_checkbox_state_changed(self, state, file_path, color):
         selected_files = self.get_selected_files()
         self.file_selected.emit(selected_files)
+        print(selected_files)
 
     def get_selected_files(self):
         selected_files = []
@@ -127,6 +122,6 @@ class SelectDump(QWidget):
             widget = self.dump_list.itemWidget(item)
             checkbox = widget.findChild(QCheckBox)
             if checkbox.isChecked():
-                file_path = item.data(Qt.UserRole)
-                selected_files.append(file_path)
+                file_path, color = item.data(Qt.UserRole)
+                selected_files.append((file_path, color))  # Append tuple of file path and color
         return selected_files
