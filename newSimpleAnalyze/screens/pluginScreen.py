@@ -4,6 +4,7 @@ from PyQt5.QtCore import pyqtSignal
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt
 from newSimpleAnalyze.Components.py_toggle import PyToggle
+from newSimpleAnalyze.data.plugins.pluginManager import PluginManager
 import subprocess
 
 class PluginScreen(QMainWindow):
@@ -24,15 +25,29 @@ class PluginScreen(QMainWindow):
 
         self.pluginScroll.setWidget(widget)
 
-        for i in range(20):
-            self.create_plugins(scroll_layout)
+        self.plugins_data = PluginManager()
 
-    def create_plugins(self, scroll_layout):
+        for i in range(len(self.plugins_data.get_plugins('windows'))):
+            plugin = self.plugins_data.get_plugins('windows')[i]
+
+            if (i+1) % 2 == 0:
+                self.create_plugins(scroll_layout, plugin.get_name(), "secondary")
+            else:
+                self.create_plugins(scroll_layout, plugin.get_name(), "primary")
+
+    def create_plugins(self, scroll_layout, command, color):
         firstFrame = QFrame()
         secondFrame = QFrame()
         thirdFrame = QFrame()
 
-        firstFrame.setStyleSheet("background-color:rgb(38, 38, 38);")
+        primaryColor = "background-color:rgb(38, 38, 38);"
+        secondaryColor = "background-color:rgb(52, 53, 52);"
+
+        if color == "primary":
+            firstFrame.setStyleSheet(primaryColor)
+        elif color == "secondary":
+            firstFrame.setStyleSheet(secondaryColor)
+
         firstFrame.setMaximumHeight(100)
 
         layout = QHBoxLayout()
@@ -45,7 +60,7 @@ class PluginScreen(QMainWindow):
         layout2 = QVBoxLayout()
         layout3 = QVBoxLayout()
 
-        label1 = QLabel("windows.pslist")
+        label1 = QLabel(command)
         label1.setStyleSheet("color:white;")
         layout2.addWidget(label1)
 

@@ -237,7 +237,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                <x>0</x>
                <y>0</y>
                <width>866</width>
-               <height>490</height>
+               <height>510</height>
               </rect>
              </property>
             </widget>
@@ -251,7 +251,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
