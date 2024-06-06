@@ -31,15 +31,19 @@ class VolatilityApp(QMainWindow):
         # self.dataBtn
         # self.pluginsBtn
         # self.settingsBtn
+        self.session_manager = SessionManager()
 
         self.file_uploader = FileUploader()
         self.os = ChooseOs()
+
         self.select_dump = SelectDump()
         self.select_plugin = SelectPlugin()
         self.session_manager = SessionManager()
         self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
 
-        self.main_page = MainPage(self.file_uploader, self.os)
+
+
+        self.main_page = MainPage(self.file_uploader, self.os, self.session_manager)
         self.plugins_page = PluginScreen(self.session_manager)
         self.data_page = AnalyzeDataScreen(self.file_uploader, self.select_dump, self.select_plugin,self.run_analysis)
         self.settings_page = SettingsPage()
@@ -67,6 +71,13 @@ class VolatilityApp(QMainWindow):
         self.pluginsBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.plugins_page))
         self.settingsBtn.clicked.connect(lambda: self.stackedWidget.setCurrentWidget(self.settings_page))
 
+
+        self.main_page.file_path_updated.connect(self.file_path_updated.emit)
+
+        file_paths = self.session_manager.get_file_uploaded()
+        if file_paths:
+            for file_path in file_paths:
+                self.file_uploader.add_file_path(file_path)
     def switch_to_data_page(self):
         self.stackedWidget.setCurrentWidget(self.data_page)
 

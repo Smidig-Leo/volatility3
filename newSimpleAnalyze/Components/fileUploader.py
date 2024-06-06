@@ -124,27 +124,26 @@ class FileUploader(QMainWindow):
         """)
         self.uploadedFiles.layout().addWidget(file_label)
 
+        if len(self.file_paths) == 1:
+            analyze_button = QPushButton("Analyze My Data")
+            analyze_button.setStyleSheet("""
+                QPushButton {
+                    background-color:#F27821;
+                    color: white;
+                    font-size: 16px;
+                    border: none;
+                    border-radius: 5px;
+                    width: 200px;
+                    height: 24px;
+                }
+                QPushButton:hover {
+                    background-color: #ff9933;
+                }
+            """)
 
-        analyze_button = QPushButton("Analyze My Data")
-        analyze_button.setStyleSheet("""
-            QPushButton {
-                background-color:#F27821;
-                color: white;
-                font-size: 16px;
-                border: none;
-                border-radius: 5px;
-                width: 200px;
-                height: 24px;
-            }
-            QPushButton:hover {
-                background-color: #ff9933;
-            }
-        """)
+            self.analyzeButtonFrame.layout().addWidget(analyze_button)
 
-        self.analyzeButtonFrame.layout().addWidget(analyze_button)
-
-        analyze_button.clicked.connect(self.emit_analyzeButtonClicked)
-
+            analyze_button.clicked.connect(self.emit_analyzeButtonClicked)
 
     def delete_file(self, file_path):
         if file_path in self.file_paths:
