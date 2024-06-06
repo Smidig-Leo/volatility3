@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QFileDialog, QMessageBox, QWidget, QPushButton, \
-    QHBoxLayout
+    QHBoxLayout, QFrame
 from PyQt5.uic import  loadUi
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
@@ -72,34 +72,56 @@ class FileUploader(QMainWindow):
     def add_file_label(self, file_path):
         file_name = os.path.basename(file_path)
         print(f"Adding file label for: {file_name}")
-        self.fileName.setText(file_name)
 
-        self.deleteBtn.setText("X")
-        # self.deleteBtn.clicked.connect(lambda _, path=file_path: self.delete_file(path))
-        self.deleteBtn.setStyleSheet("""
+        parentFrame = QFrame()
+
+        frame1 = QFrame()
+        frame2 = QFrame()
+
+        label = QLabel(file_name)
+        button = QPushButton("X")
+
+        button.setStyleSheet("""
             QPushButton {
-                background-color: red;
-                color: white;
-                font-size: 12px;
-                padding: 3px;
-                border: none;
-                border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #ff6666;
+                border-radius:2px;
+                background-color:red;
+                max-width:20px;
+                height:20px;
             }
         """)
 
+        layout1 = QVBoxLayout()
+        layout2 = QVBoxLayout()
+
+        layout1.addWidget(label)
+        layout2.addWidget(button)
+
+        frame1.setLayout(layout1)
+        frame2.setLayout(layout2)
+
+        layout1.setAlignment(Qt.AlignRight)
+
+        parentLayout = QHBoxLayout()
+        parentLayout.addWidget(frame1)
+        parentLayout.addWidget(frame2)
+
+        parentFrame.setLayout(parentLayout)
+
+
+        self.fileUploaderFrame.layout().addWidget(parentFrame)
+
+
     def show_popup(self, file_name):
 
-        self.fileUploaded.setText(f"{file_name} uploaded")
-        self.fileUploaded.setAlignment(Qt.AlignCenter)
-        self.fileUploaded.setStyleSheet("""
+        file_label = QLabel(file_name)
+        file_label.setAlignment(Qt.AlignCenter)
+        file_label.setStyleSheet("""
             QLabel {
                 color: white;
                 font-size: 16px;
             }
         """)
+        self.uploadedFiles.layout().addWidget(file_label)
 
         self.analyzeButton.setText("Analyze My Data")
         self.analyzeButton.setStyleSheet("""
