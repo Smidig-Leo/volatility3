@@ -39,6 +39,8 @@ class DataTable(QWidget):
         self.flagged_rows = set()
         self.showing_flagged = False  # Track if currently showing only flagged rows
 
+        self.table_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
     def update_table(self, data):
         if not data:
             return
@@ -64,20 +66,27 @@ class DataTable(QWidget):
         headers.append('Edit/Export')
         return headers
 
-    def setup_model(self, headers, all_rows_with_color):
-        model = QStandardItemModel()
-        model.setColumnCount(len(headers))
-        model.setHorizontalHeaderLabels(headers)
-        for row_index, (columns, color) in enumerate(all_rows_with_color):
-            for col_index, value in enumerate(columns):
-                item = QStandardItem(value)
-                model.setItem(row_index, col_index + 1, item)  # Adjust column index
+    def setup_table_view(self, headers):
+        self.table_view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table_view.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
 
-            # Add color to the color column (which is now at index 0)
-            color_item = QStandardItem()
-            color_item.setBackground(QColor(color))
-            model.setItem(row_index, 0, color_item)  # Set color column at index 0
-        return model
+        # Resize all columns to fit the contents initially
+        self.table_view.resizeColumnsToContents()
+
+        # Set fixed size for the color column and the button column
+        self.table_view.setColumnWidth(0, 40)  # Color column at index 0
+        self.table_view.setColumnWidth(len(headers) - 1, 140)  # Button column at the last index
+
+        second_row_height = 50
+        self.table_view.verticalHeader().resizeSection(1, second_row_height)
+        self.table_view.verticalHeader().setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
+        for row in range(3):
+            self.table_view.verticalHeader().hideSection(row)
+
+        self.table_view.setAlternatingRowColors(True)
+        self.table_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # Disable horizontal scrollbar
+        self.table_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)  # Expand to fit the frame
 
     def populate_table(self, model, headers, all_rows_with_color):
         self.proxy_model.setSourceModel(model)

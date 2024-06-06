@@ -42,7 +42,6 @@ class AnalyzeDataScreen(QMainWindow):
         self.export_button = QPushButton("Export as...")
         self.export_button.setFixedHeight(30)
         self.export_button.clicked.connect(self.download_as_xml)
-        self.frameTopRight.layout().addWidget(self.export_button)
 
         # Data Table
         data_layout = QHBoxLayout()
@@ -52,7 +51,7 @@ class AnalyzeDataScreen(QMainWindow):
         # Columns sort
         self.columns_sort.setFixedHeight(30)
         self.columns_sort.column_visibility_changed.connect(self.update_column_visibility)
-        self.frameTopRight.layout().addWidget(self.columns_sort)
+
 
         # Retrieve existing layouts
         dump_layout = self.frameDumps.layout()
@@ -63,16 +62,6 @@ class AnalyzeDataScreen(QMainWindow):
         # Connect signals
         self.data_table.headers_updated.connect(self.update_columns_sort)
         self.runBtn.clicked.connect(self.start_analysis)
-
-        # Set the width of frames
-        self.set_frame_width()
-
-    def set_frame_width(self):
-        """Set the width of frames to 20% of the screen width."""
-        screen_width = QApplication.desktop().screenGeometry().width()
-        frame_width = int(0.15 * screen_width)
-        for frame in [self.frameDumps, self.frame, self.framePluginContent]:
-            frame.setFixedWidth(frame_width)
 
     def update_file_label(self, selected_files):
         """Update the file label with selected files."""

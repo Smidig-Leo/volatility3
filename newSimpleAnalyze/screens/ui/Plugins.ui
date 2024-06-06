@@ -24,7 +24,7 @@ QScrollBar:vertical {
 	background-color: rgb(242, 102, 42);
     width:14px;
     margin:15px 0 15px 0;
-    boder-radius:0px;
+    border-radius:0px;
 }
 
 /*HANDLE BAT VERTICAL*/
@@ -97,7 +97,7 @@ QScrollBar:horizontal {
 	background-color: rgb(242, 102, 42);
     height:14px;
     margin:0 15px 0 15px;
-    boder-radius:0px;
+    border-radius:0px;
 }
 QScrollBar::handle:horizontal {
     background-color:  rgb(242, 102, 42);
