@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>960</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -301,38 +301,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                 <property name="horizontalSpacing">
                  <number>10</number>
                 </property>
-                <item row="0" column="2">
-                 <widget class="QLabel" name="labelExportArrow">
-                  <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/downArrow/assets/ArrowDown.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="4">
-                 <widget class="QLabel" name="labelExportIcon">
-                  <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/export/assets/ExportVector.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="3">
-                 <widget class="QLabel" name="labelExportText">
-                  <property name="font">
-                   <font>
-                    <family>Arial</family>
-                    <pointsize>12</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">color: rgb(255, 255, 255);</string>
-                  </property>
-                  <property name="text">
-                   <string>Export</string>
-                  </property>
-                 </widget>
-                </item>
                </layout>
               </widget>
              </item>
@@ -410,38 +378,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                 <property name="horizontalSpacing">
                  <number>10</number>
                 </property>
-                <item row="0" column="1">
-                 <widget class="QLabel" name="labelColumnText">
-                  <property name="font">
-                   <font>
-                    <family>Arial</family>
-                    <pointsize>12</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">color: rgb(255, 255, 255);</string>
-                  </property>
-                  <property name="text">
-                   <string>Columns</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="3">
-                 <widget class="QLabel" name="labelColumnIcon">
-                  <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/columns/assets/ColumnsVector.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="labelColumnArrow">
-                  <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/downArrow/assets/ArrowDown.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                 </widget>
-                </item>
                </layout>
               </widget>
              </item>
@@ -1191,8 +1127,8 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>981</width>
-            <height>688</height>
+            <width>979</width>
+            <height>683</height>
            </rect>
           </property>
          </widget>
@@ -1205,7 +1141,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
   </widget>
  </widget>
  <resources>
-  <include location="../../../../../volatility3/simpleAnalyze/screens/SelectPlugin.qrc"/>
   <include location="../../../../../volatility3/simpleAnalyze/screens/Export.qrc"/>
   <include location="../../../../../volatility3/simpleAnalyze/screens/DownArrow.qrc"/>
   <include location="../../../../../volatility3/simpleAnalyze/screens/Columns.qrc"/>
