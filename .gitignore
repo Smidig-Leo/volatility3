@@ -45,3 +45,4 @@ ENV/
 
 # Session data file
 simpleAnalyze/*.json
+/newSimpleAnalyze/session_data.json

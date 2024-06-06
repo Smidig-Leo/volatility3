@@ -9,6 +9,7 @@ from newSimpleAnalyze.Components.chooseOs import ChooseOs
 from screens.pluginScreen import PluginScreen
 from screens.settingsPage import SettingsPage
 from PyQt5.uic import loadUi
+from newSimpleAnalyze.data.sessionManager import SessionManager
 
 
 
@@ -31,8 +32,10 @@ class VolatilityApp(QMainWindow):
         self.file_uploader = FileUploader()
         self.os = ChooseOs()
 
+        self.session_manager = SessionManager()
+
         self.main_page = MainPage(self.file_uploader, self.os)
-        self.plugins_page = PluginScreen()
+        self.plugins_page = PluginScreen(self.session_manager)
         self.data_page = AnalyzeDataScreen(self.plugins_page.activeCommandsUpdated, self.file_uploader.file_path_updated)
         self.settings_page = SettingsPage()
 
@@ -54,6 +57,7 @@ class VolatilityApp(QMainWindow):
         self.stackedWidget.setCurrentWidget(self.data_page)
 
     def on_active_commands_updated(self, active_commands):
+        print(f"Received active commands update: {active_commands}")
         self.activeCommandsUpdated.emit(active_commands)
 
 
