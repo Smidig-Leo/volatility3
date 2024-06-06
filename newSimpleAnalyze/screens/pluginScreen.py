@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QMessageBox, QCheckBox, QMainWindow, QFrame, \
-    QHBoxLayout
+    QHBoxLayout, QLineEdit
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt
@@ -30,6 +30,17 @@ class PluginScreen(QMainWindow):
         self.pluginScroll.setWidget(widget)
 
         self.plugins_data = PluginManager()
+        # Connect the existing search bar from the .ui file
+        self.search_bar = self.findChild(QLineEdit,'lineEditPluginSearch')  # Ensure 'lineEditPluginSearch' matches the object name in the .ui file
+        if self.search_bar is None:
+            raise ValueError("Could not find the search bar widget. Please check the object name in the .ui file.")
+        self.search_bar.setPlaceholderText("Search Plugins")
+        self.search_bar.textChanged.connect(lambda: self.populate_plugin_checkboxes(scroll_layout))
+
+        self.plugins = self.plugins_data.get_plugins('windows')
+        self.populate_plugin_checkboxes(scroll_layout)
+
+
 
         for i in range(len(self.plugins_data.get_plugins('windows'))):
             plugin = self.plugins_data.get_plugins('windows')[i]
@@ -90,6 +101,19 @@ class PluginScreen(QMainWindow):
             self.activeCommands.remove(command)
         self.activeCommandsUpdated.emit(self.activeCommands)
 
+    def populate_plugin_checkboxes(self, layout):
+        # Clear current plugin checkboxes
+        for i in reversed(range(layout.count())):
+            widget = layout.itemAt(i).widget()
+            if isinstance(widget, QFrame):
+                widget.deleteLater()
+
+        search_text = self.search_bar.text().lower()
+
+        for i, plugin in enumerate(self.plugins):
+            if search_text in plugin.name.lower():
+                color = "secondary" if (i + 1) % 2 == 0 else "primary"
+                self.create_plugins(layout, plugin.name, color)
     #     self.file_path = ""
     #     self.selected_plugins = []
     #     self.plugin_manager = PluginManager()

@@ -255,51 +255,60 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <widget class="QFrame" name="framePluginSearch">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>200</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QFrame {
-    background-color: #D9D9D9;
-    border-radius: 15px;
-}
-</string>
-               </property>
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_6">
-                <property name="leftMargin">
-                 <number>9</number>
-                </property>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="labelPluginSearchText">
-                  <property name="text">
-                   <string>Search</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
+           <widget class="QFrame" name="framePluginSearch">
+  <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+    <size>
+      <width>300</width>
+      <height>30</height>
+    </size>
+  </property>
+  <property name="maximumSize">
+    <size>
+      <width>300</width>
+      <height>50</height>
+    </size>
+  </property>
+  <property name="styleSheet">
+    <string notr="true">
+      QFrame {
+        background-color: #D9D9D9;
+        border-radius: 15px;
+      }
+      QLineEdit {
+        background-color: transparent;
+        border: none;
+        padding: 5px;
+        color: black; /* Ensure text color is visible */
+        z-index: 1;  /* Ensure the text input is on top */
+      }
+    </string>
+  </property>
+  <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_6">
+    <item>
+      <widget class="QLineEdit" name="lineEditPluginSearch">
+        <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+          </sizepolicy>
+        </property>
+      </widget>
+    </item>
+  </layout>
+</widget>
+
              </item>
             </layout>
            </widget>
