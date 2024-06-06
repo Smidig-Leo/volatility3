@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QFileDialog, QMessageBox, QWidget, QPushButton, \
-    QHBoxLayout
+    QHBoxLayout, QFrame
 from PyQt5.uic import  loadUi
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QDragEnterEvent, QDropEvent
@@ -72,78 +72,113 @@ class FileUploader(QMainWindow):
     def add_file_label(self, file_path):
         file_name = os.path.basename(file_path)
         print(f"Adding file label for: {file_name}")
-        self.fileName.setText(file_name)
 
-        self.deleteBtn.setText("X")
-        # self.deleteBtn.clicked.connect(lambda _, path=file_path: self.delete_file(path))
-        self.deleteBtn.setStyleSheet("""
+        parentFrame = QFrame()
+
+        frame1 = QFrame()
+        frame2 = QFrame()
+
+        label = QLabel(file_name)
+        button = QPushButton("X")
+
+        button.setStyleSheet("""
             QPushButton {
-                background-color: red;
-                color: white;
-                font-size: 12px;
-                padding: 3px;
-                border: none;
-                border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #ff6666;
+                border-radius:2px;
+                background-color:red;
+                max-width:20px;
+                height:20px;
             }
         """)
 
+        layout1 = QVBoxLayout()
+        layout2 = QVBoxLayout()
+
+        layout1.addWidget(label)
+        layout2.addWidget(button)
+
+        frame1.setLayout(layout1)
+        frame2.setLayout(layout2)
+
+        layout1.setAlignment(Qt.AlignRight)
+
+        parentLayout = QHBoxLayout()
+        parentLayout.addWidget(frame1)
+        parentLayout.addWidget(frame2)
+
+        parentFrame.setLayout(parentLayout)
+
+        button.clicked.connect(lambda: self.delete_file(file_path))
+
+        self.fileUploaderFrame.layout().addWidget(parentFrame)
+
+
     def show_popup(self, file_name):
 
-        self.fileUploaded.setText(f"{file_name} uploaded")
-        self.fileUploaded.setAlignment(Qt.AlignCenter)
-        self.fileUploaded.setStyleSheet("""
+        file_label = QLabel(file_name)
+        file_label.setAlignment(Qt.AlignCenter)
+        file_label.setStyleSheet("""
             QLabel {
                 color: white;
                 font-size: 16px;
             }
         """)
+        self.uploadedFiles.layout().addWidget(file_label)
 
-        self.analyzeButton.setText("Analyze My Data")
-        self.analyzeButton.setStyleSheet("""
+
+        analyze_button = QPushButton("Analyze My Data")
+        analyze_button.setStyleSheet("""
             QPushButton {
                 background-color:#F27821;
                 color: white;
                 font-size: 16px;
                 border: none;
                 border-radius: 5px;
+                width: 200px;
+                height: 24px;
             }
             QPushButton:hover {
                 background-color: #ff9933;
             }
         """)
 
-        self.analyzeButton.clicked.connect(self.emit_analyzeButtonClicked)
+        self.analyzeButtonFrame.layout().addWidget(analyze_button)
+
+        analyze_button.clicked.connect(self.emit_analyzeButtonClicked)
 
 
     def delete_file(self, file_path):
-        print(f"Deleting file: {file_path}")
         if file_path in self.file_paths:
             self.file_paths.remove(file_path)
-            print(f"Removed file path: {file_path}")
-            if file_path in self.file_widgets:
-                file_layout = self.file_widgets.pop(file_path)
-                while file_layout.count():
-                    item = file_layout.takeAt(0)
-                    widget = item.widget()
-                    if widget is not None:
-                        widget.deleteLater()
+            if not self.file_paths:  # If file_paths list is empty
+                self.delete_analyze_button()
 
-            if self.file_uploaded_label and self.file_uploaded_label.text().startswith(os.path.basename(file_path)):
-                self.file_uploaded_label.clear()
-                for i in reversed(range(self.layout.count())):
-                    widget = self.layout.itemAt(i).widget()
-                    if widget is not None and widget.objectName() == "popup_widget":
-                        self.layout.removeWidget(widget)
-                        widget.deleteLater()
+        for i in range(self.fileUploaderFrame.layout().count()):
+            parentFrame = self.fileUploaderFrame.layout().itemAt(i).widget()
+            if parentFrame:
+                innerLayout = parentFrame.layout()
+                if innerLayout:
+                    innerFrameLabel = innerLayout.itemAt(0).widget()  # Access the inner frame
+                    innerFrameButton = innerLayout.itemAt(1).widget()
+                    if innerFrameLabel and innerFrameButton:
+                        file_name_label = innerFrameLabel.layout().itemAt(0).widget()  # Access the label inside the inner frame
+                        delete_button = innerFrameButton.layout().itemAt(0).widget()  # Access the delete button
+                        if file_name_label and file_name_label.text() == os.path.basename(file_path):
+                            delete_button.clicked.disconnect()  # Disconnect button signal
+                            parentFrame.deleteLater()  # Delete the entire frame
+                            # Remove label from the uploadedFiles layout
+                            for j in range(self.uploadedFiles.layout().count()):
+                                label = self.uploadedFiles.layout().itemAt(j).widget()
+                                if label and label.text() == os.path.basename(file_path):
+                                    label.deleteLater()
+                                    break
+                            break
 
-            self.file_path_updated.emit(self.file_paths.copy())
-            if self.parent_widget and hasattr(self.parent_widget, 'plugin_screen'):
-                self.parent_widget.plugin_screen.clear_file_path()
-            if self.parent_widget:
-                self.parent_widget.session_manager.set_file_uploaded(self.file_paths)
+        self.file_path_updated.emit(self.file_paths.copy())
+
+    def delete_analyze_button(self):
+        analyze_button = self.analyzeButtonFrame.layout().itemAt(0).widget()
+        if analyze_button:
+            analyze_button.deleteLater()
 
     def emit_analyzeButtonClicked(self):
         self.analyzedButtonClicked.emit()

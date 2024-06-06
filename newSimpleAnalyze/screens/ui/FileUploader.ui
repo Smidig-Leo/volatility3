@@ -72,58 +72,25 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item alignment="Qt::AlignBottom">
-           <widget class="QFrame" name="frame_3">
+           <widget class="QFrame" name="uploadedFiles">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
-             <item alignment="Qt::AlignHCenter">
-              <widget class="QLabel" name="fileUploaded">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <layout class="QVBoxLayout" name="verticalLayout_6"/>
            </widget>
           </item>
           <item alignment="Qt::AlignHCenter|Qt::AlignTop">
-           <widget class="QFrame" name="frame_4">
+           <widget class="QFrame" name="analyzeButtonFrame">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <item>
-              <widget class="QPushButton" name="analyzeButton">
-               <property name="minimumSize">
-                <size>
-                 <width>250</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QPushButton{
-	background-color:transparent;
-}</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <layout class="QVBoxLayout" name="verticalLayout_5"/>
            </widget>
           </item>
          </layout>
@@ -234,68 +201,24 @@ QFrame &gt; * {
             </layout>
            </widget>
           </item>
-          <item alignment="Qt::AlignTop">
-           <widget class="QFrame" name="frame_5">
+          <item>
+           <widget class="QFrame" name="fileUploaderFrame">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout">
-             <item alignment="Qt::AlignRight">
-              <widget class="QFrame" name="frame_6">
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="QFrame" name="frame_5">
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
                </property>
                <property name="frameShadow">
                 <enum>QFrame::Raised</enum>
                </property>
-               <layout class="QVBoxLayout" name="verticalLayout_8">
-                <item alignment="Qt::AlignRight">
-                 <widget class="QLabel" name="fileName">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item alignment="Qt::AlignLeft">
-              <widget class="QFrame" name="frame_7">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_7">
-                <item>
-                 <widget class="QPushButton" name="deleteBtn">
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton{
-	background-color:transparent;
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <layout class="QHBoxLayout" name="horizontalLayout"/>
               </widget>
              </item>
             </layout>
