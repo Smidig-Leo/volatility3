@@ -169,14 +169,14 @@ class DataTable(QWidget):
         model = self.proxy_model.sourceModel()
 
         if not flagged:
-            for col in range(model.columnCount()):
+            for col in range(1, model.columnCount()):
                 index = model.index(row, col)
                 item = model.itemFromIndex(index)
                 item.setBackground(QColor("#FF6242"))
             self.flagged_rows.add(row)
             button.setStyleSheet("background-color: #ff6242; color: white; text-align: center;")
         else:
-            for col in range(model.columnCount()):
+            for col in range(1, model.columnCount()):
                 index = model.index(row, col)
                 item = model.itemFromIndex(index)
                 item.setBackground(QBrush())
