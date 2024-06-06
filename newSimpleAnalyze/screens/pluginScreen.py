@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QMainWindow, QFrame, QHBoxLayout, QLineEdit
-from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QMainWindow, QFrame, QHBoxLayout, QLineEdit, QScrollArea, QToolTip, QApplication
+from PyQt5.QtCore import pyqtSignal, Qt, QEvent, QPoint
 from PyQt5.uic import loadUi
 from newSimpleAnalyze.Components.py_toggle import PyToggle
 from newSimpleAnalyze.data.plugins.pluginManager import PluginManager
@@ -11,6 +11,9 @@ class PluginScreen(QMainWindow):
     def __init__(self, session_manager):
         super().__init__()
         loadUi('screens/ui/Plugins.ui', self)
+
+
+        QApplication.instance().setStyleSheet("QToolTip { background-color: black; color: white; border: 1px solid white; padding: 5px; font-size: 10pt; }")
 
         self.session_manager = session_manager
         self.activeCommands = self.session_manager.get_activated_plugins()
@@ -24,6 +27,7 @@ class PluginScreen(QMainWindow):
         widget.setLayout(scroll_layout)
 
         self.pluginScroll.setWidget(widget)
+        self.pluginScroll.setWidgetResizable(True)
 
         self.plugins_data = PluginManager()
         self.search_bar = self.findChild(QLineEdit, 'lineEditPluginSearch')
@@ -35,7 +39,7 @@ class PluginScreen(QMainWindow):
         self.plugins = self.plugins_data.get_plugins('windows')
         self.populate_plugin_toggles(scroll_layout)
 
-    def create_plugin_toggle(self, scroll_layout, plugin_name, color):
+    def create_plugin_toggle(self, scroll_layout, plugin_name, plugin_description, color):
         firstFrame = QFrame()
         secondFrame = QFrame()
         thirdFrame = QFrame()
@@ -61,6 +65,8 @@ class PluginScreen(QMainWindow):
 
         label1 = QLabel(plugin_name)
         label1.setStyleSheet("color:white;")
+        label1.setToolTip(plugin_description)
+        label1.installEventFilter(self)
         layout2.addWidget(label1)
 
         toggle = PyToggle()
@@ -74,6 +80,14 @@ class PluginScreen(QMainWindow):
         toggle.stateChanged.connect(lambda: self.setActiveCommands(plugin_name, toggle.isChecked()))
 
         scroll_layout.addWidget(firstFrame)
+
+    def eventFilter(self, source, event):
+        if event.type() == QEvent.Enter and isinstance(source, QLabel):
+            tooltip_position = source.mapToGlobal(QPoint(source.width() - 350, -source.height() // 2))
+            QToolTip.showText(tooltip_position, source.toolTip(), source)
+        elif event.type() == QEvent.Leave and isinstance(source, QLabel):
+            QToolTip.hideText()
+        return super().eventFilter(source, event)
 
     def setActiveCommands(self, plugin_name, isChecked):
         if isChecked:
@@ -97,59 +111,5 @@ class PluginScreen(QMainWindow):
         for i, plugin in enumerate(self.plugins):
             if search_text in plugin.name.lower():
                 color = "secondary" if (i + 1) % 2 == 0 else "primary"
-                self.create_plugin_toggle(layout, plugin.name, color)
-    #     self.file_path = ""
-    #     self.selected_plugins = []
-    #     self.plugin_manager = PluginManager()
-    #     self.selected_os = "windows"
-    #
-    #     self.layout = QVBoxLayout()
-    #     self.setLayout(self.layout)
-    #
-    #     self.load_plugins(self.selected_os)
-    #
-    # def load_plugins(self, os):
-    #     self.plugin_manager.load_plugins(os, self.file_path)
-    #     self.plugins = self.plugin_manager.get_plugins()
-    #     self.populate_plugin_checkboxes()
-    #
-    # def populate_plugin_checkboxes(self):
-    #
-    #     for i in reversed(range(self.layout.count())):
-    #         widget = self.layout.itemAt(i).widget()
-    #         if widget:
-    #             widget.deleteLater()
-    #
-    #     for plugin in self.plugins:
-    #         checkbox = QCheckBox(plugin.name)
-    #         checkbox.stateChanged.connect(self.toggle_plugin)
-    #         self.layout.addWidget(checkbox)
-    #         if self.selected_os in self.selected_plugins and plugin.name in self.selected_plugins[self.selected_os]:
-    #             checkbox.setChecked(True)
-    #         self.layout.addWidget(checkbox)
-    #
-    # def set_os(self, os):
-    #     self.selected_os = str(os)
-    #     print("OS set to ", self.selected_os)
-    #     self.load_plugins(self.selected_os)
-    #
-    # def toggle_plugin(self):
-    #     plugin_name = self.sender().text()
-    #     if self.file_path:
-    #         if plugin_name in self.selected_plugins:
-    #             self.selected_plugins.remove(plugin_name)
-    #             self.sender().setStyleSheet("")
-    #         else:
-    #             self.selected_plugins.append(plugin_name)
-    #
-    #
-    #         self.plugins_updated.emit(self.selected_plugins)
-    #
-    # def set_file_path(self, file_path):
-    #     self.file_path = file_path
-    #     self.load_plugins(self.selected_os)
-    #
-    # def clear_file_path(self):
-    #     self.file_path = ""
-    #     self.selected_plugins.clear()
-    #     self.load_plugins(self.selected_os)
+                self.create_plugin_toggle(layout, plugin.name, plugin.description, color)
+
