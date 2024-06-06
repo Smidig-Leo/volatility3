@@ -8,6 +8,9 @@ from newSimpleAnalyze.Components.fileUploader import FileUploader
 from newSimpleAnalyze.Components.chooseOs import ChooseOs
 from screens.pluginScreen import PluginScreen
 from screens.settingsPage import SettingsPage
+from newSimpleAnalyze.Components.selectDump import SelectDump
+from newSimpleAnalyze.Components.runAnalysis import RunAnalysis
+from newSimpleAnalyze.Components.selectPlugin import SelectPlugin
 from PyQt5.uic import loadUi
 from newSimpleAnalyze.data.sessionManager import SessionManager
 
@@ -31,13 +34,24 @@ class VolatilityApp(QMainWindow):
 
         self.file_uploader = FileUploader()
         self.os = ChooseOs()
-
+        self.select_dump = SelectDump()
+        self.select_plugin = SelectPlugin()
         self.session_manager = SessionManager()
+        self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
 
         self.main_page = MainPage(self.file_uploader, self.os)
         self.plugins_page = PluginScreen(self.session_manager)
-        self.data_page = AnalyzeDataScreen(self.plugins_page.activeCommandsUpdated, self.file_uploader.file_path_updated)
+        self.data_page = AnalyzeDataScreen(self.file_uploader, self.select_dump, self.select_plugin,self.run_analysis)
         self.settings_page = SettingsPage()
+
+        self.plugins_page.activeCommandsUpdated.connect(self.select_plugin.set_plugins)
+        self.file_uploader.file_path_updated.connect(self.select_dump.update_file_paths)
+        self.select_dump.file_selected.connect(self.run_analysis.handle_selected_files)
+        self.select_dump.file_selected.connect(self.data_page.update_file_label)
+        self.select_plugin.plugin_selected.connect(self.data_page.update_plugin_label)
+        # Setup connections for the run analysis process
+        self.select_plugin.plugin_selected.connect(self.run_analysis.handle_selected_plugin)
+        self.run_analysis.analysis_result.connect(self.data_page.display_data)
 
         self.stackedWidget.addWidget(self.main_page)
         self.stackedWidget.addWidget(self.data_page)
