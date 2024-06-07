@@ -20,6 +20,10 @@ class ChooseOs(QMainWindow):
         # self.radioButtonMac
         # self.radioButtonLinux
 
+        if self.session_manager.get_os() == "":
+            self.session_manager.set_os("windows")
+
+
         self.on_os_changed(self.session_manager.get_os())
 
         if self.session_manager.get_os() == "windows":
