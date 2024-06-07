@@ -12,82 +12,69 @@ class PluginScreen(QMainWindow):
         super().__init__()
         loadUi('screens/ui/Plugins.ui', self)
 
-
         QApplication.instance().setStyleSheet("QToolTip { background-color: black; color: white; border: 1px solid white; padding: 5px; font-size: 10pt; }")
 
         self.session_manager = session_manager
         self.activeCommands = self.session_manager.get_activated_plugins()
-
         self.os = session_manager.get_os()
 
-        scroll_layout = QVBoxLayout()
-        scroll_layout.setSpacing(0)
-
-        self.pluginScroll.setLayout(scroll_layout)
+        self.scroll_layout = QVBoxLayout()
+        self.scroll_layout.setSpacing(5)
+        self.scroll_layout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
 
         widget = QWidget()
-        widget.setLayout(scroll_layout)
+        widget.setLayout(self.scroll_layout)
+
 
         self.pluginScroll.setWidget(widget)
         self.pluginScroll.setWidgetResizable(True)
+        self.pluginScroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+
+        self.is_searching = False
 
         self.plugins_data = PluginManager()
         self.search_bar = self.findChild(QLineEdit, 'lineEditPluginSearch')
         if self.search_bar is None:
             raise ValueError("Could not find the search bar widget. Please check the object name in the .ui file.")
         self.search_bar.setPlaceholderText("Search Plugins")
-        self.search_bar.textChanged.connect(lambda: self.populate_plugin_toggles(scroll_layout))
+        self.search_bar.textChanged.connect(self.populate_plugin_toggles)
 
         os.connect(self.change_plugin_os)
 
         self.plugins = self.plugins_data.get_plugins(self.os)
-        self.populate_plugin_toggles(scroll_layout)
+        self.populate_plugin_toggles()
 
-    def create_plugin_toggle(self, scroll_layout, plugin_name, plugin_description, color):
+    def create_plugin_toggle(self, plugin_name, plugin_description, color):
         firstFrame = QFrame()
-        secondFrame = QFrame()
-        thirdFrame = QFrame()
-
-        primaryColor = "background-color:rgb(38, 38, 38);"
-        secondaryColor = "background-color:rgb(52, 53, 52);"
-
-        if color == "primary":
-            firstFrame.setStyleSheet(primaryColor)
-        elif color == "secondary":
-            firstFrame.setStyleSheet(secondaryColor)
-
-        firstFrame.setMaximumHeight(100)
+        firstFrame.setFixedHeight(50)
 
         layout = QHBoxLayout()
-        layout.addWidget(secondFrame)
-        layout.addWidget(thirdFrame)
 
-        firstFrame.setLayout(layout)
-
-        layout2 = QVBoxLayout()
-        layout3 = QVBoxLayout()
-
-        label1 = QLabel(plugin_name)
-        label1.setStyleSheet("color:white;")
-        label1.setToolTip(plugin_description)
-        label1.installEventFilter(self)
-        layout2.addWidget(label1)
+        label = QLabel(plugin_name)
+        label.setStyleSheet("color:white;")
+        label.setToolTip(plugin_description)
+        label.installEventFilter(self)
+        layout.addWidget(label)
 
         toggle = PyToggle()
-        layout3.addWidget(toggle)
-        layout3.setAlignment(toggle, Qt.AlignRight)
+        layout.addWidget(toggle)
+        layout.setAlignment(toggle, Qt.AlignRight)
 
-        secondFrame.setLayout(layout2)
-        thirdFrame.setLayout(layout3)
+        firstFrame.setLayout(layout)
+        firstFrame.setStyleSheet(f"background-color: {'#262626' if color == 'primary' else '#343534'};")
 
         toggle.setChecked(plugin_name in self.activeCommands)
         toggle.stateChanged.connect(lambda: self.setActiveCommands(plugin_name, toggle.isChecked()))
 
-        scroll_layout.addWidget(firstFrame)
+        return firstFrame
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.Enter and isinstance(source, QLabel):
-            tooltip_position = source.mapToGlobal(QPoint(source.width() - 350, -source.height() // 2))
+            tooltip_position = source.mapToGlobal(QPoint(
+                source.width() - 350,
+                source.height() // 2 if self.is_searching else -source.height() // 2
+
+            ))
             QToolTip.showText(tooltip_position, source.toolTip(), source)
         elif event.type() == QEvent.Leave and isinstance(source, QLabel):
             QToolTip.hideText()
@@ -104,21 +91,23 @@ class PluginScreen(QMainWindow):
         self.plugins_updated.emit(self.activeCommands)
         self.session_manager.set_activated_plugins(self.activeCommands)
 
-    def populate_plugin_toggles(self, layout):
-        for i in reversed(range(layout.count())):
-            widget = layout.itemAt(i).widget()
-            if isinstance(widget, QFrame):
-                widget.deleteLater()
-
+    def populate_plugin_toggles(self):
         search_text = self.search_bar.text().lower()
+        self.is_searching = bool(search_text)
 
-        for i, plugin in enumerate(self.plugins):
-            if search_text in plugin.name.lower():
-                color = "secondary" if (i + 1) % 2 == 0 else "primary"
-                self.create_plugin_toggle(layout, plugin.name, plugin.description, color)
+        for i in reversed(range(self.scroll_layout.count())):
+            widget = self.scroll_layout.itemAt(i).widget()
+            if isinstance(widget, QFrame):
+                widget.setParent(None)
 
+        visible_plugins = [plugin for plugin in self.plugins if search_text in plugin.name.lower()]
+
+        for i, plugin in enumerate(visible_plugins):
+            color = "secondary" if (i % 2 == 0) else "primary"
+            frame = self.create_plugin_toggle(plugin.name, plugin.description, color)
+            self.scroll_layout.addWidget(frame)
 
     def change_plugin_os(self, os):
         self.os = os
         self.plugins = self.plugins_data.get_plugins(self.os)
-        self.populate_plugin_toggles(self.pluginScroll.widget().layout())
+        self.populate_plugin_toggles()
