@@ -2,7 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 import csv
 from PyQt5.QtWidgets import (
-    QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout
+    QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout, QLineEdit
 )
 from PyQt5.uic import loadUi
 
@@ -59,6 +59,12 @@ class AnalyzeDataScreen(QMainWindow):
         self.columns_sort.column_visibility_changed.connect(self.update_column_visibility)
         self.frameColumns.layout().addWidget(self.columns_sort)
 
+        # Filter when searching
+        self.search_bar = self.findChild(QLineEdit, 'lineEditDataSearch')
+        if self.search_bar is None:
+            raise ValueError("Could not find the search bar widget. Please check the object name in the .ui file.")
+        self.search_bar.setPlaceholderText("Search data")
+        self.search_bar.textChanged.connect(self.filter_data)
 
         # Retrieve existing layouts
         dump_layout = self.frameDumps.layout()
@@ -99,6 +105,10 @@ class AnalyzeDataScreen(QMainWindow):
     def update_columns_sort(self, headers):
         """Update column sorting."""
         self.columns_sort.update_columns(headers)
+
+    def filter_data(self, text):
+        self.data_table.proxy_model.setFilterRegExp(text)
+        self.data_table.proxy_model.setFilterKeyColumn(-1)
 
     def start_analysis(self):
         """Start data analysis."""
