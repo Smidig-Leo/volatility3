@@ -37,6 +37,12 @@ class FileUploader(QMainWindow):
         self.dropArea.dragEnterEvent = self.dragEnterEvent
         self.dropArea.dropEvent = self.dropEvent
 
+        self.scroll_content_layout = QVBoxLayout()
+        self.scroll_content_layout.setAlignment(Qt.AlignTop)
+        self.fileUploaderScrollWidget = QWidget()
+        self.fileUploaderScrollWidget.setLayout(self.scroll_content_layout)
+        self.fileUploaderScroll.setWidget(self.fileUploaderScrollWidget)
+
     def dragEnterEvent(self, event: QDragEnterEvent):
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
@@ -109,7 +115,7 @@ class FileUploader(QMainWindow):
 
         button.clicked.connect(lambda: self.delete_file(file_path))
 
-        self.fileUploaderFrame.layout().addWidget(parentFrame)
+        self.scroll_content_layout.addWidget(parentFrame)
 
 
     def show_popup(self, file_name):
@@ -151,26 +157,49 @@ class FileUploader(QMainWindow):
             if not self.file_paths:  # If file_paths list is empty
                 self.delete_analyze_button()
 
-        for i in range(self.fileUploaderFrame.layout().count()):
-            parentFrame = self.fileUploaderFrame.layout().itemAt(i).widget()
-            if parentFrame:
-                innerLayout = parentFrame.layout()
-                if innerLayout:
-                    innerFrameLabel = innerLayout.itemAt(0).widget()  # Access the inner frame
-                    innerFrameButton = innerLayout.itemAt(1).widget()
-                    if innerFrameLabel and innerFrameButton:
-                        file_name_label = innerFrameLabel.layout().itemAt(0).widget()  # Access the label inside the inner frame
-                        delete_button = innerFrameButton.layout().itemAt(0).widget()  # Access the delete button
-                        if file_name_label and file_name_label.text() == os.path.basename(file_path):
-                            delete_button.clicked.disconnect()  # Disconnect button signal
-                            parentFrame.deleteLater()  # Delete the entire frame
-                            # Remove label from the uploadedFiles layout
-                            for j in range(self.uploadedFiles.layout().count()):
-                                label = self.uploadedFiles.layout().itemAt(j).widget()
-                                if label and label.text() == os.path.basename(file_path):
-                                    label.deleteLater()
-                                    break
-                            break
+        scroll_area_widget = self.fileUploaderScroll.widget()
+        scroll_layout = scroll_area_widget.layout()
+
+        for i in range(scroll_layout.count()):
+            parent_frame = scroll_layout.itemAt(i).widget()
+            if parent_frame:
+                innerFrameLabel = parent_frame.layout().itemAt(0).widget()
+                innerFrameButton = parent_frame.layout().itemAt(1).widget()
+                if innerFrameLabel and innerFrameButton:
+                    file_name_label = innerFrameLabel.layout().itemAt(0).widget()  # Access the label inside the inner frame
+                    delete_button = innerFrameButton.layout().itemAt(0).widget()  # Access the delete button
+                    if file_name_label and file_name_label.text() == os.path.basename(file_path):
+                        delete_button.clicked.disconnect()  # Disconnect button signal
+                        parent_frame.deleteLater()  # Delete the entire frame
+                        for j in range(self.uploadedFiles.layout().count()):
+                            label = self.uploadedFiles.layout().itemAt(j).widget()
+                            if label and label.text() == os.path.basename(file_path):
+                                label.deleteLater()
+                                break
+                        break
+
+
+
+
+        # for i in range(self.fileUploaderFrame.layout().count()):
+        #     parentFrame = self.fileUploaderFrame.layout().itemAt(i).widget()
+        #     if parentFrame:
+        #         innerLayout = parentFrame.layout()
+        #         if innerLayout:
+        #             innerFrameLabel = innerLayout.itemAt(0).widget()  # Access the inner frame
+        #             innerFrameButton = innerLayout.itemAt(1).widget()
+        #             if innerFrameLabel and innerFrameButton:
+        #                 file_name_label = innerFrameLabel.layout().itemAt(0).widget()  # Access the label inside the inner frame
+        #                 delete_button = innerFrameButton.layout().itemAt(0).widget()  # Access the delete button
+        #                 if file_name_label and file_name_label.text() == os.path.basename(file_path):
+        #                     delete_button.clicked.disconnect()  # Disconnect button signal
+        #                     parentFrame.deleteLater()  # Delete the entire frame
+        #                     for j in range(self.uploadedFiles.layout().count()):
+        #                         label = self.uploadedFiles.layout().itemAt(j).widget()
+        #                         if label and label.text() == os.path.basename(file_path):
+        #                             label.deleteLater()
+        #                             break
+        #                     break
 
         self.file_path_updated.emit(self.file_paths.copy())
 

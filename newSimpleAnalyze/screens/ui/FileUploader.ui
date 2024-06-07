@@ -13,6 +13,147 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">/*VERTICAL SCROLLBAR*/
+QScrollBar:vertical {
+	border:none;
+	background-color: rgb(242, 102, 42);
+    width:14px;
+    margin:15px 0 15px 0;
+    boder-radius:0px;
+}
+
+/*HANDLE BAT VERTICAL*/
+QScrollBar::handle:vertical{
+	background-color:  rgb(242, 102, 42);
+    min-height:30px;
+    border-radius:7px;
+}
+
+QScrollBar::handle:vertical:hover {
+  background-color:orange;
+}
+
+QScrollBar::handle:vertical:pressed{
+   background-color:orange;
+}
+
+/*BTN TOP -SCROLLBAR*/
+QScrollBar::sub-line:vertical {
+  border:none;
+  background-color:  rgb(242, 102, 42);
+  height:15px;
+  border-top-left-radius:7px;
+  border-top-right-radius:7px;
+  subcontrol-position:top;
+  subcontrol-origin:margin;
+}
+
+QScrollBar::sub-line:vertical:hover{
+	background-color: orange;
+}
+
+QScrollBar::sub-line:vertical:pressed{
+	background-color: orange;
+}
+
+/*BTN BOTTOM -SCROLLBAR*/
+QScrollBar::add-line:vertical {
+  border:none;
+  background-color:  rgb(242, 102, 42);
+  height:15px;
+  border-bottom-left-radius:7px;
+  border-bottom-right-radius:7px;
+  subcontrol-position:bottom;
+  subcontrol-origin:margin;
+}
+
+QScrollBar::add-line:vertical:hover{
+	background-color: orange;
+}
+
+QScrollBar::add-line:vertical:pressed{
+	background-color:orange;
+}
+
+
+/*RESET ARROW*/
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical{
+  background:none;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{
+  background:none;
+}
+
+
+/* HORIZONTAL SCROLLBAR*/
+QScrollBar:horizontal {
+   	border:none;
+	background-color: rgb(242, 102, 42);
+    height:14px;
+    margin:0 15px 0 15px;
+    boder-radius:0px;
+}
+QScrollBar::handle:horizontal {
+    background-color:  rgb(242, 102, 42);
+    min-width:30px;
+    border-radius:7px;
+}
+
+QScrollBar::handle:horizontal:hover {
+  background-color:orange;
+}
+
+QScrollBar::handle:horizontal:pressed{
+   background-color:orange;
+}
+
+QScrollBar::add-line:horizontal {
+  border:none;
+  background-color: rgb(242, 102, 42);
+  width:15px;
+  border-bottom-right-radius:7px;
+  border-top-right-radius:7px;
+  subcontrol-position:right;
+  subcontrol-origin:margin;
+}
+
+QScrollBar::add-line:horizontal:hover{
+	background-color: orange;
+}
+
+QScrollBar::add-line:horizontal:pressed{
+	background-color:orange;
+}
+
+QScrollBar::sub-line:horizontal {
+  border:none;
+  background-color:  rgb(242, 102, 42);
+  width:15px;
+  border-bottom-left-radius:7px;
+  border-top-left-radius:7px;
+  subcontrol-position:left;
+  subcontrol-origin:margin;
+}
+
+QScrollBar::sub-line:horizontal:hover{
+	background-color:orange;
+}
+
+QScrollBar::sub-line:horizontal:pressed{
+	background-color:orange;
+}
+
+QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal
+{
+ background:none;
+}
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
+{
+ background:none;
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
@@ -288,23 +429,32 @@ line-height: normal;</string>
               <number>0</number>
              </property>
              <property name="topMargin">
-              <number>0</number>
+              <number>4</number>
              </property>
              <property name="rightMargin">
               <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <item>
-              <widget class="QFrame" name="frame_5">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
+              <widget class="QScrollArea" name="fileUploaderScroll">
+               <property name="styleSheet">
+                <string notr="true">background-color:transparent;</string>
                </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
+               <property name="widgetResizable">
+                <bool>true</bool>
                </property>
-               <layout class="QHBoxLayout" name="horizontalLayout"/>
+               <widget class="QWidget" name="scrollAreaWidgetContents">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>482</width>
+                  <height>116</height>
+                 </rect>
+                </property>
+               </widget>
               </widget>
              </item>
             </layout>
