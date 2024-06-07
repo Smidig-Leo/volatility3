@@ -39,9 +39,19 @@ class FileUploader(QMainWindow):
 
         self.scroll_content_layout = QVBoxLayout()
         self.scroll_content_layout.setAlignment(Qt.AlignTop)
+        self.scroll_content_layout.setSpacing(0)
+
+        self.uploaded_layout = QVBoxLayout()
+        self.uploaded_layout.setAlignment(Qt.AlignTop)
+        self.uploaded_layout.setSpacing(0)
+
         self.fileUploaderScrollWidget = QWidget()
         self.fileUploaderScrollWidget.setLayout(self.scroll_content_layout)
         self.fileUploaderScroll.setWidget(self.fileUploaderScrollWidget)
+
+        self.uploadedScrollWidget = QWidget()
+        self.uploadedScrollWidget.setLayout(self.uploaded_layout)
+        self.uploadedFilesScroll.setWidget(self.uploadedScrollWidget)
 
     def dragEnterEvent(self, event: QDragEnterEvent):
         if event.mimeData().hasUrls():
@@ -108,6 +118,7 @@ class FileUploader(QMainWindow):
         layout1.setAlignment(Qt.AlignRight)
 
         parentLayout = QHBoxLayout()
+        parentLayout.setContentsMargins(0, 0, 0, 0)
         parentLayout.addWidget(frame1)
         parentLayout.addWidget(frame2)
 
@@ -128,7 +139,8 @@ class FileUploader(QMainWindow):
                 font-size: 16px;
             }
         """)
-        self.uploadedFiles.layout().addWidget(file_label)
+
+        self.uploaded_layout.addWidget(file_label)
 
         if len(self.file_paths) == 1:
             analyze_button = QPushButton("Analyze My Data")
@@ -147,6 +159,8 @@ class FileUploader(QMainWindow):
                 }
             """)
 
+            self.uploadedText.setText("Uploaded")
+
             self.analyzeButtonFrame.layout().addWidget(analyze_button)
 
             analyze_button.clicked.connect(self.emit_analyzeButtonClicked)
@@ -155,6 +169,7 @@ class FileUploader(QMainWindow):
         if file_path in self.file_paths:
             self.file_paths.remove(file_path)
             if not self.file_paths:  # If file_paths list is empty
+                self.uploadedText.setText("")
                 self.delete_analyze_button()
 
         scroll_area_widget = self.fileUploaderScroll.widget()
@@ -171,36 +186,12 @@ class FileUploader(QMainWindow):
                     if file_name_label and file_name_label.text() == os.path.basename(file_path):
                         delete_button.clicked.disconnect()  # Disconnect button signal
                         parent_frame.deleteLater()  # Delete the entire frame
-                        for j in range(self.uploadedFiles.layout().count()):
-                            label = self.uploadedFiles.layout().itemAt(j).widget()
+                        for j in range(self.uploaded_layout.layout().count()):
+                            label = self.uploaded_layout.layout().itemAt(j).widget()
                             if label and label.text() == os.path.basename(file_path):
                                 label.deleteLater()
                                 break
                         break
-
-
-
-
-        # for i in range(self.fileUploaderFrame.layout().count()):
-        #     parentFrame = self.fileUploaderFrame.layout().itemAt(i).widget()
-        #     if parentFrame:
-        #         innerLayout = parentFrame.layout()
-        #         if innerLayout:
-        #             innerFrameLabel = innerLayout.itemAt(0).widget()  # Access the inner frame
-        #             innerFrameButton = innerLayout.itemAt(1).widget()
-        #             if innerFrameLabel and innerFrameButton:
-        #                 file_name_label = innerFrameLabel.layout().itemAt(0).widget()  # Access the label inside the inner frame
-        #                 delete_button = innerFrameButton.layout().itemAt(0).widget()  # Access the delete button
-        #                 if file_name_label and file_name_label.text() == os.path.basename(file_path):
-        #                     delete_button.clicked.disconnect()  # Disconnect button signal
-        #                     parentFrame.deleteLater()  # Delete the entire frame
-        #                     for j in range(self.uploadedFiles.layout().count()):
-        #                         label = self.uploadedFiles.layout().itemAt(j).widget()
-        #                         if label and label.text() == os.path.basename(file_path):
-        #                             label.deleteLater()
-        #                             break
-        #                     break
-
         self.file_path_updated.emit(self.file_paths.copy())
 
     def delete_analyze_button(self):
