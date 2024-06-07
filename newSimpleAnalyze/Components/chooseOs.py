@@ -17,7 +17,15 @@ class ChooseOs(QMainWindow):
         # self.radioButtonMac
         # self.radioButtonLinux
 
+        self.on_os_changed("windows")
 
+        self.radioButtonWindows.clicked.connect(lambda: self.on_os_changed("windows"))
+        self.radioButtonMac.clicked.connect(lambda: self.on_os_changed("mac"))
+        self.radioButtonLinux.clicked.connect(lambda: self.on_os_changed("linux"))
+
+    def on_os_changed(self, text):
+        print("Selected OS:", text)
+        self.os_changed.emit(text)
 
 
         # self.parent_widget = parent
@@ -40,9 +48,7 @@ class ChooseOs(QMainWindow):
         #
         # self.windows_radio.setChecked(True)
 
-    def on_os_changed(self, text):
-        print("Selected OS:", text)
-        self.os_changed.emit(text)
+
 
 
 

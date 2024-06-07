@@ -20,6 +20,7 @@ from newSimpleAnalyze.data.sessionManager import SessionManager
 class VolatilityApp(QMainWindow):
     activeCommandsUpdated = pyqtSignal(list)
     file_path_updated = pyqtSignal(list)
+    os_changed = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -44,7 +45,7 @@ class VolatilityApp(QMainWindow):
 
 
         self.main_page = MainPage(self.file_uploader, self.os, self.session_manager)
-        self.plugins_page = PluginScreen(self.session_manager)
+        self.plugins_page = PluginScreen(self.session_manager,self.os.os_changed)
         self.data_page = AnalyzeDataScreen(self.file_uploader, self.select_dump, self.select_plugin,self.run_analysis)
         self.settings_page = SettingsPage()
 

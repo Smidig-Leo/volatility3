@@ -8,7 +8,7 @@ class PluginScreen(QMainWindow):
     plugins_updated = pyqtSignal(list)
     activeCommandsUpdated = pyqtSignal(list)
 
-    def __init__(self, session_manager):
+    def __init__(self, session_manager, os):
         super().__init__()
         loadUi('screens/ui/Plugins.ui', self)
 
@@ -17,6 +17,8 @@ class PluginScreen(QMainWindow):
 
         self.session_manager = session_manager
         self.activeCommands = self.session_manager.get_activated_plugins()
+
+        self.os = 'windows'
 
         scroll_layout = QVBoxLayout()
         scroll_layout.setSpacing(0)
@@ -36,7 +38,9 @@ class PluginScreen(QMainWindow):
         self.search_bar.setPlaceholderText("Search Plugins")
         self.search_bar.textChanged.connect(lambda: self.populate_plugin_toggles(scroll_layout))
 
-        self.plugins = self.plugins_data.get_plugins('windows')
+        os.connect(self.change_plugin_os)
+
+        self.plugins = self.plugins_data.get_plugins(self.os)
         self.populate_plugin_toggles(scroll_layout)
 
     def create_plugin_toggle(self, scroll_layout, plugin_name, plugin_description, color):
@@ -113,3 +117,9 @@ class PluginScreen(QMainWindow):
                 color = "secondary" if (i + 1) % 2 == 0 else "primary"
                 self.create_plugin_toggle(layout, plugin.name, plugin.description, color)
 
+
+    def change_plugin_os(self, os):
+        self.os = os
+        self.plugins = self.plugins_data.get_plugins(self.os)
+        self.populate_plugin_toggles(self.pluginScroll.widget().layout())
+        print("SUKA BLYAT")
