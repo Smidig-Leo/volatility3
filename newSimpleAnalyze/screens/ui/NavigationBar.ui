@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
     <string notr="true">QWidget{
-	background-color:rgb(52, 53, 52);
+	/*background-color:rgb(52, 53, 52);*/
 }</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">

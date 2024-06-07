@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1082</width>
-    <height>655</height>
+    <height>674</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,22 +46,19 @@
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <property name="leftMargin">
-        <number>50</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
-        <number>60</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>50</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>60</number>
+        <number>0</number>
        </property>
-       <property name="horizontalSpacing">
-        <number>40</number>
-       </property>
-       <property name="verticalSpacing">
-        <number>60</number>
+       <property name="spacing">
+        <number>0</number>
        </property>
        <item row="1" column="0">
         <widget class="QWidget" name="popupWidget" native="true">
@@ -107,19 +104,19 @@
          <property name="minimumSize">
           <size>
            <width>500</width>
-           <height>300</height>
+           <height>400</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>300</width>
-           <height>300</height>
+           <width>500</width>
+           <height>400</height>
           </size>
          </property>
          <property name="styleSheet">
           <string notr="true">QFrame {
     background-color: #262626;
-    border-radius: 25px;
+    border-radius: 40px;
 }
 
 QFrame &gt; * {
@@ -133,34 +130,20 @@ QFrame &gt; * {
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-           <widget class="QLabel" name="label">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Drag &amp; Drop to Upload File</string>
-            </property>
-           </widget>
-          </item>
-          <item alignment="Qt::AlignHCenter">
-           <widget class="QLabel" name="label_2">
-            <property name="font">
-             <font>
-              <pointsize>14</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>OR</string>
-            </property>
-           </widget>
-          </item>
-          <item alignment="Qt::AlignHCenter|Qt::AlignTop">
+          <item>
            <widget class="QFrame" name="frame_2">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>250</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>250</height>
+             </size>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -168,8 +151,92 @@ QFrame &gt; * {
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>20</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item alignment="Qt::AlignHCenter">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap>../../design/Vector.png</pixmap>
+               </property>
+               <property name="scaledContents">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
              <item>
+              <widget class="QLabel" name="labelDragDrop">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="layoutDirection">
+                <enum>Qt::LeftToRight</enum>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: white;
+background-color: transparent;</string>
+               </property>
+               <property name="text">
+                <string>Drag &amp; Drop to upload file</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="indent">
+                <number>-1</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="textOR">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <pointsize>14</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: white;
+background-color: transparent;</string>
+               </property>
+               <property name="text">
+                <string>OR</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item alignment="Qt::AlignHCenter">
               <widget class="QPushButton" name="selectButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>200</width>
@@ -182,19 +249,23 @@ QFrame &gt; * {
                  <height>30</height>
                 </size>
                </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
+               <property name="layoutDirection">
+                <enum>Qt::LeftToRight</enum>
                </property>
                <property name="styleSheet">
-                <string notr="true">QPushButton{
-	border-radius:4px;
-	background-color:rgb(242, 120, 33);
-}</string>
+                <string notr="true">border-radius: 6px;
+background: #F27821;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+color: #FFF;
+text-align: center;
+font: 75 12pt &quot;Arial&quot;;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;</string>
                </property>
                <property name="text">
-                <string>Browse File</string>
+                <string>Browse file</string>
                </property>
               </widget>
              </item>
@@ -210,6 +281,21 @@ QFrame &gt; * {
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QFrame" name="frame_5">
                <property name="frameShape">
