@@ -18,7 +18,7 @@ class PluginScreen(QMainWindow):
         self.session_manager = session_manager
         self.activeCommands = self.session_manager.get_activated_plugins()
 
-        self.os = 'windows'
+        self.os = session_manager.get_os()
 
         scroll_layout = QVBoxLayout()
         scroll_layout.setSpacing(0)
@@ -122,4 +122,3 @@ class PluginScreen(QMainWindow):
         self.os = os
         self.plugins = self.plugins_data.get_plugins(self.os)
         self.populate_plugin_toggles(self.pluginScroll.widget().layout())
-        print("SUKA BLYAT")

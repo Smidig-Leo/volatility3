@@ -153,6 +153,9 @@ QFrame &gt; * {
           </item>
           <item>
            <widget class="QRadioButton" name="radioButtonWindows">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="font">
              <font>
               <family>Arial</family>
@@ -202,7 +205,16 @@ QRadioButton {
               <height>20</height>
              </size>
             </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
             <property name="checked">
+             <bool>false</bool>
+            </property>
+            <property name="autoRepeat">
+             <bool>false</bool>
+            </property>
+            <property name="autoExclusive">
              <bool>true</bool>
             </property>
            </widget>

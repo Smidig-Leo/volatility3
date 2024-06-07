@@ -27,7 +27,7 @@ class VolatilityApp(QMainWindow):
         # Initialize components and session manager
         self.session_manager = SessionManager()
         self.file_uploader = FileUploader()
-        self.os = ChooseOs()
+        self.os = ChooseOs(self.session_manager)
         self.select_dump = SelectDump()
         self.select_plugin = SelectPlugin()
         self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
