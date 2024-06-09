@@ -36,18 +36,17 @@ class AnalyzeDataScreen(QMainWindow):
         self.framePluginContent = self.findChild(QFrame, 'framePluginContent')
         self.frameDataContent = self.findChild(QFrame, 'frame_7')
         self.dataScroll = self.findChild(QFrame, 'dataScroll')
+        self.dataScroll.setStyleSheet("border: none;")
         self.frame = self.findChild(QFrame, 'frame')
         self.runBtn = self.findChild(QPushButton, 'runBtn')
         self.frameTopRight = self.findChild(QFrame, 'frame_10')
         self.pluginsParentFrame = self.findChild(QFrame, 'frame_11')
         self.frameExport = self.findChild(QFrame, 'frameExport')
         self.frameColumns = self.findChild(QFrame, 'frameColumns')
+        self.export_button = self.findChild(QPushButton, 'exportButton')
 
-        # Add export button
-        self.export_button = QPushButton("Export as...")
-        self.export_button.setFixedHeight(30)
+        # Export button
         self.export_button.clicked.connect(self.export_data)
-        self.frameExport.layout().addWidget(self.export_button)
 
         # Data Table
         data_layout = QHBoxLayout()
@@ -75,6 +74,7 @@ class AnalyzeDataScreen(QMainWindow):
         # Connect signals
         self.data_table.headers_updated.connect(self.update_columns_sort)
         self.runBtn.clicked.connect(self.start_analysis)
+
 
 
     def update_file_label(self, selected_files):
