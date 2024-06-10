@@ -14,7 +14,11 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">/*VERTICAL SCROLLBAR*/
+   <string notr="true">QWidget QFrame {
+	border:none;
+}
+
+/*VERTICAL SCROLLBAR*/
 QScrollBar:vertical {
 	border:none;
 	background-color: rgb(242, 102, 42);
