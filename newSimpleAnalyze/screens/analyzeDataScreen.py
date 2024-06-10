@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.uic import loadUi
 
 from newSimpleAnalyze.utils.exportmanager import ExportManager
-from simpleAnalyze.Components.datatable import DataTable
+from newSimpleAnalyze.Components.datable import DataTable
 from simpleAnalyze.Components.columnsSort import ColumnsSort
 
 
@@ -109,6 +109,7 @@ class AnalyzeDataScreen(QMainWindow):
     def filter_data(self, text):
         self.data_table.proxy_model.setFilterRegExp(text)
         self.data_table.proxy_model.setFilterKeyColumn(-1)
+        self.data_table.recreate_cell_widget()
 
     def start_analysis(self):
         """Start data analysis."""
