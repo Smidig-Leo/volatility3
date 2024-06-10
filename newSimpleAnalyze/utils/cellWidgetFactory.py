@@ -5,6 +5,7 @@ class CellWidgetFactory:
     def create_cell_widget(row_index, table):
         cell_widget = QWidget()
         cell_layout = QHBoxLayout()
+
         cell_layout.setContentsMargins(0, 0, 0, 0)
         cell_layout.setSpacing(5)
 

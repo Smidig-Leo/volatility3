@@ -1,8 +1,11 @@
 import os
 import xml.etree.ElementTree as ET
 import csv
+
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (
-    QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout, QLineEdit
+    QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout, QLineEdit, QMenu, QAction, QToolButton,
+    QVBoxLayout
 )
 from PyQt5.uic import loadUi
 
@@ -45,8 +48,9 @@ class AnalyzeDataScreen(QMainWindow):
         self.frameColumns = self.findChild(QFrame, 'frameColumns')
         self.export_button = self.findChild(QPushButton, 'exportButton')
 
-        # Export button
+        # Export buttons
         self.export_button.clicked.connect(self.export_data)
+        self.exportIcon.clicked.connect(self.export_data)
 
         # Data Table
         data_layout = QHBoxLayout()
@@ -54,9 +58,13 @@ class AnalyzeDataScreen(QMainWindow):
         data_layout.addWidget(self.data_table)
 
         # Columns sort
-        self.columns_sort.setFixedHeight(30)
-        self.columns_sort.column_visibility_changed.connect(self.update_column_visibility)
-        self.frameColumns.layout().addWidget(self.columns_sort)
+        self.menu = QMenu()
+        self.columnsButton.setMenu(self.menu)
+        self.columnsButton.setPopupMode(QToolButton.InstantPopup)
+
+        self.menuIcon = QMenu()
+        self.columnsIcon.setMenu(self.menuIcon)
+        self.columnsIcon.setPopupMode(QToolButton.InstantPopup)
 
         # Filter when searching
         self.search_bar = self.findChild(QLineEdit, 'lineEditDataSearch')
@@ -74,8 +82,6 @@ class AnalyzeDataScreen(QMainWindow):
         # Connect signals
         self.data_table.headers_updated.connect(self.update_columns_sort)
         self.runBtn.clicked.connect(self.start_analysis)
-
-
 
     def update_file_label(self, selected_files):
         """Update the file label with selected files."""
@@ -104,7 +110,15 @@ class AnalyzeDataScreen(QMainWindow):
 
     def update_columns_sort(self, headers):
         """Update column sorting."""
-        self.columns_sort.update_columns(headers)
+        self.menu.clear()
+        self.menuIcon.clear()
+
+        for header in headers:
+            action = QAction(header, self, checkable=True)
+            action.setChecked(True)
+            action.toggled.connect(lambda checked, hdr=header: self.update_column_visibility(hdr, checked))
+            self.menu.addAction(action)
+            self.menuIcon.addAction(action)
 
     def filter_data(self, text):
         self.data_table.proxy_model.setFilterRegExp(text)

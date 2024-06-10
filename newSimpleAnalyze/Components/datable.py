@@ -66,6 +66,7 @@ class DataTable(QWidget):
             cell_widget = CellWidgetFactory.create_cell_widget(row_index, self)
             index = model.index(row_index, len(headers) - 1)
             self.table_view.setIndexWidget(self.proxy_model.mapFromSource(index), cell_widget)
+            self.table_view.setAlternatingRowColors(True)
 
     def set_column_visibility(self, column_name, is_visible):
         model = self.proxy_model.sourceModel()
