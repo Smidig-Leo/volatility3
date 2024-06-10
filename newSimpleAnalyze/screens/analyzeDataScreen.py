@@ -11,7 +11,6 @@ from PyQt5.uic import loadUi
 
 from newSimpleAnalyze.utils.exportmanager import ExportManager
 from newSimpleAnalyze.Components.datable import DataTable
-from simpleAnalyze.Components.columnsSort import ColumnsSort
 
 
 class AnalyzeDataScreen(QMainWindow):
@@ -28,7 +27,6 @@ class AnalyzeDataScreen(QMainWindow):
         self.select_plugin = select_plugin
         self.run_analysis = run_analysis
         self.data_table = DataTable()
-        self.columns_sort = ColumnsSort()
 
         # Set initial values
         self.labelFileChosen.setText("None")

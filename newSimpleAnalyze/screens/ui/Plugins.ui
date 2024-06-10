@@ -14,7 +14,11 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget{
+   <string notr="true">QWidget QFrame {
+	border:none;
+}
+
+QWidget{
 	background-color: rgb(52, 53, 52);
 }
 
@@ -255,27 +259,27 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-           <widget class="QFrame" name="framePluginSearch">
-  <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-    </sizepolicy>
-  </property>
-  <property name="minimumSize">
-    <size>
-      <width>300</width>
-      <height>30</height>
-    </size>
-  </property>
-  <property name="maximumSize">
-    <size>
-      <width>300</width>
-      <height>50</height>
-    </size>
-  </property>
-  <property name="styleSheet">
-    <string notr="true">
+              <widget class="QFrame" name="framePluginSearch">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>300</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>300</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">
       QFrame {
         background-color: #D9D9D9;
         border-radius: 15px;
@@ -288,27 +292,26 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
         z-index: 1;  /* Ensure the text input is on top */
       }
     </string>
-  </property>
-  <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-  </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_6">
-    <item>
-      <widget class="QLineEdit" name="lineEditPluginSearch">
-        <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-          </sizepolicy>
-        </property>
-      </widget>
-    </item>
-  </layout>
-</widget>
-
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_6">
+                <item>
+                 <widget class="QLineEdit" name="lineEditPluginSearch">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -331,8 +334,8 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>886</width>
-            <height>540</height>
+            <width>888</width>
+            <height>542</height>
            </rect>
           </property>
          </widget>

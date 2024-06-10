@@ -18,6 +18,10 @@
 	background-color: rgb(52, 53, 52);
 }
 
+QWidget QFrame {
+	border:none;
+}
+
 /*VERTICAL SCROLLBAR*/
 QScrollBar:vertical {
 	border:none;
@@ -160,7 +164,10 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(52, 53, 52);</string>
+    <string notr="true">QWidget {
+	background-color: rgb(52, 53, 52);
+}
+</string>
    </property>
    <layout class="QGridLayout" name="gridLayout" rowstretch="0" columnstretch="0">
     <property name="leftMargin">
@@ -1322,8 +1329,8 @@ QPushButton:hover{
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>998</width>
-            <height>698</height>
+            <width>1000</width>
+            <height>700</height>
            </rect>
           </property>
          </widget>
