@@ -1,8 +1,11 @@
+import csv
+import os
+import xml.etree.ElementTree as ET
 from PyQt5.QtCore import QSizeF
 from PyQt5.QtGui import QTextDocument
 from PyQt5.QtPrintSupport import QPrinter
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
-import xml.etree.ElementTree as ET
+
 
 class ExportManager:
     @staticmethod
@@ -65,13 +68,27 @@ class ExportManager:
         QMessageBox.information(None, "Success", "PDF file exported successfully.")
 
     @staticmethod
+    def export_data_as_csv(data, file_name):
+        try:
+            with open(file_name, 'w', newline='', encoding='utf-8') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=data[0].keys())
+                writer.writeheader()
+                for row in data:
+                    writer.writerow(row)
+            QMessageBox.information(None, "Success", "CSV file exported successfully.")
+        except Exception as e:
+            QMessageBox.warning(None, "Error", f"Failed to create CSV file: {str(e)}")
+
+    @staticmethod
     def export_data(data, parent):
         options = QFileDialog.Options()
         file_name, _ = QFileDialog.getSaveFileName(parent, "Save Data As", "",
-                                                   "XML Files (*.xml);;PDF Files (*.pdf);;All Files (*)",
+                                                   "XML Files (*.xml);;PDF Files (*.pdf);;CSV Files (*.csv);;All Files (*)",
                                                    options=options)
         if file_name:
             if file_name.endswith('.xml'):
                 ExportManager.export_data_as_xml(data, file_name)
             elif file_name.endswith('.pdf'):
                 ExportManager.export_data_as_pdf(data, file_name)
+            elif file_name.endswith('.csv'):
+                ExportManager.export_data_as_csv(data, file_name)

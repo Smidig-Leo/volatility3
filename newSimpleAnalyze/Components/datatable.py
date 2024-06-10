@@ -22,6 +22,16 @@ class NumericSortFilterProxyModel(QSortFilterProxyModel):
 
         return left_data < right_data
 
+    def filterAcceptsRow(self, source_row, source_parent):
+        search_text = self.filterRegExp().pattern().lower()
+        model = self.sourceModel()
+        for column in range(model.columnCount()):
+            index = model.index(source_row, column, source_parent)
+            data = model.data(index)
+            if search_text in str(data).lower():
+                return True
+        return False
+
 class DataTable(QWidget):
     headers_updated = pyqtSignal(list)
 

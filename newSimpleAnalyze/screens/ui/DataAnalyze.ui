@@ -205,10 +205,13 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
        <property name="topMargin">
         <number>0</number>
        </property>
-       <property name="horizontalSpacing">
-        <number>6</number>
+       <property name="rightMargin">
+        <number>0</number>
        </property>
-       <property name="verticalSpacing">
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
         <number>0</number>
        </property>
        <item row="0" column="1">
@@ -281,13 +284,13 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>150</width>
+                 <width>110</width>
                  <height>45</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>150</width>
+                 <width>110</width>
                  <height>45</height>
                 </size>
                </property>
@@ -298,9 +301,83 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QGridLayout" name="gridLayout_6">
-                <property name="horizontalSpacing">
-                 <number>10</number>
+                <property name="leftMargin">
+                 <number>0</number>
                 </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <item row="0" column="1">
+                 <widget class="QPushButton" name="exportButton">
+                  <property name="minimumSize">
+                   <size>
+                    <width>55</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>55</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Arial</family>
+                    <pointsize>12</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton{
+	background-color:transparent;
+	color:white;
+}
+
+QPushButton:hover{
+	color:rgb(242, 120, 33);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Export</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label">
+                  <property name="minimumSize">
+                   <size>
+                    <width>20</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>25</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="pixmap">
+                   <pixmap>../../design/Export.png</pixmap>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </widget>
              </item>
@@ -339,9 +416,10 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                </property>
                <layout class="QGridLayout" name="gridLayout_8">
                 <item row="0" column="0">
-                 <widget class="QLabel" name="labelSearchText">
-                  <property name="text">
-                   <string>Search</string>
+                 <widget class="QLineEdit" name="lineEditDataSearch">
+                  <property name="styleSheet">
+                   <string notr="true">background-color:transparent;
+border:1px solid transparent;</string>
                   </property>
                  </widget>
                 </item>
@@ -892,7 +970,13 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
               <number>0</number>
              </property>
              <property name="topMargin">
-              <number>9</number>
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
              </property>
              <item>
               <widget class="QFrame" name="framePluginsText">
@@ -1114,9 +1198,21 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
        </item>
        <item row="1" column="1">
         <widget class="QScrollArea" name="dataScroll">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">QScrollArea{
-	border:1px solid transparent;
+	border:none;
 }</string>
          </property>
          <property name="widgetResizable">
@@ -1127,8 +1223,8 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>979</width>
-            <height>683</height>
+            <width>998</width>
+            <height>698</height>
            </rect>
           </property>
          </widget>

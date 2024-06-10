@@ -1,9 +1,12 @@
 import os
 import xml.etree.ElementTree as ET
+import csv
 from PyQt5.QtWidgets import (
-    QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout
+    QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout, QLineEdit
 )
 from PyQt5.uic import loadUi
+
+from newSimpleAnalyze.utils.exportmanager import ExportManager
 from simpleAnalyze.Components.datatable import DataTable
 from simpleAnalyze.Components.columnsSort import ColumnsSort
 
@@ -33,18 +36,17 @@ class AnalyzeDataScreen(QMainWindow):
         self.framePluginContent = self.findChild(QFrame, 'framePluginContent')
         self.frameDataContent = self.findChild(QFrame, 'frame_7')
         self.dataScroll = self.findChild(QFrame, 'dataScroll')
+        self.dataScroll.setStyleSheet("border: none;")
         self.frame = self.findChild(QFrame, 'frame')
         self.runBtn = self.findChild(QPushButton, 'runBtn')
         self.frameTopRight = self.findChild(QFrame, 'frame_10')
         self.pluginsParentFrame = self.findChild(QFrame, 'frame_11')
         self.frameExport = self.findChild(QFrame, 'frameExport')
         self.frameColumns = self.findChild(QFrame, 'frameColumns')
+        self.export_button = self.findChild(QPushButton, 'exportButton')
 
-        # Add export button
-        self.export_button = QPushButton("Export as...")
-        self.export_button.setFixedHeight(30)
-        self.export_button.clicked.connect(self.download_as_xml)
-        self.frameExport.layout().addWidget(self.export_button)
+        # Export button
+        self.export_button.clicked.connect(self.export_data)
 
         # Data Table
         data_layout = QHBoxLayout()
@@ -56,6 +58,12 @@ class AnalyzeDataScreen(QMainWindow):
         self.columns_sort.column_visibility_changed.connect(self.update_column_visibility)
         self.frameColumns.layout().addWidget(self.columns_sort)
 
+        # Filter when searching
+        self.search_bar = self.findChild(QLineEdit, 'lineEditDataSearch')
+        if self.search_bar is None:
+            raise ValueError("Could not find the search bar widget. Please check the object name in the .ui file.")
+        self.search_bar.setPlaceholderText("Search data")
+        self.search_bar.textChanged.connect(self.filter_data)
 
         # Retrieve existing layouts
         dump_layout = self.frameDumps.layout()
@@ -66,6 +74,7 @@ class AnalyzeDataScreen(QMainWindow):
         # Connect signals
         self.data_table.headers_updated.connect(self.update_columns_sort)
         self.runBtn.clicked.connect(self.start_analysis)
+
 
 
     def update_file_label(self, selected_files):
@@ -82,31 +91,12 @@ class AnalyzeDataScreen(QMainWindow):
         """Display data in the data table."""
         self.data_table.update_table(data)
 
-    def download_as_xml(self):
-        """Export data as XML."""
+    def export_data(self):
+        """Export data."""
         data = self.data_table.get_data()
         if not data:
             return
-
-        def sanitize_tag(tag):
-            return ''.join(c if c.isalnum() or c == '_' else '_' for c in tag)
-
-        root = ET.Element("Data")
-        for item in data:
-            record = ET.SubElement(root, "Record")
-            for key, value in item.items():
-                sanitized_key = sanitize_tag(key)
-                field = ET.SubElement(record, sanitized_key)
-                field.text = str(value)
-        tree = ET.ElementTree(root)
-
-        options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getSaveFileName(
-            self, "Save Data As", "", "XML Files (*.xml);;All Files (*)",
-            options=options
-        )
-        if file_name:
-            tree.write(file_name, encoding='utf-8', xml_declaration=True)
+        ExportManager.export_data(data, self)
 
     def update_column_visibility(self, column_name, is_visible):
         """Update column visibility."""
@@ -116,64 +106,10 @@ class AnalyzeDataScreen(QMainWindow):
         """Update column sorting."""
         self.columns_sort.update_columns(headers)
 
+    def filter_data(self, text):
+        self.data_table.proxy_model.setFilterRegExp(text)
+        self.data_table.proxy_model.setFilterKeyColumn(-1)
+
     def start_analysis(self):
         """Start data analysis."""
         self.run_analysis.run_analysis()
-
-
-'''     self.loading_bar = QProgressBar()
-        self.loading_bar.setRange(0, 100)
-        self.loading_bar.setValue(0)
-        right_layout.addWidget(self.loading_bar)
-
-        self.reset_timer = QTimer(self)
-        self.reset_timer.setSingleShot(True)
-        self.reset_timer.timeout.connect(self.reset_progress_bar)
-
-        self.original_button_text = self.runBtn.text()'''
-
-
-
-'''    def start_analysis(self):
-        self.loading_bar.setValue(0)  # Reset loading bar
-        self.update_button_text("Analyzing...")  # Update button text
-        self.run_analysis.progress_updated.connect(self.update_progress)
-        self.run_analysis.analysis_result.connect(self.analysis_complete)  # Connect analysis_complete slot
-        self.run_analysis.run_analysis()'''
-
-
-
-'''    def update_progress(self, progress_percentage):
-        self.loading_bar.setValue(progress_percentage)
-
-    def analysis_complete(self):
-        self.reset_timer.start(3000)
-        self.update_button_text(self.original_button_text)
-
-    def reset_progress_bar(self):
-        self.loading_bar.setValue(0)
-
-    def update_button_text(self, text):
-        self.runBtn.setText(text)
-'''
-
-
-        # available buttons:
-        # self.checkBoxDump1
-        # self.checkBoxDump2
-        # self.checkBoxDump3
-        # self.checkBoxDump4
-        # self.checkBoxPlugin1
-        # self.checkBoxPlugin2
-        # self.checkBoxPlugin3
-        # self.checkBoxPlugin4
-        # self.frameFilePlugin
-        # self.labelFileText
-        # self.labelPluginText
-        # self.labelFileChosen
-        # self.labelPluginChosen
-        # self.labelColumnText
-        # self.labelExportText
-        # self.labelSearchText
-        # self.runBtn
-

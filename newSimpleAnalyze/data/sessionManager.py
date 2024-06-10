@@ -30,7 +30,6 @@ class SessionManager:
     def get_file_uploaded(self):
         return self.session_data.get("file_uploaded", [])
 
-
     def set_activated_plugins(self, plugins):
         self.session_data["activated_plugins"] = plugins
         self.save_session()
@@ -51,7 +50,7 @@ class SessionManager:
         return self.session_data.get("dark_mode", bool)
 
     def set_os(self, os):
-        self.session_data["os"] = os
+        self.set_session_data("os", os)
 
     def get_os(self):
         return self.session_data.get("os", "")

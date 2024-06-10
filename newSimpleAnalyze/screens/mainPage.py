@@ -10,6 +10,7 @@ class MainPage(QWidget):
         super().__init__()
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
 
         self.os = os
         self.file_uploader = file_uploader
