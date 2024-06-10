@@ -29,8 +29,8 @@ class AnalyzeDataScreen(QMainWindow):
         self.data_table = DataTable()
 
         # Set initial values
-        self.labelFileChosen.setText("None")
-        self.labelPluginChosen.setText("None")
+        self.labelFileChosenV.setText("None")
+        self.labelPluginChosenV.setText("None")
 
         # Find frames
         self.frameDumps = self.findChild(QFrame, 'frameDumps')
@@ -85,11 +85,11 @@ class AnalyzeDataScreen(QMainWindow):
         """Update the file label with selected files."""
         if selected_files:
             file_names = [os.path.basename(file[0]) for file in selected_files]
-            self.labelFileChosen.setText(", ".join(file_names))
+            self.labelFileChosenV.setText(", ".join(file_names))
 
     def update_plugin_label(self, plugin_name):
         """Update the plugin label."""
-        self.labelPluginChosen.setText(plugin_name)
+        self.labelPluginChosenV.setText(plugin_name)
 
     def display_data(self, data):
         """Display data in the data table."""
