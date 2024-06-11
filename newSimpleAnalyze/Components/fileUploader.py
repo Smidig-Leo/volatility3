@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QFileDialog, QMessageBox, QWidget, QPushButton, \
     QHBoxLayout, QFrame
 from PyQt5.uic import  loadUi
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QDragEnterEvent, QDropEvent
+from PyQt5.QtCore import Qt, pyqtSignal, QSize
+from PyQt5.QtGui import QDragEnterEvent, QDropEvent, QIcon, QFont
 import os
 
 from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
@@ -53,6 +53,16 @@ class FileUploader(QMainWindow):
         self.uploadedScrollWidget.setLayout(self.uploaded_layout)
         self.uploadedFilesScroll.setWidget(self.uploadedScrollWidget)
 
+        self.uploaded_files_label = QLabel()
+        self.uploaded_files_label.setAlignment(Qt.AlignCenter)
+        self.uploaded_files_label.setFont(QFont('MS Shell Dlg 2', 10, QFont.Bold))
+        self.uploaded_files_label.setStyleSheet("""
+             QLabel {
+                 color: white;
+             }
+         """)
+        self.uploaded_layout.addWidget(self.uploaded_files_label)
+
     def dragEnterEvent(self, event: QDragEnterEvent):
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
@@ -81,7 +91,7 @@ class FileUploader(QMainWindow):
             self.file_paths.append(file_path)
             self.add_file_label(file_path)
             self.file_path_updated.emit(self.file_paths.copy())
-            self.show_popup(os.path.basename(file_path))
+            self.show_popup()
         else:
             print(f"File path {file_path} already exists in the list")
 
@@ -95,19 +105,16 @@ class FileUploader(QMainWindow):
         frame2 = QFrame()
 
         label = QLabel(file_name)
-        button = QPushButton("X")
 
-        button.setStyleSheet("""
-            QPushButton {
-                border-radius:2px;
-                background-color:red;
-                max-width:20px;
-                height:20px;
-            }
-        """)
+        button = QPushButton()
+        icon = QIcon('Components/assets/Close.png')
+        button.setIcon(icon)
+        button.setIconSize(QSize(16, 16))
+        button.setCursor(Qt.PointingHandCursor)
 
         layout1 = QVBoxLayout()
         layout2 = QVBoxLayout()
+        layout2.setAlignment(Qt.AlignLeft)
 
         layout1.addWidget(label)
         layout2.addWidget(button)
@@ -129,30 +136,29 @@ class FileUploader(QMainWindow):
         self.scroll_content_layout.addWidget(parentFrame)
 
 
-    def show_popup(self, file_name):
+    def show_popup(self):
 
-        file_label = QLabel(file_name)
-        file_label.setAlignment(Qt.AlignCenter)
-        file_label.setStyleSheet("""
-            QLabel {
-                color: white;
-                font-size: 16px;
-            }
-        """)
+        file_names = list(map(lambda file_path: os.path.basename(file_path), self.file_paths))
 
-        self.uploaded_layout.addWidget(file_label)
+        # Group file names into rows of 5
+        grouped_file_names = [", ".join(file_names[i:i + 5]) for i in range(0, len(file_names), 5)]
+        formatted_file_names = "\n".join(grouped_file_names)
+
+        # Set the formatted text to the uploaded files label
+        if self.uploaded_files_label:
+            self.uploaded_files_label.setText(formatted_file_names)
 
         if len(self.file_paths) == 1:
             analyze_button = QPushButton("Analyze My Data")
+            analyze_button.setCursor(Qt.PointingHandCursor)
+            analyze_button.setFont(QFont('MS Shell Dlg 2', 11, QFont.Bold))
+            analyze_button.setMinimumSize(200, 30)
             analyze_button.setStyleSheet("""
                 QPushButton {
                     background-color:#F27821;
                     color: white;
-                    font-size: 16px;
                     border: none;
                     border-radius: 5px;
-                    width: 200px;
-                    height: 24px;
                 }
                 QPushButton:hover {
                     background-color: #ff9933;
@@ -186,13 +192,15 @@ class FileUploader(QMainWindow):
                     if file_name_label and file_name_label.text() == os.path.basename(file_path):
                         delete_button.clicked.disconnect()  # Disconnect button signal
                         parent_frame.deleteLater()  # Delete the entire frame
-                        for j in range(self.uploaded_layout.layout().count()):
-                            label = self.uploaded_layout.layout().itemAt(j).widget()
-                            if label and label.text() == os.path.basename(file_path):
-                                label.deleteLater()
-                                break
+                        self.update_uploaded_files_label()
                         break
         self.file_path_updated.emit(self.file_paths.copy())
+
+    def update_uploaded_files_label(self):
+        file_names = list(map(lambda file_path: os.path.basename(file_path), self.file_paths))
+        file_name = ", ".join(file_names)
+        self.uploaded_files_label.setText(file_name)
+
 
     def delete_analyze_button(self):
         analyze_button = self.analyzeButtonFrame.layout().itemAt(0).widget()
