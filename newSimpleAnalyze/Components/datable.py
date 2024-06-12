@@ -13,20 +13,28 @@ from newSimpleAnalyze.utils.cellWidgetFactory import CellWidgetFactory
 
 class NumericSortFilterProxyModel(QSortFilterProxyModel):
     def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
-        left_data = self.sourceModel().data(left)
-        right_data = self.sourceModel().data(right)
+        left_row = left.row()
+        right_row = right.row()
+        model = self.sourceModel()
 
-        if left_data is None or right_data is None:
-            return False
+        left_file_id = model.data(model.index(left_row, 0))
+        right_file_id = model.data(model.index(right_row, 0))
+
+        if left_file_id != right_file_id:
+            return left_file_id < right_file_id
+
+        left_value = model.data(left)
+        right_value = model.data(right)
 
         try:
-            left_data = float(left_data)
-            right_data = float(right_data)
-        except ValueError:
-            left_data = str(left_data)
-            right_data = str(right_data)
+            left_value = float(left_value)
+            right_value = float(right_value)
+        except (ValueError, TypeError):
+            left_value = str(left_value)
+            right_value = str(right_value)
 
-        return left_data < right_data
+        return left_value < right_value
+
 
 class DataTable(QWidget):
     headers_updated = pyqtSignal(list)
