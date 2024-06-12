@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1610</width>
-    <height>673</height>
+    <height>671</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -340,14 +340,14 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>10</height>
+                    <width>100</width>
+                    <height>3</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>10</height>
+                    <width>100</width>
+                    <height>3</height>
                    </size>
                   </property>
                   <property name="styleSheet">
@@ -430,13 +430,13 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
+                    <width>120</width>
                     <height>25</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
+                    <width>120</width>
                     <height>25</height>
                    </size>
                   </property>
@@ -1234,6 +1234,68 @@ QPushButton:hover{
                  </widget>
                 </item>
                 <item>
+                 <widget class="QFrame" name="frame_10">
+                  <property name="minimumSize">
+                   <size>
+                    <width>200</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>200</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_7">
+                   <item>
+                    <widget class="QPushButton" name="exportButton_2">
+                     <property name="minimumSize">
+                      <size>
+                       <width>175</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>175</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Arial</family>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>PointingHandCursor</cursorShape>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton{
+	background-color:rgb(242, 120, 33);
+	border-radius:4px;
+	color:white;
+}
+</string>
+                     </property>
+                     <property name="text">
+                      <string>Show Flagged Rows</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QFrame" name="frame_9">
                   <property name="minimumSize">
                    <size>
@@ -1348,7 +1410,7 @@ QPushButton:hover{
                <x>0</x>
                <y>0</y>
                <width>1100</width>
-               <height>573</height>
+               <height>571</height>
               </rect>
              </property>
             </widget>
