@@ -17,6 +17,5 @@ class TableViewConfigurator:
         for row in range(3):
             table_view.verticalHeader().hideSection(row)
 
-        table_view.setAlternatingRowColors(True)
-        table_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # Disable horizontal scrollbar
         table_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)  # Expand to fit the frame
+

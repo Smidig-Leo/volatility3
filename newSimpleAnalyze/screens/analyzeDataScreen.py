@@ -58,6 +58,28 @@ class AnalyzeDataScreen(QMainWindow):
         data_layout = QVBoxLayout(data_container)
         data_layout.addWidget(self.data_table)
         self.dataScroll.setWidget(data_container)
+        # add style to data container
+        data_container.setStyleSheet("""
+            QWidget {
+                background-color: #343534;
+                color: #ffffff;  /* Change text color to white */
+            }
+            QTableWidget {
+                background-color: #444444;  /* Change table background color */
+                color: #ffffff;  /* Change table text color */
+                gridline-color: #555555;  /* Change gridline color */
+            }
+            QHeaderView::section {
+                background-color: #555555;  /* Change header background color */
+                color: #ffffff;  /* Change header text color */
+            }
+            QTableWidget::item {
+                background-color: #3a3a3a;  /* Change row background color */
+            }
+            QTableWidget::item:alternate {
+                background-color: #2a2a2a;  /* Change alternate row background color */
+            }
+        """)
 
         # Columns sort
         self.menu = QMenu()

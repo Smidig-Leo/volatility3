@@ -120,8 +120,6 @@ class DataTable(QWidget):
         for row in range(3):
             self.table_view.verticalHeader().hideSection(row)
 
-        self.table_view.setAlternatingRowColors(True)
-
     def get_data(self):
         model = self.proxy_model.sourceModel()
         if not model:
