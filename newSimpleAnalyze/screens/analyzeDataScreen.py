@@ -1,7 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
 import csv
-
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (
     QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout, QLineEdit, QMenu, QAction, QToolButton,
@@ -45,10 +44,14 @@ class AnalyzeDataScreen(QMainWindow):
         self.frameExport = self.findChild(QFrame, 'frameExport')
         self.frameColumns = self.findChild(QFrame, 'frameColumns')
         self.export_button = self.findChild(QPushButton, 'exportButton')
+        self.flag_button = self.findChild(QPushButton,'exportButton_2')
 
         # Export buttons
         self.export_button.clicked.connect(self.export_data)
         self.exportIcon.clicked.connect(self.export_data)
+
+        #Flag Button
+        self.flag_button.clicked.connect(self.show_flagged_rows)
 
         # Data Table
         data_container = QWidget()
@@ -127,3 +130,6 @@ class AnalyzeDataScreen(QMainWindow):
     def start_analysis(self):
         """Start data analysis."""
         self.run_analysis.run_analysis()
+
+    def show_flagged_rows(self):
+        self.data_table.show_flagged_rows()
