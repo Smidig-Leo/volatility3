@@ -20,6 +20,7 @@ class PluginScreen(QMainWindow):
 
         self.scroll_layout = QVBoxLayout()
         self.scroll_layout.setSpacing(5)
+        self.scroll_layout.setContentsMargins(20, 0, 20, 0)
         self.scroll_layout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
 
         widget = QWidget()

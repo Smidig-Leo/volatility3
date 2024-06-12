@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1243</width>
+    <width>1610</width>
     <height>673</height>
    </rect>
   </property>
@@ -18,14 +18,13 @@
 	border:none;
 }
 
-
 /*VERTICAL SCROLLBAR*/
 QScrollBar:vertical {
 	border:none;
 	background-color: rgb(242, 102, 42);
     width:14px;
     margin:15px 0 15px 0;
-    boder-radius:0px;
+    border-radius:0px;
 }
 
 /*HANDLE BAT VERTICAL*/
@@ -47,7 +46,7 @@ QScrollBar::handle:vertical:pressed{
 QScrollBar::sub-line:vertical {
   border:none;
   background-color:  rgb(242, 102, 42);
-  height:15px;
+  height:0px;
   border-top-left-radius:7px;
   border-top-right-radius:7px;
   subcontrol-position:top;
@@ -66,7 +65,7 @@ QScrollBar::sub-line:vertical:pressed{
 QScrollBar::add-line:vertical {
   border:none;
   background-color:  rgb(242, 102, 42);
-  height:15px;
+  height:0px;
   border-bottom-left-radius:7px;
   border-bottom-right-radius:7px;
   subcontrol-position:bottom;
@@ -98,11 +97,11 @@ QScrollBar:horizontal {
 	background-color: rgb(242, 102, 42);
     height:14px;
     margin:0 15px 0 15px;
-    boder-radius:0px;
+    border-radius:0px;
 }
 QScrollBar::handle:horizontal {
     background-color:  rgb(242, 102, 42);
-    min-width:30px;
+    min-width:0px;
     border-radius:7px;
 }
 
@@ -117,7 +116,7 @@ QScrollBar::handle:horizontal:pressed{
 QScrollBar::add-line:horizontal {
   border:none;
   background-color: rgb(242, 102, 42);
-  width:15px;
+  width:0px;
   border-bottom-right-radius:7px;
   border-top-right-radius:7px;
   subcontrol-position:right;
@@ -135,7 +134,7 @@ QScrollBar::add-line:horizontal:pressed{
 QScrollBar::sub-line:horizontal {
   border:none;
   background-color:  rgb(242, 102, 42);
-  width:15px;
+  width:0px;
   border-bottom-left-radius:7px;
   border-top-left-radius:7px;
   subcontrol-position:left;
@@ -613,6 +612,12 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
        </item>
        <item>
         <widget class="QFrame" name="frame_4">
+         <property name="minimumSize">
+          <size>
+           <width>1100</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -1229,31 +1234,18 @@ QPushButton:hover{
                  </widget>
                 </item>
                 <item>
-                 <widget class="QFrame" name="frameSearch">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
+                 <widget class="QFrame" name="frame_9">
                   <property name="minimumSize">
                    <size>
                     <width>200</width>
-                    <height>35</height>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
                     <width>200</width>
-                    <height>35</height>
+                    <height>16777215</height>
                    </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QFrame {
-    background-color: #D9D9D9;
-    border-radius: 15px;
-}
-</string>
                   </property>
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
@@ -1261,25 +1253,62 @@ QPushButton:hover{
                   <property name="frameShadow">
                    <enum>QFrame::Raised</enum>
                   </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_7">
-                   <item alignment="Qt::AlignVCenter">
-                    <widget class="QLineEdit" name="lineEditDataSearch">
+                  <layout class="QVBoxLayout" name="verticalLayout_12">
+                   <item>
+                    <widget class="QFrame" name="frameSearch">
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
-                       <height>20</height>
+                       <height>30</height>
                       </size>
                      </property>
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>20</height>
+                       <height>30</height>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:transparent;
-border:1px solid transparent;</string>
+                      <string notr="true">QFrame {
+    background-color: #D9D9D9;
+    border:2px solid #D9D9D9;
+	border-radius:15px;
+}
+</string>
                      </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_13">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QLineEdit" name="lineEditDataSearch">
+                        <property name="styleSheet">
+                         <string notr="true">QLineEdit {
+	border:none;
+	background-color:#D9D9D9;
+}</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                   </layout>
@@ -1293,6 +1322,18 @@ border:1px solid transparent;</string>
           </item>
           <item>
            <widget class="QScrollArea" name="dataScroll">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>1100</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true">QScrollArea{
 	border:none;
@@ -1306,7 +1347,7 @@ border:1px solid transparent;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1033</width>
+               <width>1100</width>
                <height>573</height>
               </rect>
              </property>

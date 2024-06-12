@@ -5,7 +5,7 @@ import csv
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (
     QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout, QLineEdit, QMenu, QAction, QToolButton,
-    QVBoxLayout
+    QVBoxLayout, QWidget
 )
 from PyQt5.uic import loadUi
 
@@ -37,7 +37,7 @@ class AnalyzeDataScreen(QMainWindow):
         self.framePluginContent = self.findChild(QFrame, 'framePluginContent')
         self.frameDataContent = self.findChild(QFrame, 'frame_7')
         self.dataScroll = self.findChild(QFrame, 'dataScroll')
-        self.dataScroll.setStyleSheet("border: none;")
+        self.dataScroll.setWidgetResizable(True)
         self.frame = self.findChild(QFrame, 'frame')
         self.runBtn = self.findChild(QPushButton, 'runBtn')
         self.frameTopRight = self.findChild(QFrame, 'frame_10')
@@ -51,9 +51,10 @@ class AnalyzeDataScreen(QMainWindow):
         self.exportIcon.clicked.connect(self.export_data)
 
         # Data Table
-        data_layout = QHBoxLayout()
-        self.dataScroll.setLayout(data_layout)
+        data_container = QWidget()
+        data_layout = QVBoxLayout(data_container)
         data_layout.addWidget(self.data_table)
+        self.dataScroll.setWidget(data_container)
 
         # Columns sort
         self.menu = QMenu()
