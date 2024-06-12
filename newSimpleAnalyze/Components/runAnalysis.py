@@ -1,6 +1,7 @@
 import os
 import subprocess
 from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt5.QtWidgets import QMessageBox
 
 
 class RunAnalysis(QObject):
@@ -24,6 +25,14 @@ class RunAnalysis(QObject):
         self.file_color = [file[1] for file in selected_files]
         print("Selected color: ", self.file_color)
         print("Selected files: ", self.selected_files)
+
+    def show_error_message(self, message):
+        error_box = QMessageBox()
+        error_box.setIcon(QMessageBox.Critical)
+        error_box.setWindowTitle("Error")
+        error_box.setText(message)
+        error_box.setStandardButtons(QMessageBox.Ok)
+        error_box.exec_()
 
     def run_analysis(self):
         if self.selected_files and self.plugin:
@@ -54,4 +63,5 @@ class RunAnalysis(QObject):
             except subprocess.CalledProcessError as e:
                 self.analysis_result.emit("Error: " + e.output.decode())
         else:
-            self.analysis_result.emit("Error: No plugin or memory dump selected")
+            self.show_error_message("Error: No plugin or memory dump selected")
+
