@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>841</width>
+    <width>783</width>
     <height>602</height>
    </rect>
   </property>
@@ -176,7 +176,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
       <property name="minimumSize">
        <size>
         <width>500</width>
-        <height>400</height>
+        <height>300</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -202,12 +202,27 @@ QFrame &gt; * {
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QFrame" name="frame_2">
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>250</height>
+           <height>200</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -240,6 +255,18 @@ QFrame &gt; * {
           </property>
           <item alignment="Qt::AlignHCenter">
            <widget class="QLabel" name="label">
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -247,12 +274,24 @@ QFrame &gt; * {
              <pixmap>../../design/Vector.png</pixmap>
             </property>
             <property name="scaledContents">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="labelDragDrop">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Arial</family>
@@ -281,6 +320,18 @@ background-color: transparent;</string>
           </item>
           <item>
            <widget class="QLabel" name="textOR">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Arial</family>
@@ -321,6 +372,9 @@ background-color: transparent;</string>
               <height>30</height>
              </size>
             </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="layoutDirection">
              <enum>Qt::LeftToRight</enum>
             </property>
@@ -351,8 +405,20 @@ QPushButton:hover {
          </layout>
         </widget>
        </item>
-       <item>
+       <item alignment="Qt::AlignHCenter">
         <widget class="QFrame" name="fileUploaderFrame">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">
 </string>
@@ -381,6 +447,12 @@ QPushButton:hover {
           </property>
           <item>
            <widget class="QScrollArea" name="fileUploaderScroll">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>100</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color:transparent;
 </string>
@@ -393,8 +465,8 @@ QPushButton:hover {
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>482</width>
-               <height>116</height>
+               <width>300</width>
+               <height>100</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -476,7 +548,7 @@ font-size:16px;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>823</width>
+            <width>765</width>
             <height>30</height>
            </rect>
           </property>
