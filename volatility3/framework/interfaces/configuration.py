@@ -71,7 +71,7 @@ def path_depth(path: str, depth: int = 1) -> str:
     """Returns the `path` up to a certain depth.
 
     Note that `depth` can be negative (such as `-x`) and will return all
-    elements except for the last `x` components
+    elements except for the last `x` Components
     """
     return path_join(path.split(CONFIG_SEPARATOR)[:depth])
 
@@ -318,7 +318,7 @@ class HierarchicalDict(collections.abc.Mapping):
 class RequirementInterface(metaclass=ABCMeta):
     """Class that defines a requirement.
 
-    A requirement is a means for plugins and other framework components to request specific configuration data.
+    A requirement is a means for plugins and other framework Components to request specific configuration data.
     Requirements can either be simple types (such as
     :class:`~volatility3.framework.configuration.requirements.SimpleTypeRequirement`,
     :class:`~volatility3.framework.configuration.requirements.IntRequirement`,
@@ -796,7 +796,7 @@ class ConfigurableInterface(metaclass=ABCMeta):
 
 
 class VersionableInterface:
-    """A class that allows version checking so that plugins can request specific versions of components they made need
+    """A class that allows version checking so that plugins can request specific versions of Components they made need
 
     This currently includes other Plugins and scanners, but may be extended in the future
 

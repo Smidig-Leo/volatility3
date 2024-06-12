@@ -4,9 +4,9 @@
 """The interfaces module contains the API interface for the core volatility
 framework.
 
-These interfaces should help developers attempting to write components
+These interfaces should help developers attempting to write Components
 for the main framework and help them understand how to use the internal
-components of volatility to write plugins.
+Components of volatility to write plugins.
 """
 
 # Import the submodules we want people to be able to use without importing them themselves

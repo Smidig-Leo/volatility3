@@ -7,7 +7,7 @@ from volatility3.framework.configuration import requirements
 from volatility3.framework.renderers import format_hints
 from volatility3.plugins.windows import ssdt, driverscan
 
-# built in Windows-components that trigger false positives
+# built in Windows-Components that trigger false positives
 KNOWN_DRIVERS = ["ACPI_HAL", "PnpManager", "RAW", "WMIxWDM", "Win32k", "Fs_Rec"]
 
 

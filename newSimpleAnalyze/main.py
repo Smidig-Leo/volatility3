@@ -24,7 +24,7 @@ class VolatilityApp(QMainWindow):
         loadUi('screens/ui/NavigationBar.ui', self)
         self.setWindowTitle("Volatility3")
 
-        # Initialize components and session manager
+        # Initialize Components and session manager
         self.session_manager = SessionManager()
         self.file_uploader = FileUploader()
         self.os = ChooseOs(self.session_manager)

@@ -10,7 +10,7 @@ from volatility3.framework.interfaces import plugins
 
 
 class FrameworkInfo(plugins.PluginInterface):
-    """Plugin to list the various modular components of Volatility"""
+    """Plugin to list the various modular Components of Volatility"""
 
     _required_framework_version = (2, 0, 0)
 

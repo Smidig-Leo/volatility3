@@ -20,7 +20,7 @@ class AnalyzeDataScreen(QMainWindow):
         super().__init__()
         loadUi('screens/ui/DataAnalyze.ui', self)
 
-        # Load components
+        # Load Components
         self.file_uploader = file_uploader
         self.select_dump = select_dump
         self.select_plugin = select_plugin

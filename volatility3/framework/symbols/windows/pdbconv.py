@@ -206,7 +206,7 @@ class PdbReader:
         self._omap_mapping = []
 
     def read_necessary_streams(self):
-        """Read streams to populate the various internal components for a PDB
+        """Read streams to populate the various internal Components for a PDB
         table."""
         if not self.metadata["windows"].get("pdb", None):
             self.read_pdb_info_stream()
@@ -485,7 +485,7 @@ class PdbReader:
         return self._omap_mapping[pos][1] + (address - self._omap_mapping[pos][0])
 
     def name_strip(self, name):
-        """Strips unnecessary components from the start of a symbol name."""
+        """Strips unnecessary Components from the start of a symbol name."""
         new_name = name
 
         if new_name[:1] in ["_", "@", "\u007F"]:

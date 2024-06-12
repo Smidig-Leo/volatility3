@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1610</width>
-    <height>671</height>
+    <width>1154</width>
+    <height>673</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,14 +17,13 @@
    <string notr="true">QMainWindow QFrame {
 	border:none;
 }
-
 /*VERTICAL SCROLLBAR*/
 QScrollBar:vertical {
 	border:none;
 	background-color: rgb(242, 102, 42);
     width:14px;
     margin:15px 0 15px 0;
-    border-radius:0px;
+    boder-radius:0px;
 }
 
 /*HANDLE BAT VERTICAL*/
@@ -97,11 +96,11 @@ QScrollBar:horizontal {
 	background-color: rgb(242, 102, 42);
     height:14px;
     margin:0 15px 0 15px;
-    border-radius:0px;
+    boder-radius:0px;
 }
 QScrollBar::handle:horizontal {
     background-color:  rgb(242, 102, 42);
-    min-width:0px;
+    min-width:30px;
     border-radius:7px;
 }
 
@@ -421,75 +420,87 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_9">
                 <item>
-                 <widget class="QLabel" name="labelPlugins">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
+                 <widget class="QFrame" name="frame_13">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
                   </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>120</width>
-                    <height>25</height>
-                   </size>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
                   </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>120</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Arial</family>
-                    <pointsize>18</pointsize>
-                    <weight>75</weight>
-                    <italic>true</italic>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QLabel {
+                  <layout class="QVBoxLayout" name="verticalLayout_14">
+                   <item>
+                    <widget class="QLabel" name="labelPlugins">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>120</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>120</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Arial</family>
+                       <pointsize>18</pointsize>
+                       <weight>75</weight>
+                       <italic>true</italic>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QLabel {
     color: #FFFFFF; /* Text color */
     background-color: transparent; /* Ensure background is transparent */
     padding-bottom: 5px; /* Padding at the bottom to create space for the line */
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>PLUGINS</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="Line" name="linePlugins">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>120</width>
-                    <height>3</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>120</width>
-                    <height>3</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color: rgb(242, 120, 33);</string>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
+                     </property>
+                     <property name="text">
+                      <string>PLUGINS</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="Line" name="linePlugins">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>120</width>
+                       <height>3</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>120</width>
+                       <height>3</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">background-color: rgb(242, 120, 33);</string>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
                 <item>
@@ -597,6 +608,10 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
 	border-radius:2px;
 	background-color:rgb(242, 120, 33);
 	color:white;
+}
+
+QPushButton:hover {
+	 background-color: #ff9933;
 }</string>
                </property>
                <property name="text">
@@ -612,12 +627,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
        </item>
        <item>
         <widget class="QFrame" name="frame_4">
-         <property name="minimumSize">
-          <size>
-           <width>1100</width>
-           <height>0</height>
-          </size>
-         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -979,21 +988,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_3">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
                 <item>
                  <widget class="QFrame" name="frameColumns">
                   <property name="sizePolicy">
@@ -1285,7 +1279,10 @@ QPushButton:hover{
 	border-radius:4px;
 	color:white;
 }
-</string>
+
+QPushButton:hover {
+	 background-color: #ff9933;
+}</string>
                      </property>
                      <property name="text">
                       <string>Show Flagged Rows</string>
@@ -1300,13 +1297,13 @@ QPushButton:hover{
                   <property name="minimumSize">
                    <size>
                     <width>200</width>
-                    <height>0</height>
+                    <height>45</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
                     <width>200</width>
-                    <height>16777215</height>
+                    <height>45</height>
                    </size>
                   </property>
                   <property name="frameShape">
@@ -1384,18 +1381,6 @@ QPushButton:hover{
           </item>
           <item>
            <widget class="QScrollArea" name="dataScroll">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>1100</width>
-              <height>16777215</height>
-             </size>
-            </property>
             <property name="styleSheet">
              <string notr="true">QScrollArea{
 	border:none;
@@ -1409,8 +1394,8 @@ QPushButton:hover{
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1100</width>
-               <height>571</height>
+               <width>944</width>
+               <height>573</height>
               </rect>
              </property>
             </widget>
