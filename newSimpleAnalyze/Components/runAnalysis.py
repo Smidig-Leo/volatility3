@@ -1,8 +1,13 @@
 import os
 import subprocess
+import sys
+import logging
+
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QMessageBox
 
+
+logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 class RunAnalysis(QObject):
     analysis_result = pyqtSignal(list)
@@ -10,6 +15,12 @@ class RunAnalysis(QObject):
 
     def __init__(self, select_dump, select_plugin):
         super().__init__()
+
+        try:
+            self.base_path = sys._MEIPASS
+        except Exception:
+            self.base_path = os.path.abspath(".")
+
         self.plugin = []
         self.selected_files = []
         self.file_color = []
@@ -26,6 +37,12 @@ class RunAnalysis(QObject):
         print("Selected color: ", self.file_color)
         print("Selected files: ", self.selected_files)
 
+    def get_vol_path(self):
+        if hasattr(sys, '_MEIPASS'):
+            return os.path.join(sys._MEIPASS, 'volatility3', 'vol.py')
+        else:
+            return os.path.abspath(".")
+
     def show_error_message(self, message):
         error_box = QMessageBox()
         error_box.setIcon(QMessageBox.Critical)
@@ -40,10 +57,14 @@ class RunAnalysis(QObject):
                 total_files = len(self.selected_files)
                 current_file_count = 0
                 summaries = []  # List to store summaries for each file
+                # vol_path = self.get_vol_path()
                 for file, color in zip(self.selected_files, self.file_color):
-                    command = ["python", "../vol.py", "-f", file, self.plugin]
+                    # vol_py_path = os.path.join(os.path.dirname(__file__), 'volatility3', 'vol.py')
+                    command = ["python", 'C:/Users/Lavra/OneDrive/Documents/It/Python/volatility3/vol.py', "-f", file, self.plugin]
+                    logging.debug(f"Running command: {' '.join(command)}")
                     print(f"Running command: {' '.join(command)}")  # Debugging statement
                     output = subprocess.check_output(command).decode()
+                    logging.debug(f"Command output: {output}")
 
                     lines = output.splitlines()
 
@@ -61,7 +82,11 @@ class RunAnalysis(QObject):
                     self.progress_updated.emit(progress_percentage)
                 self.analysis_result.emit(summaries)
             except subprocess.CalledProcessError as e:
-                self.analysis_result.emit("Error: " + e.output.decode())
+                logging.error(f"Subprocess error: {e.output.decode()}")
+                self.analysis_result.emit([f"Error: {e.output.decode()}"])
+            except Exception as e:
+                logging.exception("An unexpected error occurred")
+                self.show_error_message(f"Unexpected error: {str(e)}")
         else:
             self.show_error_message("Error: No plugin or memory dump selected")
 

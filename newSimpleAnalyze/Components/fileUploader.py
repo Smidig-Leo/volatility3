@@ -1,14 +1,16 @@
+import sys
+
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QFileDialog, QMessageBox, QWidget, QPushButton, \
     QHBoxLayout, QFrame
 from PyQt5.uic import  loadUi
 from PyQt5.QtCore import Qt, pyqtSignal, QSize
-from PyQt5.QtGui import QDragEnterEvent, QDropEvent, QIcon, QFont
+from PyQt5.QtGui import QDragEnterEvent, QDropEvent, QIcon, QFont, QPixmap
 import os
 
-from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
+from Utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
 
 
-# from simpleAnalyze.utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
+# from simpleAnalyze.Utils.uploadConfirmation import is_valid_memory_dump, is_file_exists
 
 
 class FileUploader(QMainWindow):
@@ -17,7 +19,17 @@ class FileUploader(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        loadUi('screens/ui/FileUploader.ui', self)
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        ui_path = os.path.join(base_path, 'ui', 'FileUploader.ui')
+        file_uploaded_img = os.path.join(base_path, 'png', 'Vector.png')
+        self.close_icon = os.path.join(base_path, 'png', 'Close.png')
+        loadUi(ui_path, self)
+
+        self.label.setPixmap(QPixmap(file_uploaded_img))
 
         # available buttons:
         # self.selectButton
@@ -107,7 +119,7 @@ class FileUploader(QMainWindow):
         label = QLabel(file_name)
 
         button = QPushButton()
-        icon = QIcon('Components/assets/Close.png')
+        icon = QIcon(self.close_icon)
         button.setIcon(icon)
         button.setIconSize(QSize(16, 16))
         button.setCursor(Qt.PointingHandCursor)

@@ -2,14 +2,14 @@ from PyQt5.QtCore import Qt, pyqtSignal, QSortFilterProxyModel, QModelIndex
 from PyQt5.QtGui import QColor, QBrush
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableView, QSizePolicy
 
-from newSimpleAnalyze.utils.dataParser import DataParser
-from newSimpleAnalyze.utils.exportmanager import ExportManager
-from newSimpleAnalyze.utils.headerManager import HeaderManager
-from newSimpleAnalyze.utils.modelManager import ModelManager
-from newSimpleAnalyze.utils.numericSortFilterProxyModel import NumericSortFilterProxyModel
-from newSimpleAnalyze.utils.tablePopulator import TablePopulator
-from newSimpleAnalyze.utils.tableViewConfigurator import TableViewConfigurator
-from newSimpleAnalyze.utils.cellWidgetFactory import CellWidgetFactory
+from Utils.dataParser import DataParser
+from Utils.exportmanager import ExportManager
+from Utils.headerManager import HeaderManager
+from Utils.modelManager import ModelManager
+from Utils.numericSortFilterProxyModel import NumericSortFilterProxyModel
+from Utils.tablePopulator import TablePopulator
+from Utils.tableViewConfigurator import TableViewConfigurator
+from Utils.cellWidgetFactory import CellWidgetFactory
 
 class NumericSortFilterProxyModel(QSortFilterProxyModel):
     def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:

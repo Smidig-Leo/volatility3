@@ -1,18 +1,28 @@
+import os
 import sys
-from PyQt5.QtCore import pyqtSignal, QTimer
+from PyQt5.QtCore import pyqtSignal, QTimer, QSize
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget
-from screens.mainPage import MainPage
-from screens.analyzeDataScreen import AnalyzeDataScreen
-from newSimpleAnalyze.Components.fileUploader import FileUploader
-from newSimpleAnalyze.Components.chooseOs import ChooseOs
-from screens.pluginScreen import PluginScreen
-from screens.settingsPage import SettingsPage
-from newSimpleAnalyze.Components.selectDump import SelectDump
-from newSimpleAnalyze.Components.runAnalysis import RunAnalysis
-from newSimpleAnalyze.Components.selectPlugin import SelectPlugin
+from Screens.mainPage import MainPage
+from Screens.analyzeDataScreen import AnalyzeDataScreen
+from Components.fileUploader import FileUploader
+from Components.chooseOs import ChooseOs
+from Screens.pluginScreen import PluginScreen
+from Screens.settingsPage import SettingsPage
+from Components.selectDump import SelectDump
+from Components.runAnalysis import RunAnalysis
+from Components.selectPlugin import SelectPlugin
 from PyQt5.uic import loadUi
-from newSimpleAnalyze.data.sessionManager import SessionManager
+from Data.sessionManager import SessionManager
 
+basedir = os.path.dirname(__file__)
+
+try:
+    from ctypes import windll
+    myappid = 'mnemonic.simpleanalyze.data.1'
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
 
 class VolatilityApp(QMainWindow):
     activeCommandsUpdated = pyqtSignal(list)
@@ -21,8 +31,23 @@ class VolatilityApp(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        loadUi('screens/ui/NavigationBar.ui', self)
-        self.setWindowTitle("Volatility3")
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        ui_path = os.path.join(base_path, 'ui', 'NavigationBar.ui')
+        settings_icon = os.path.join(base_path, 'png', 'settings.png')
+        menomic_logo = os.path.join(base_path, 'png', 'Mnemonic logo.png')
+
+        loadUi(ui_path, self)
+        self.setWindowTitle("Simple analyze")
+
+        self.settingsBtn.setIcon(QIcon(settings_icon))
+        self.settingsBtn.setIconSize(QSize(50, 50))
+
+        self.mainBtn.setIcon(QIcon(menomic_logo))
+        self.settingsBtn.setIconSize(QSize(100, 100))
 
         # Initialize Components and session manager
         self.session_manager = SessionManager()
@@ -32,7 +57,7 @@ class VolatilityApp(QMainWindow):
         self.select_plugin = SelectPlugin()
         self.run_analysis = RunAnalysis(self.select_dump, self.select_plugin)
 
-        # Initialize screens
+        # Initialize Screens
         self.main_page = MainPage(self.file_uploader, self.os, self.session_manager)
         self.plugins_page = PluginScreen(self.session_manager, self.os.os_changed)
         self.data_page = AnalyzeDataScreen(self.file_uploader, self.select_dump, self.select_plugin, self.run_analysis)
@@ -47,7 +72,7 @@ class VolatilityApp(QMainWindow):
         self.select_plugin.plugin_selected.connect(self.run_analysis.handle_selected_plugin)
         self.run_analysis.analysis_result.connect(self.data_page.display_data)
 
-        # Add screens to the stacked widget
+        # Add Screens to the stacked widget
         self.stackedWidget.addWidget(self.main_page)
         self.stackedWidget.addWidget(self.data_page)
         self.stackedWidget.addWidget(self.plugins_page)
@@ -97,6 +122,7 @@ class VolatilityApp(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon(os.path.join(basedir, 'ico', 'mnemonic.ico')))
     window = VolatilityApp()
     window.show()
     sys.exit(app.exec_())

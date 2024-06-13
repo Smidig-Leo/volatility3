@@ -1,4 +1,4 @@
-from newSimpleAnalyze.data.plugins.plugin import Plugin
+from Data.plugins.plugin import Plugin
 
 class PluginManager:
     def __init__(self):

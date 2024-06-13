@@ -1,6 +1,5 @@
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget
-from newSimpleAnalyze.Components.chooseOs import ChooseOs
 
 class MainPage(QWidget):
     analyzedButtonClicked = pyqtSignal()

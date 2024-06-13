@@ -1,5 +1,5 @@
 from PyQt5.Qt import Qt
-from newSimpleAnalyze.utils.cellWidgetFactory import CellWidgetFactory
+from Utils.cellWidgetFactory import CellWidgetFactory
 
 class TablePopulator:
     @staticmethod

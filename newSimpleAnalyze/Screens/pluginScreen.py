@@ -1,16 +1,25 @@
+import os
+import sys
+
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QMainWindow, QFrame, QHBoxLayout, QLineEdit, QScrollArea, QToolTip, QApplication
 from PyQt5.QtCore import pyqtSignal, Qt, QEvent, QPoint
 from PyQt5.uic import loadUi
-from newSimpleAnalyze.Components.py_toggle import PyToggle
-from newSimpleAnalyze.data.plugins.pluginManager import PluginManager
+from Components.py_toggle import PyToggle
+from Data.plugins.pluginManager import PluginManager
 
 class PluginScreen(QMainWindow):
     plugins_updated = pyqtSignal(list)
     activeCommandsUpdated = pyqtSignal(list)
 
-    def __init__(self, session_manager, os):
+    def __init__(self, session_manager, choose_os):
         super().__init__()
-        loadUi('screens/ui/Plugins.ui', self)
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        ui_path = os.path.join(base_path, 'ui', 'Plugins.ui')
+        loadUi(ui_path, self)
 
         QApplication.instance().setStyleSheet("QToolTip { background-color: black; color: white; border: 1px solid white; padding: 5px; font-size: 10pt; }")
 
@@ -40,7 +49,7 @@ class PluginScreen(QMainWindow):
         self.search_bar.setPlaceholderText("Search Plugins")
         self.search_bar.textChanged.connect(self.populate_plugin_toggles)
 
-        os.connect(self.change_plugin_os)
+        choose_os.connect(self.change_plugin_os)
 
         self.plugins = self.plugins_data.get_plugins(self.os)
         self.populate_plugin_toggles()

@@ -1,24 +1,40 @@
 import os
+import sys
 import xml.etree.ElementTree as ET
 import csv
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QSize
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QMainWindow, QPushButton, QFrame, QFileDialog, QApplication, QHBoxLayout, QLineEdit, QMenu, QAction, QToolButton,
     QVBoxLayout, QWidget
 )
 from PyQt5.uic import loadUi
 
-from newSimpleAnalyze.utils.exportmanager import ExportManager
-from newSimpleAnalyze.Components.datable import DataTable
+from Utils.exportmanager import ExportManager
+from Components.datable import DataTable
 
 
 class AnalyzeDataScreen(QMainWindow):
-    """Main window for data analysis."""
+    """Main window for Data analysis."""
 
     def __init__(self, file_uploader, select_dump, select_plugin, run_analysis):
         """Initialize the AnalyzeDataScreen."""
         super().__init__()
-        loadUi('screens/ui/DataAnalyze.ui', self)
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        ui_path = os.path.join(base_path, 'ui', 'DataAnalyze.ui')
+        column_icon = os.path.join(base_path, 'png', 'Columns.png')
+        export_icon = os.path.join(base_path, 'png', 'Export.png')
+        loadUi(ui_path, self)
+
+        self.columnsIcon.setIcon(QIcon(column_icon))
+        self.columnsIcon.setIconSize(QSize(24, 24))
+
+        self.exportIcon.setIcon(QIcon(export_icon))
+        self.exportIcon.setIconSize(QSize(24, 24))
 
         # Load Components
         self.file_uploader = file_uploader
@@ -58,7 +74,7 @@ class AnalyzeDataScreen(QMainWindow):
         data_layout = QVBoxLayout(data_container)
         data_layout.addWidget(self.data_table)
         self.dataScroll.setWidget(data_container)
-        # add style to data container
+        # add style to Data container
         data_container.setStyleSheet("""
             QWidget {
                 background-color: #343534;
@@ -94,7 +110,7 @@ class AnalyzeDataScreen(QMainWindow):
         self.search_bar = self.findChild(QLineEdit, 'lineEditDataSearch')
         if self.search_bar is None:
             raise ValueError("Could not find the search bar widget. Please check the object name in the .ui file.")
-        self.search_bar.setPlaceholderText("Search data")
+        self.search_bar.setPlaceholderText("Search Data")
         self.search_bar.textChanged.connect(self.filter_data)
 
         # Retrieve existing layouts
@@ -118,11 +134,11 @@ class AnalyzeDataScreen(QMainWindow):
         self.labelPluginChosenV.setText(plugin_name)
 
     def display_data(self, data):
-        """Display data in the data table."""
+        """Display Data in the Data table."""
         self.data_table.update_table(data)
 
     def export_data(self):
-        """Export data."""
+        """Export Data."""
         data = self.data_table.get_data()
         if not data:
             return
@@ -150,7 +166,7 @@ class AnalyzeDataScreen(QMainWindow):
         self.data_table.recreate_cell_widget()
 
     def start_analysis(self):
-        """Start data analysis."""
+        """Start Data analysis."""
         self.run_analysis.run_analysis()
 
     def show_flagged_rows(self):

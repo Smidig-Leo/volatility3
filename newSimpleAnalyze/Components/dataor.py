@@ -2,7 +2,7 @@ def update_table(self, data):
     if not data:
         return
 
-    # Parse data and color code
+    # Parse Data and color code
     all_rows_with_color = []
     for entry in data:
         color, rows_str = entry

@@ -96,7 +96,7 @@ class SelectDump(QWidget):
         widget = QWidget()
         widget.setLayout(layout)
         item.setSizeHint(widget.sizeHint())
-        item.setData(Qt.UserRole, (file_path, color))  # Store both file path and color in the item's data
+        item.setData(Qt.UserRole, (file_path, color))  # Store both file path and color in the item's Data
         layout.setSizeConstraint(QVBoxLayout.SetFixedSize)
         self.dump_list.addItem(item)
         self.dump_list.setItemWidget(item, widget)

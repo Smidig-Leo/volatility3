@@ -1,8 +1,10 @@
+import sys
+
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QFileDialog, QMessageBox, QWidget, QPushButton, \
     QHBoxLayout
 from PyQt5.uic import  loadUi
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QDragEnterEvent, QDropEvent
+from PyQt5.QtGui import QDragEnterEvent, QDropEvent, QPixmap
 import os
 
 
@@ -11,7 +13,18 @@ class ChooseOs(QMainWindow):
 
     def __init__(self, session_manager):
         super().__init__()
-        loadUi('screens/ui/Os.ui', self)
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        ui_path = os.path.join(base_path, 'ui', 'Os.ui')
+        simple_analyze_logo = os.path.join(base_path, 'png', 'Simple Analyze.png')
+        mnemonic_secondary_logo = os.path.join(base_path, 'png', 'mnemonic logo white 2.png')
+        loadUi(ui_path, self)
+
+        self.label.setPixmap(QPixmap(simple_analyze_logo))
+        self.label_2.setPixmap(QPixmap(mnemonic_secondary_logo))
 
         self.session_manager = session_manager
 

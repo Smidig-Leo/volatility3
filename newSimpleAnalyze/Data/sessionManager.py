@@ -1,5 +1,4 @@
 import json
-from simpleAnalyze.utils.fileUploader import FileUploader
 
 
 class SessionManager:
@@ -13,7 +12,7 @@ class SessionManager:
             with open(self.session_file, "r") as file:
                 return json.load(file)
         except FileNotFoundError:
-            print("No session file found. Starting with empty session data.")
+            print("No session file found. Starting with empty session Data.")
             return {}
 
     def save_session(self):
