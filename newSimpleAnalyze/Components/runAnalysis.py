@@ -37,11 +37,11 @@ class RunAnalysis(QObject):
         print("Selected color: ", self.file_color)
         print("Selected files: ", self.selected_files)
 
-    def get_vol_path(self):
-        if hasattr(sys, '_MEIPASS'):
-            return os.path.join(sys._MEIPASS, 'volatility3', 'vol.py')
-        else:
-            return os.path.abspath(".")
+    # def get_vol_path(self):
+    #     if hasattr(sys, '_MEIPASS'):
+    #         return os.path.join(sys._MEIPASS, 'volatility3', 'vol.py')
+    #     else:
+    #         return os.path.abspath(".")
 
     def show_error_message(self, message):
         error_box = QMessageBox()
@@ -51,7 +51,39 @@ class RunAnalysis(QObject):
         error_box.setStandardButtons(QMessageBox.Ok)
         error_box.exec_()
 
+    def find_vol_py(self):
+        common_dirs = [
+            ".",
+            "..",
+            "../..",
+            "/usr/local/bin",
+            "/usr/bin",
+            "/bin",
+            "/opt",
+            "/usr/local/sbin",
+            "/usr/sbin",
+            "/sbin",
+        ]
+
+        for directory in common_dirs:
+            vol_path = os.path.join(directory, "vol.py")
+            if os.path.isfile(vol_path):
+                return vol_path
+
+        for root, dirs, files in os.walk("/"):
+            if "vol.py" in files:
+                return os.path.join(root, "vol.py")
+
+        return None
+
     def run_analysis(self):
+        vol_path = self.find_vol_py()
+        print(vol_path)
+
+        if not vol_path:
+            self.show_error_message("Error: vol.py not found")
+            return
+
         if self.selected_files and self.plugin:
             try:
                 total_files = len(self.selected_files)
@@ -59,8 +91,7 @@ class RunAnalysis(QObject):
                 summaries = []  # List to store summaries for each file
                 # vol_path = self.get_vol_path()
                 for file, color in zip(self.selected_files, self.file_color):
-                    # vol_py_path = os.path.join(os.path.dirname(__file__), 'volatility3', 'vol.py')
-                    command = ["python", 'C:/Users/Lavra/OneDrive/Documents/It/Python/volatility3/vol.py', "-f", file, self.plugin]
+                    command = ["python", vol_path, "-f", file, self.plugin]
                     logging.debug(f"Running command: {' '.join(command)}")
                     print(f"Running command: {' '.join(command)}")  # Debugging statement
                     output = subprocess.check_output(command).decode()
@@ -89,4 +120,3 @@ class RunAnalysis(QObject):
                 self.show_error_message(f"Unexpected error: {str(e)}")
         else:
             self.show_error_message("Error: No plugin or memory dump selected")
-
